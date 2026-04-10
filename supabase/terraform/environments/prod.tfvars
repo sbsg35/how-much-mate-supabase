@@ -1,0 +1,5 @@
+project_name             = "how-much-mate-prod"
+region                   = "ap-southeast-1"
+plan                     = "pro"
+supabase_organization_id = "your-org-id"
+database_password        = "change-me-prod-password"

@@ -1,0 +1,5 @@
+project_name             = "how-much-mate-dev"
+region                   = "ap-southeast-1"
+plan                     = "free"
+supabase_organization_id = "your-org-id"
+database_password        = "change-me-dev-password"

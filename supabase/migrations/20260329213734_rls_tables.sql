@@ -13,7 +13,7 @@ with check ((( SELECT auth.uid() AS uid) = profile_id));
   as permissive
   for delete
   to public
-using ((auth.uid() = profile_id));
+using (((select auth.uid()) = profile_id));
 
 
 
@@ -22,8 +22,8 @@ using ((auth.uid() = profile_id));
   as permissive
   for update
   to public
-using ((auth.uid() = profile_id))
-with check ((auth.uid() = profile_id));
+using (((select auth.uid()) = profile_id))
+with check (((select auth.uid()) = profile_id));
 
 
 
@@ -41,7 +41,7 @@ using ((( SELECT auth.uid() AS uid) = profile_id));
   as permissive
   for insert
   to authenticated
-with check ((auth.uid() = profile_id));
+with check (((select auth.uid()) = profile_id));
 
 
 
@@ -59,8 +59,8 @@ using (true);
   as permissive
   for update
   to public
-using ((auth.uid() = profile_id))
-with check ((auth.uid() = profile_id));
+using (((select auth.uid()) = profile_id))
+with check (((select auth.uid()) = profile_id));
 
 
 
