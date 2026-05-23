@@ -10,7 +10,7 @@ import { FC } from "react";
 export const UserMenuDropdown: FC<{
   email: string | undefined;
   name: string | undefined;
-  logout: () => void;
+  logout: () => void | Promise<void>;
 }> = ({ email, name, logout }) => {
   return (
     <Menu withArrow trigger="click" position="bottom-start">

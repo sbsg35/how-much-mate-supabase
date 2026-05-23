@@ -5,17 +5,20 @@ import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/icons/Logo";
 import { NextLink } from "@/components/NextLink";
 import { UserMenuDropdown } from "@/components/UserMenuDropdown";
+import { useAuth } from "@/providers/AuthProvider";
 import { AppShell, Button, Group, Skeleton } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import { FC, ReactNode } from "react";
 
 const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
-  const { logout, isLoggedIn, isLoading, user } = {
-    isLoggedIn: false,
-    isLoading: false,
-    user: { email: "john.doe@example.com", name: "John Doe" },
-    logout: () => {},
-  }; // TODO: replace with actual auth logic
+  const { user, isLoading, logout } = useAuth();
+  const isLoggedIn = !!user;
+  const router = useRouter();
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+  };
 
   return (
     <AppShell header={{ height: 65 }} footer={{ height: 60 }}>
@@ -40,8 +43,10 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
                 </Button>
                 <UserMenuDropdown
                   email={user?.email}
-                  name={user?.name}
-                  logout={logout}
+                  name={
+                    user?.user_metadata?.full_name ?? user?.user_metadata?.name
+                  }
+                  logout={handleLogout}
                 />
               </Group>
             ) : (
