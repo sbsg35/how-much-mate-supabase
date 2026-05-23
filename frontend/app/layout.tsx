@@ -6,6 +6,8 @@ import "@mantine/dropzone/styles.css";
 
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import { ThemeProvider } from "@/providers/ThemeProvider";
+import AuthProvider from "@/providers/AuthProvider";
+import Providers from "@/providers/Providers";
 
 export const metadata = {
   title: "How Much Mate - Find Quotes from Service Providers",
@@ -29,7 +31,7 @@ export default function RootLayout({
             "light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6))",
         }}
       >
-        <ThemeProvider>{children}</ThemeProvider>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

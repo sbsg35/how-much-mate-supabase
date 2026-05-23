@@ -1,12 +1,12 @@
--- inserts a row into public.profiles
+-- inserts a row into public.profile
 create function public.handle_new_user()
 returns trigger
 language plpgsql
 security definer set search_path = ''
 as $$
 begin
-  insert into public.profiles (id, first_name, last_name)
-  values (new.id, new.raw_user_meta_data ->> 'first_name', new.raw_user_meta_data ->> 'last_name');
+  insert into public.profile (profile_id, email)
+  values (new.id, new.email);
   return new;
 end;
 $$;

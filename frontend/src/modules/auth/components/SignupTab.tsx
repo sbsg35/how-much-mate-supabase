@@ -6,8 +6,6 @@ import { HookFormProvider } from "@/components/HookFormProvider";
 import { Turnstile } from "@/components/Turnstile";
 import { useTurnstile } from "@/hooks/useTurnstile";
 import { CLOUDFLARE_TURNSTILE_KEY } from "@/lib/env";
-import { handleApiError } from "@/lib/schema";
-import { useSignUpMutation } from "@/service/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Group,
@@ -23,6 +21,8 @@ import { SignupDto, signupSchema } from "@/schema";
 import { SocialLogins } from "./SocialLogins";
 import { NextLink } from "@/components/NextLink";
 import { FormPasswordInput } from "@/components/FormPasswordInput";
+import { notifications } from "@mantine/notifications";
+import { supabaseBrowserClient } from "@/supabase/client";
 
 export const SignupTab = () => {
   const navigate = useRouter();
@@ -47,19 +47,27 @@ export const SignupTab = () => {
     formFieldName: "botToken",
   });
 
-  const { mutateAsync: signUp } = useSignUpMutation();
-
   const handleSignUp = async (data: SignupDto) => {
+    const supabase = supabaseBrowserClient();
+
     try {
-      await signUp(data);
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          // captchaToken: data.botToken,
+        },
+      });
+      if (error) throw error;
       navigate.push("/auth/check-email");
     } catch (error) {
+      console.error("Error during sign up:", error);
       resetTurnstile();
 
-      handleApiError(error, {
-        resetForm: form.reset,
-        setError: form.setError,
-        customErrorMessage: "Failed to sign up",
+      notifications.show({
+        title: "Error",
+        message: "Sign up failed. Please try again.",
       });
     }
   };

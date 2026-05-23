@@ -13,11 +13,12 @@ import { useTurnstile } from "@/hooks/useTurnstile";
 import { CLOUDFLARE_TURNSTILE_KEY } from "@/lib/env";
 
 import { PasswordLoginDto, passwordLoginSchema } from "@/schema";
-import { useLoginWithPasswordMutation } from "@/service/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Divider, Group, VisuallyHidden } from "@mantine/core";
 
 import { SocialLogins } from "./SocialLogins";
+import { supabaseBrowserClient } from "@/supabase/client";
+import { notifications } from "@mantine/notifications";
 
 export const LoginTab = () => {
   const navigate = useRouter();
@@ -44,16 +45,19 @@ export const LoginTab = () => {
 
   const handleLogin = async (data: PasswordLoginDto) => {
     try {
-      await supabase(data);
+      const result =
+        await supabaseBrowserClient().auth.signInWithPassword(data);
+      if (!result.data.user) throw new Error("No user returned from Supabase");
       navigate.push("/user/profile");
     } catch (error) {
       console.error("Login error:", error);
       resetTurnstile();
 
-      handleApiError(error, {
-        resetForm: form.reset,
-        setError: form.setError,
-        customErrorMessage: "Failed to send magic link",
+      notifications.show({
+        title: "Error",
+        message:
+          "Failed to log in. Please check your credentials and try again.",
+        color: "red",
       });
     }
   };

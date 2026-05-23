@@ -5,6 +5,8 @@ import {
   AUState,
   publicQuotesSearchSchema,
 } from "@/schema";
+import { createSsrClient } from "@/supabase/server";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "How Much Mate - Find Quotes",
@@ -16,5 +18,8 @@ export default async function Home({
 }: {
   searchParams: Promise<PublicQuotesSearchDto>;
 }) {
-  return <>Home page</>;
+  const serverClient = createSsrClient(cookies());
+  const { data } = await serverClient.from("suburb").select("*").limit(1);
+
+  return <pre>{JSON.stringify(data, null, 2)}</pre>;
 }

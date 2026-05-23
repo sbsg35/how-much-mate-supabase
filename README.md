@@ -24,6 +24,8 @@ Reference: https://www.youtube.com/watch?v=BceVcpiOlKM
 
 ## Database Migrations
 
+The recommended workflow is to create and test migrations locally, then push them to the remote project once verified. This ensures that you can iterate quickly without affecting production data until you're ready.
+
 ### Creating Migrations
 
 - `supabase db migration new <name>` - Create a blank migration file
@@ -31,6 +33,8 @@ Reference: https://www.youtube.com/watch?v=BceVcpiOlKM
   - Auto-Diff: Use the local Studio UI (localhost:54323) to create tables/columns, then run `supabase db diff -f <name>` to generate SQL automatically
 
 ### Pulling from Remote
+
+We can make changes in the local supabase studio and then pull those changes down to our local environment to test before pushing to production.
 
 - `npx supabase db pull` - Pull current database schema from remote project and create a migration file locally
 
@@ -47,3 +51,12 @@ Reference: https://www.youtube.com/watch?v=BceVcpiOlKM
 - `supabase link --project-ref <your-id>` - Connects local to remote
 - `supabase db pull` - Downloads the remote schema
 - `supabase db reset` - Applies downloaded schema to local Docker database
+
+## Local keys
+
+Run `npx supbase status`
+
+```
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
+```
