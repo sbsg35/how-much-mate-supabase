@@ -60,3 +60,9 @@ Run `npx supbase status`
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
 ```
+
+## TODO for dev & prod
+
+- [ ] Add environment variables for local and production
+- [ ] Add captcha secret
+- [ ] Add redirect URLS for auth/callback

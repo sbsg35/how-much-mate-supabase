@@ -12,10 +12,10 @@ import {
   VisuallyHidden,
   Box,
   Divider,
-  Text,
   Stack,
+  Title,
+  Text,
 } from "@mantine/core";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { SignupDto, signupSchema } from "@/schema";
 import { SocialLogins } from "./SocialLogins";
@@ -24,9 +24,11 @@ import { FormPasswordInput } from "@/components/FormPasswordInput";
 import { notifications } from "@mantine/notifications";
 import { supabaseBrowserClient } from "@/supabase/client";
 
-export const SignupTab = () => {
-  const navigate = useRouter();
+interface SignupFormProps {
+  onSuccess: (email: string) => void;
+}
 
+export const SignupForm = ({ onSuccess }: SignupFormProps) => {
   const form = useForm<SignupDto>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -56,11 +58,11 @@ export const SignupTab = () => {
         password: data.password,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
-          // captchaToken: data.botToken,
+          captchaToken: data.botToken,
         },
       });
       if (error) throw error;
-      navigate.push("/auth/check-email");
+      onSuccess(data.email);
     } catch (error) {
       console.error("Error during sign up:", error);
       resetTurnstile();
@@ -74,6 +76,8 @@ export const SignupTab = () => {
 
   return (
     <>
+      <Title size="md">Create an account</Title>
+      <Text c="dimmed">Join the community and start sharing quotes</Text>
       <HookFormProvider {...form}>
         <form onSubmit={form.handleSubmit(handleSignUp)}>
           <FormTextInput name="email" label="Email" mt="md" required />

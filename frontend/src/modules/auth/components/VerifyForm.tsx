@@ -1,20 +1,24 @@
 "use client";
+
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { FormTextInput } from "@/components/FormTextInput";
 import { HookFormProvider } from "@/components/HookFormProvider";
-import { NextLink } from "@/components/NextLink";
+
 import { supabaseBrowserClient } from "@/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Center, Flex, Text, Title } from "@mantine/core";
-import { IconArrowLeft, IconMailCheck } from "@tabler/icons-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Center, Text, Title } from "@mantine/core";
+import { IconMailCheck } from "@tabler/icons-react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { OtpDto, otpSchema } from "../schema";
+import { notifications } from "@mantine/notifications";
 
-export const CheckEmailPage = () => {
+interface VerifyFormProps {
+  email: string;
+}
+
+export const VerifyForm = ({ email }: VerifyFormProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email") ?? "";
 
   const form = useForm<OtpDto>({
     resolver: zodResolver(otpSchema),
@@ -23,26 +27,34 @@ export const CheckEmailPage = () => {
   });
 
   const handleSubmit = async ({ token }: OtpDto) => {
-    const { error } = await supabaseBrowserClient().auth.verifyOtp({
-      email,
-      token,
-      type: "email",
-    });
+    try {
+      const { error } = await supabaseBrowserClient().auth.verifyOtp({
+        email,
+        token,
+        type: "email",
+      });
 
-    if (error) {
-      form.setError("token", { message: error.message });
-      return;
+      if (error) {
+        form.setError("token", { message: error.message });
+        return;
+      }
+
+      router.push("/user/profile");
+    } catch (error) {
+      console.error("Error verifying OTP:", error);
+      notifications.show({
+        title: "Error",
+        message: "Verification failed. Please try again.",
+      });
     }
-
-    router.push("/");
   };
 
   return (
     <>
       <Title size="lg">Check your email</Title>
       <Text fz="sm" ta="center">
-        We sent a 6-digit code to <strong>{email || "your email"}</strong>.
-        Enter it below to sign in.
+        We sent a 6-digit code to <strong>{email}</strong>. Enter it below to
+        complete your sign up.
       </Text>
       <Center my="24">
         <IconMailCheck size={40} color="var(--mantine-color-anchor)" />
@@ -61,14 +73,6 @@ export const CheckEmailPage = () => {
           </FormSubmitButton>
         </form>
       </HookFormProvider>
-      <Center mt="lg">
-        <NextLink href="/">
-          <Flex align="center">
-            <IconArrowLeft size={18} stroke={1.5} />
-            <Text>Back to the home page</Text>
-          </Flex>
-        </NextLink>
-      </Center>
     </>
   );
 };
