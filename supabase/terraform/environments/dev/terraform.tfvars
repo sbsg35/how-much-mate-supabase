@@ -7,10 +7,13 @@ auth_settings = {
   enable_refresh_token_rotation = true
   enable_signup                 = true
   enable_anonymous_sign_ins     = false
-  minimum_password_length       = 8
-  security_captcha_enabled      = true
-  security_captcha_provider     = "turnstile"
-  security_captcha_secret       = "1x0000000000000000000000000000000AA"
-  external_google_client_id     = "778035252919-s5c65jm6ksfbktq2uho6llghqn1pfidf.apps.googleusercontent.com"
-  external_google_enabled       = true
+  minimum_password_length       = 6
+  mailer_otp_exp : 5,
+  mailer_otp_length : 6,
+  security_captcha_enabled                 = true
+  security_captcha_provider                = "turnstile"
+  security_captcha_secret                  = "1x0000000000000000000000000000000AA"
+  external_google_client_id                = "778035252919-s5c65jm6ksfbktq2uho6llghqn1pfidf.apps.googleusercontent.com"
+  external_google_enabled                  = true
+  mailer_templates_magic_link_content_path = "../../templates/magic-link.html"
 }

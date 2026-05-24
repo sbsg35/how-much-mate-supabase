@@ -44,6 +44,23 @@ variable "external_google_secret" {
   default     = null
 }
 
+locals {
+  magic_link_template_path = try(var.auth_settings.mailer_templates_magic_link_content_path, null)
+
+  auth_settings_without_template_path = var.auth_settings == null ? null : {
+    for key, value in var.auth_settings : key => value if key != "mailer_templates_magic_link_content_path"
+  }
+
+  auth_settings = local.auth_settings_without_template_path == null ? null : merge(
+    local.auth_settings_without_template_path,
+    local.magic_link_template_path == null ? {} : {
+      mailer_templates_magic_link_content = file(local.magic_link_template_path)
+    }
+  )
+}
+
+
+
 module "supabase_environment" {
   source = "../../modules/supabase_environment"
 
@@ -53,6 +70,7 @@ module "supabase_environment" {
   database_password      = var.database_password
   instance_size          = var.instance_size
   api_settings           = var.api_settings
-  auth_settings          = var.auth_settings
+  auth_settings          = local.auth_settings
   external_google_secret = var.external_google_secret
+
 }
