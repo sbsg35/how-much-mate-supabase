@@ -21,8 +21,9 @@ import { SignupDto, signupSchema } from "@/schema";
 import { SocialLogins } from "./SocialLogins";
 import { NextLink } from "@/components/NextLink";
 import { FormPasswordInput } from "@/components/FormPasswordInput";
-import { notifications } from "@mantine/notifications";
+
 import { supabaseBrowserClient } from "@/supabase/client";
+import { handleSupabaseAuthError } from "@/lib/error";
 
 interface SignupFormProps {
   onSuccess: (email: string) => void;
@@ -64,12 +65,11 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
       if (error) throw error;
       onSuccess(data.email);
     } catch (error) {
-      console.error("Error during sign up:", error);
       resetTurnstile();
-
-      notifications.show({
-        title: "Error",
-        message: "Sign up failed. Please try again.",
+      handleSupabaseAuthError(error, {
+        resetForm: () => form.reset({ email: data.email, password: "" }),
+        fallbackMessage:
+          "Sign up failed. Please check your credentials and try again.",
       });
     }
   };

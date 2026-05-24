@@ -1,14 +1,14 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const publicRoutes = [
-  "/",
+const authRoutes = [
   "/auth/login",
   "/auth/sign-up",
-  "/random",
   "/auth/check-email",
   "/auth/callback",
 ];
+
+const publicRoutes = ["/", "/random", ...authRoutes];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -57,6 +57,18 @@ export async function updateSession(request: NextRequest) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
+    return NextResponse.redirect(url);
+  }
+
+  const isAuthRoute = authRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+
+  if (isAuthRoute && user) {
+    // user is trying to access an auth route but they are already logged in, so
+    // redirect them to the profile
+    const url = request.nextUrl.clone();
+    url.pathname = "/user/profile";
     return NextResponse.redirect(url);
   }
 

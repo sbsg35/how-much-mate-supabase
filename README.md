@@ -66,3 +66,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
 - [ ] Add environment variables for local and production
 - [ ] Add captcha secret
 - [ ] Add redirect URLS for auth/callback
+
+## Quirks
+
+- If you turn off email_confirmations, the user created prior that didn't verify their email will be stuck, since their status is not verified.
