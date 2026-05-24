@@ -1,10 +1,10 @@
 "use client";
 
-import { useUserQuery } from "@/service/user";
+import { useAuth } from "@/providers/AuthProvider";
 
 export function SignedOut({ children }: { children: React.ReactNode }) {
-  const { data } = useUserQuery();
+  const { user } = useAuth();
 
-  if (data?.user) return null;
+  if (user) return null;
   return <>{children}</>;
 }

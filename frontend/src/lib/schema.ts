@@ -9,10 +9,8 @@ string();
 export const schemaFormatError = (err: ZodError) => err.issues[0].message;
 
 // date schema for 'YYYY-MM-DD' format
-export const postgresDateSchema = (
-  required_error: string = "Date is required",
-) =>
-  stringTrimmed({ error: required_error }).refine(
+export const postgresDateSchema = (error: string = "Date is required") =>
+  stringTrimmed({ error }).refine(
     (v) => {
       const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
       if (!dateRegex.test(v)) return false;

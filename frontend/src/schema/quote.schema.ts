@@ -12,7 +12,7 @@ const profanityMatcher = new RegExpMatcher({
 });
 
 // Shared field schemas
-const titleSchema = stringTrimmed({ required_error: "Title is required" })
+const titleSchema = stringTrimmed({ error: "Title is required" })
   .min(3, { message: "Title must be at least 3 characters long" })
   .max(255, { message: "Title must be at most 255 characters long" })
   .refine((value) => !profanityMatcher.hasMatch(value), {
@@ -20,7 +20,7 @@ const titleSchema = stringTrimmed({ required_error: "Title is required" })
   });
 
 const business_nameSchema = stringTrimmed({
-  required_error: "Business name is required",
+  error: "Business name is required",
 })
   .min(3, { message: "Business name must be at least 3 characters long" })
   .max(255, { message: "Business name must be at most 255 characters long" })
@@ -29,7 +29,7 @@ const business_nameSchema = stringTrimmed({
   });
 
 const descriptionSchema = stringTrimmed({
-  required_error: "Description is required",
+  error: "Description is required",
 })
   .min(10, { message: "Description must be at least 10 characters long" })
   .max(1000, { message: "Description must be at most 1000 characters long" })
@@ -46,7 +46,7 @@ const category_idSchema = coerce
   .int()
   .positive({ message: "Category is required" });
 
-const suburb_idSchema = stringTrimmed({ required_error: "Suburb is required" });
+const suburb_idSchema = stringTrimmed({ error: "Suburb is required" });
 
 // Base quote fields shared between create and edit
 const quoteFieldsSchema = {
@@ -110,7 +110,7 @@ export const publicQuotesSearchSchema = object({
 });
 
 export const unpublishQuoteSchema = object({
-  reason: stringTrimmed({ required_error: "Reason is required" }).min(3, {
+  reason: stringTrimmed({ error: "Reason is required" }).min(3, {
     message: "Reason must be at least 3 characters long",
   }),
 });
