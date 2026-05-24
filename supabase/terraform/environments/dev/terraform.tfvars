@@ -15,5 +15,7 @@ auth_settings = {
   security_captcha_secret                  = "1x0000000000000000000000000000000AA"
   external_google_client_id                = "778035252919-s5c65jm6ksfbktq2uho6llghqn1pfidf.apps.googleusercontent.com"
   external_google_enabled                  = true
-  mailer_templates_magic_link_content_path = "../../templates/magic-link.html"
+  mailer_templates_magic_link_content_path = "../../../templates/magic-link.html"
+  mailer_templates_confirmation_content_path = "../../../templates/confirmation.html"
+  
 }

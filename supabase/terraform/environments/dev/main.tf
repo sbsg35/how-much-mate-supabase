@@ -45,16 +45,20 @@ variable "external_google_secret" {
 }
 
 locals {
-  magic_link_template_path = try(var.auth_settings.mailer_templates_magic_link_content_path, null)
+  magic_link_template_path   = var.auth_settings.mailer_templates_magic_link_content_path
+  confirmation_template_path = var.auth_settings.mailer_templates_confirmation_content_path
 
   auth_settings_without_template_path = var.auth_settings == null ? null : {
-    for key, value in var.auth_settings : key => value if key != "mailer_templates_magic_link_content_path"
+    for key, value in var.auth_settings : key => value if key != "mailer_templates_magic_link_content_path" && key != "mailer_templates_confirmation_content_path"
   }
 
   auth_settings = local.auth_settings_without_template_path == null ? null : merge(
     local.auth_settings_without_template_path,
-    local.magic_link_template_path == null ? {} : {
+    {
       mailer_templates_magic_link_content = file(local.magic_link_template_path)
+    },
+    {
+      mailer_templates_confirmation_content = file(local.confirmation_template_path)
     }
   )
 }
