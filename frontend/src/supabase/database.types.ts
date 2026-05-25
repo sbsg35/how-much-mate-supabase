@@ -9,19 +9,43 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      category: {
+        Row: {
+          category_id: number
+          created_at: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          category_id?: number
+          created_at?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          category_id?: number
+          created_at?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       profile: {
         Row: {
           created_at: string
+          email: string
           profile_id: string
           username: string | null
         }
         Insert: {
           created_at?: string
+          email: string
           profile_id: string
           username?: string | null
         }
         Update: {
           created_at?: string
+          email?: string
           profile_id?: string
           username?: string | null
         }
@@ -30,6 +54,7 @@ export type Database = {
       project: {
         Row: {
           category: string | null
+          category_id: number | null
           created_at: string
           description: string
           profile_id: string
@@ -38,6 +63,7 @@ export type Database = {
         }
         Insert: {
           category?: string | null
+          category_id?: number | null
           created_at?: string
           description: string
           profile_id: string
@@ -46,6 +72,7 @@ export type Database = {
         }
         Update: {
           category?: string | null
+          category_id?: number | null
           created_at?: string
           description?: string
           profile_id?: string
@@ -53,6 +80,13 @@ export type Database = {
           title?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "project_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "category"
+            referencedColumns: ["category_id"]
+          },
           {
             foreignKeyName: "project_profile_id_fkey"
             columns: ["profile_id"]

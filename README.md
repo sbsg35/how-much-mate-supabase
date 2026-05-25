@@ -28,7 +28,7 @@ The recommended workflow is to create and test migrations locally, then push the
 
 ### Creating Migrations
 
-- `supabase db migration new <name>` - Create a blank migration file
+- `supabase migration new <name>` - Create a blank migration file
   - Manual: Write SQL directly in the file
   - Auto-Diff: Use the local Studio UI (localhost:54323) to create tables/columns, then run `supabase db diff -f <name>` to generate SQL automatically
 

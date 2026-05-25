@@ -18,7 +18,7 @@ import { Box, Divider, Group, VisuallyHidden } from "@mantine/core";
 
 import { SocialLogins } from "./SocialLogins";
 import { supabaseBrowserClient } from "@/supabase/client";
-import { notifications } from "@mantine/notifications";
+
 import { handleSupabaseAuthError } from "@/lib/error";
 
 export const LoginTab = () => {
@@ -53,6 +53,7 @@ export const LoginTab = () => {
           captchaToken: data.botToken,
         },
       });
+
       if (result.error) throw result.error;
       navigate.push("/user/profile");
     } catch (error) {
@@ -69,7 +70,7 @@ export const LoginTab = () => {
 
   return (
     <>
-      <HookFormProvider {...form}>
+      <HookFormProvider form={form}>
         <form onSubmit={form.handleSubmit(handleLogin)}>
           <FormTextInput name="email" label="Email" mt="md" />
           <FormPasswordInput name="password" label="Password" mt="md" />

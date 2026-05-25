@@ -78,7 +78,7 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
     <>
       <Title size="md">Create an account</Title>
       <Text c="dimmed">Join the community and start sharing quotes</Text>
-      <HookFormProvider {...form}>
+      <HookFormProvider form={form}>
         <form onSubmit={form.handleSubmit(handleSignUp)}>
           <FormTextInput name="email" label="Email" mt="md" required />
           <FormPasswordInput

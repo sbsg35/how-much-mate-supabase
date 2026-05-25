@@ -59,7 +59,7 @@ export const VerifyForm = ({ email }: VerifyFormProps) => {
       <Center my="24">
         <IconMailCheck size={40} color="var(--mantine-color-anchor)" />
       </Center>
-      <HookFormProvider {...form}>
+      <HookFormProvider form={form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <FormTextInput
             name="token"
