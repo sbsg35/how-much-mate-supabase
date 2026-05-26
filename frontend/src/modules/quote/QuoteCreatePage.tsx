@@ -1,5 +1,5 @@
 import { Container, Title, Paper, Text } from "@mantine/core";
-import { CreateProjectForm } from "./components/CreateProjectForm";
+import { CreateProjectForm } from "./components/CreateQuoteForm";
 
 export const QuoteCreatePage = () => {
   return (

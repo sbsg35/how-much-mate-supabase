@@ -51,96 +51,57 @@ export type Database = {
         }
         Relationships: []
       }
-      project: {
+      quote: {
         Row: {
-          category: string | null
+          business_name: string | null
           category_id: number | null
           created_at: string
-          description: string
-          profile_id: string
-          project_id: string
-          title: string
+          description: string | null
+          metadata: Json | null
+          price: number | null
+          profile_id: string | null
+          quote_id: number
+          suburb_id: string | null
+          title: string | null
         }
         Insert: {
-          category?: string | null
+          business_name?: string | null
           category_id?: number | null
           created_at?: string
-          description: string
-          profile_id: string
-          project_id?: string
-          title: string
+          description?: string | null
+          metadata?: Json | null
+          price?: number | null
+          profile_id?: string | null
+          quote_id?: number
+          suburb_id?: string | null
+          title?: string | null
         }
         Update: {
-          category?: string | null
+          business_name?: string | null
           category_id?: number | null
           created_at?: string
-          description?: string
-          profile_id?: string
-          project_id?: string
-          title?: string
+          description?: string | null
+          metadata?: Json | null
+          price?: number | null
+          profile_id?: string | null
+          quote_id?: number
+          suburb_id?: string | null
+          title?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "project_category_id_fkey"
+            foreignKeyName: "quote_category_id_fkey"
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "category"
             referencedColumns: ["category_id"]
           },
           {
-            foreignKeyName: "project_profile_id_fkey"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profile"
-            referencedColumns: ["profile_id"]
-          },
-        ]
-      }
-      quote: {
-        Row: {
-          business_name: string | null
-          created_at: string
-          metadata: Json | null
-          price: number | null
-          profile_id: string | null
-          project_id: string | null
-          quote_id: number
-          suburb_id: string | null
-        }
-        Insert: {
-          business_name?: string | null
-          created_at?: string
-          metadata?: Json | null
-          price?: number | null
-          profile_id?: string | null
-          project_id?: string | null
-          quote_id?: number
-          suburb_id?: string | null
-        }
-        Update: {
-          business_name?: string | null
-          created_at?: string
-          metadata?: Json | null
-          price?: number | null
-          profile_id?: string | null
-          project_id?: string | null
-          quote_id?: number
-          suburb_id?: string | null
-        }
-        Relationships: [
-          {
             foreignKeyName: "quote_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
             referencedRelation: "profile"
             referencedColumns: ["profile_id"]
-          },
-          {
-            foreignKeyName: "quote_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "project"
-            referencedColumns: ["project_id"]
           },
           {
             foreignKeyName: "quote_suburb_id_fkey"
