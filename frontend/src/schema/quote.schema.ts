@@ -55,6 +55,7 @@ const quoteFieldsSchema = {
   description: descriptionSchema,
   price: priceSchema,
   category_id: category_idSchema,
+
   suburb_id: suburb_idSchema,
   completed: coerce.boolean(),
   quote_date: postgresDateSchema("Quote date is required"),

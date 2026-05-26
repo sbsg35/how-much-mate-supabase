@@ -1,5 +1,5 @@
 import { Container, Title, Paper, Text } from "@mantine/core";
-import { CreateProjectForm } from "./components/CreateQuoteForm";
+import { CreateQuoteForm } from "./components/CreateQuoteForm";
 
 export const QuoteCreatePage = () => {
   return (
@@ -8,10 +8,10 @@ export const QuoteCreatePage = () => {
 
       <Paper withBorder shadow="md" p={30} radius="md" mt="sm" pos="relative">
         <Title fz="h4" order={1}>
-          Create Project
+          Create Quote
         </Title>
         <Text c="dimmed">Share quotes and help the community</Text>
-        <CreateProjectForm />
+        <CreateQuoteForm />
       </Paper>
     </Container>
   );

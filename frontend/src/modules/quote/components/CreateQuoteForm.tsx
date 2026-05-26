@@ -14,11 +14,13 @@ import { CategorySelect } from "@/components/CategorySelect";
 import { CreateQuoteDto, createQuoteSchema } from "@/schema";
 import { FormNumberInput } from "@/components/FormNumberInput";
 import { SuburbSelect } from "@/components/SuburbSelect";
+import { useCreateQuoteMutation } from "@/service/quote";
 
 type CreateQuoteFormValues = z.input<typeof createQuoteSchema>;
 
-export const CreateProjectForm = () => {
+export const CreateQuoteForm = () => {
   const router = useRouter();
+  const { mutateAsync: createQuote } = useCreateQuoteMutation();
 
   const form = useForm<CreateQuoteFormValues, unknown, CreateQuoteDto>({
     defaultValues: {
@@ -29,15 +31,21 @@ export const CreateProjectForm = () => {
       price: 0,
       suburb_id: "",
       completed: false,
-
       category_id: NaN,
     },
     resolver: zodResolver(createQuoteSchema),
     mode: "onSubmit",
   });
 
-  const handleSubmit = async () => {
-    router.push("/user/my-quotes");
+  const handleSubmit = async (data: CreateQuoteDto) => {
+    try {
+      console.log("Submitting quote with data:", data);
+      await createQuote(data);
+      router.push("/quote/list");
+    } catch (error) {
+      console.error("Error creating quote:", error);
+      // Handle error (e.g., show notification)
+    }
   };
 
   const { field: completedField } = useController({

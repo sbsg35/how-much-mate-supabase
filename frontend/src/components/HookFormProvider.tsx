@@ -25,7 +25,11 @@ export const HookFormProvider = <
 }: HookFormProviderProps<TFieldValues, TContext, TTransformedValues>) => {
   return (
     <FormProvider {...form}>
-      {debug && <DebugJson data={form.watch()} />}
+      {debug && (
+        <DebugJson
+          data={{ data: form.watch(), errors: form.formState.errors }}
+        />
+      )}
 
       {children}
     </FormProvider>

@@ -55,36 +55,42 @@ export type Database = {
         Row: {
           business_name: string | null
           category_id: number | null
+          completed: boolean | null
           created_at: string
           description: string | null
           metadata: Json | null
           price: number | null
           profile_id: string | null
-          quote_id: number
+          quote_date: string | null
+          quote_id: string
           suburb_id: string | null
           title: string | null
         }
         Insert: {
           business_name?: string | null
           category_id?: number | null
+          completed?: boolean | null
           created_at?: string
           description?: string | null
           metadata?: Json | null
           price?: number | null
           profile_id?: string | null
-          quote_id?: number
+          quote_date?: string | null
+          quote_id?: string
           suburb_id?: string | null
           title?: string | null
         }
         Update: {
           business_name?: string | null
           category_id?: number | null
+          completed?: boolean | null
           created_at?: string
           description?: string | null
           metadata?: Json | null
           price?: number | null
           profile_id?: string | null
-          quote_id?: number
+          quote_date?: string | null
+          quote_id?: string
           suburb_id?: string | null
           title?: string | null
         }
