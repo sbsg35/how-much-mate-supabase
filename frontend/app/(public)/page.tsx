@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { QuoteListPage } from "@/modules/quote/QuoteListPage";
-import { getPublicQuotes } from "@/service/quote";
+import { getPublicQuotes } from "@/service/admin-quote";
 
 import {
   PublicQuotesSearchDto,
