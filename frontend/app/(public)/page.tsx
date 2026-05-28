@@ -1,12 +1,12 @@
 import { Metadata } from "next";
+import { QuoteListPage } from "@/modules/quote/QuoteListPage";
+import { getPublicQuotes } from "@/service/quote";
 
 import {
   PublicQuotesSearchDto,
   AUState,
   publicQuotesSearchSchema,
 } from "@/schema";
-import { createSsrClient } from "@/supabase/server";
-import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "How Much Mate - Find Quotes",
@@ -18,8 +18,45 @@ export default async function Home({
 }: {
   searchParams: Promise<PublicQuotesSearchDto>;
 }) {
-  const serverClient = createSsrClient(cookies());
-  const { data } = await serverClient.from("suburb").select("*").limit(1);
+  // Parse search parameters
+  const query = await searchParams;
 
-  return <pre>{JSON.stringify(data, null, 2)}</pre>;
+  const {
+    page,
+    search_type,
+    state,
+    keyword,
+    category_id,
+    suburb_id,
+    radius_km,
+    limit,
+  } = publicQuotesSearchSchema.parse(query);
+
+  // Fetch quotes server-side
+  const response = await getPublicQuotes({
+    page,
+    limit,
+    keyword,
+    search_type,
+    state,
+    category_id,
+    suburb_id,
+    radius_km,
+  });
+  const { quotes, has_more } = response.data;
+
+  return (
+    <QuoteListPage
+      quotes={quotes}
+      page={page}
+      keyword={keyword}
+      search_type={search_type}
+      state={state as AUState}
+      limit={limit}
+      category_id={category_id}
+      suburb_id={suburb_id}
+      radius_km={radius_km}
+      has_more={has_more}
+    />
+  );
 }

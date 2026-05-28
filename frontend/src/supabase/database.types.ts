@@ -57,42 +57,48 @@ export type Database = {
           category_id: number | null
           completed: boolean | null
           created_at: string
-          description: string | null
+          description: string
           metadata: Json | null
           price: number | null
           profile_id: string | null
           quote_date: string | null
           quote_id: string
+          search_tsv: unknown
+          status: string
           suburb_id: string | null
-          title: string | null
+          title: string
         }
         Insert: {
           business_name?: string | null
           category_id?: number | null
           completed?: boolean | null
           created_at?: string
-          description?: string | null
+          description: string
           metadata?: Json | null
           price?: number | null
           profile_id?: string | null
           quote_date?: string | null
           quote_id?: string
+          search_tsv?: unknown
+          status?: string
           suburb_id?: string | null
-          title?: string | null
+          title: string
         }
         Update: {
           business_name?: string | null
           category_id?: number | null
           completed?: boolean | null
           created_at?: string
-          description?: string | null
+          description?: string
           metadata?: Json | null
           price?: number | null
           profile_id?: string | null
           quote_date?: string | null
           quote_id?: string
+          search_tsv?: unknown
+          status?: string
           suburb_id?: string | null
-          title?: string | null
+          title?: string
         }
         Relationships: [
           {
@@ -156,7 +162,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      find_published_quotes: {
+        Args: {
+          p_category_id?: number
+          p_keyword?: string
+          p_limit?: number
+          p_page?: number
+          p_radius_km?: number
+          p_search_type?: string
+          p_state?: string
+          p_suburb_id?: string
+        }
+        Returns: {
+          category: Json
+          quote: Json
+          suburb: Json
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
