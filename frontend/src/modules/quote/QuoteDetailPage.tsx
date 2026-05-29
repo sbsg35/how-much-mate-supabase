@@ -8,14 +8,16 @@ import {
 } from "@tabler/icons-react";
 import { CentredContainer } from "@/components/CentredContainer";
 import { BackLink } from "@/components/BackLink";
+import { ShareButtons } from "@/components/ShareButtons";
 import { Quote } from "@/service/admin-quote";
 import { timeAgo } from "@/lib/date";
 
 interface QuoteDetailPageProps {
   quote: Quote;
+  shareUrl: string;
 }
 
-export const QuoteDetailPage = ({ quote }: QuoteDetailPageProps) => {
+export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
   const formattedDate = quote.created_at
     ? timeAgo(quote.created_at)
     : "Recently";
@@ -92,6 +94,8 @@ export const QuoteDetailPage = ({ quote }: QuoteDetailPageProps) => {
             </Group>
           )}
         </Stack>
+
+        <ShareButtons title={quote.title} shareUrl={shareUrl} />
       </CentredContainer>
     </>
   );
