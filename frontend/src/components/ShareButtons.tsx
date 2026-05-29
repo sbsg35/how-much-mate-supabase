@@ -16,12 +16,13 @@ type ShareButtonsProps = {
 
 export const ShareButtons = ({ title, shareUrl }: ShareButtonsProps) => {
   const [copied, setCopied] = useState(false);
+  const shareMessage = `Check out this quote: ${title}`;
 
   const handleNativeShare = async () => {
     if (navigator.share) {
       await navigator.share({
         title,
-        text: title,
+        text: shareMessage,
         url: shareUrl,
       });
       return;
@@ -38,7 +39,7 @@ export const ShareButtons = ({ title, shareUrl }: ShareButtonsProps) => {
     window.setTimeout(() => setCopied(false), 1500);
   };
 
-  const shareText = encodeURIComponent(`${title} on How Much Mate`);
+  const shareText = encodeURIComponent(`${shareMessage} on How Much Mate`);
   const encodedShareUrl = encodeURIComponent(shareUrl);
 
   return (

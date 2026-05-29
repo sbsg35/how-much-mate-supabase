@@ -18,10 +18,21 @@ export async function generateMetadata({
     const response = await getQuoteById(p.id);
 
     const quote = response.data;
+    const description = `Check out this quote from ${quote.business_name} on How Much Mate. ${quote.description.substring(0, 140)}`;
 
     return {
-      title: `${quote.title} - How Much Mate`,
-      description: quote.description.substring(0, 160),
+      title: `Check out this quote: ${quote.title}`,
+      description,
+      openGraph: {
+        title: `Check out this quote: ${quote.title}`,
+        description,
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `Check out this quote: ${quote.title}`,
+        description,
+      },
     };
   } catch {
     return {
