@@ -15,9 +15,9 @@ import { FormTextInput } from "@/components/FormTextInput";
 import { FormSelect } from "@/components/FormSelect";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { FormRadioGroup } from "@/components/FormRadioGroup";
-import { CategorySelect } from "./CategorySelect";
 import { useMediaQuery } from "@mantine/hooks";
 import { SuburbSelect } from "@/components/SuburbSelect";
+import { CategorySelect } from "@/components/CategorySelect";
 
 const AUSTRALIAN_STATES = [
   { value: "ACT", label: "Australian Capital Territory" },
