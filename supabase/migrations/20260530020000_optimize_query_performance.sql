@@ -95,3 +95,8 @@ create index if not exists idx_quote_suburb_id_published
 -- State queries (s.state = p_state) previously required a sequential scan.
 create index if not exists idx_suburb_state
   on public.suburb (state);
+
+
+
+-- Cleanup: Remove the original search_tsv index which is no longer needed and was causing overhead without providing any benefit for the optimized queries.
+drop index if exists public.quote_search_tsv_idx;

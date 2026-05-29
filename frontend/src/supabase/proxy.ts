@@ -8,14 +8,14 @@ const authRoutes = [
   "/auth/callback",
 ];
 
-const publicRoutes = ["/", "/random", ...authRoutes];
+const protectedRoutes = ["/user/profile", "/user/settings"];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
   const pathname = request.nextUrl.pathname;
-  const isPublicRoute = publicRoutes.some(
+  const isProtectedRoute = protectedRoutes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
@@ -53,7 +53,7 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-  if (!isPublicRoute && !user) {
+  if (isProtectedRoute && !user) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";

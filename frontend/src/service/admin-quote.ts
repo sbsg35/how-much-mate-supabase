@@ -80,3 +80,23 @@ export async function getPublicQuotes({
     },
   };
 }
+
+export async function getQuoteById(quote_id: string): Promise<{ data: Quote }> {
+  const { data, error } = await supabaseAdminServerClient()
+    .from("quote")
+    .select(
+      `
+        *,
+        category:category_id (category_id, name, slug),
+        suburb:suburb_id (suburb_id, locality, postcode, state)
+      `,
+    )
+    .eq("quote_id", quote_id)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { data: data as Quote };
+}
