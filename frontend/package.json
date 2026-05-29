@@ -14,7 +14,7 @@
     "push:local": ""
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
+    "@hookform/resolvers": "^5.4.0",
     "@mantine/core": "^9.0.0",
     "@mantine/dropzone": "^9.0.0",
     "@mantine/form": "^9.0.0",
@@ -23,7 +23,7 @@
     "@mantine/notifications": "^9.0.0",
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.101.1",
-    "@tabler/icons-react": "^3.41.1",
+    "@tabler/icons-react": "^3.44.0",
     "@tanstack/react-query": "^5.100.14",
     "lodash": "^4.18.1",
     "next": "16.2.1",

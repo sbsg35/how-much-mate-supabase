@@ -1,7 +1,7 @@
 import { formatCurrency } from "@/lib/text";
 import { Flex, Badge, Text } from "@mantine/core";
 import { IconCheck, IconCurrencyDollar } from "@tabler/icons-react";
-import React, { FC } from "react";
+import { FC } from "react";
 
 export const PriceBadge: FC<{ completed: boolean; price: string }> = ({
   completed,
@@ -15,7 +15,7 @@ export const PriceBadge: FC<{ completed: boolean; price: string }> = ({
         </Text>
         <Badge
           variant="light"
-          color={completed ? "green.9" : "orange.9"}
+          color={completed ? "green" : "orange"}
           leftSection={
             completed ? (
               <IconCheck size="12" />
@@ -24,7 +24,7 @@ export const PriceBadge: FC<{ completed: boolean; price: string }> = ({
             )
           }
         >
-          {completed ? "Paid" : "Quoted"}
+          Job {completed ? "completed" : "quoted"}
         </Badge>
       </Flex>
     </Flex>
