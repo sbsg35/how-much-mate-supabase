@@ -146009,7 +146009,7 @@ INSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at, raw_u
 VALUES (
   gen_random_uuid(),
   'user@example.com',
-  crypt('password123', gen_salt('bf')),
+  extensions.crypt('password123', extensions.gen_salt('bf')),
   now(),
   '{"first_name": "Demo"}'
 );
