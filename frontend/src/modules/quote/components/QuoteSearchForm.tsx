@@ -8,7 +8,7 @@ import {
 } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HookFormProvider } from "@/components/HookFormProvider";
-import { Accordion, CloseButton, Group, Radio, Stack } from "@mantine/core";
+import { Accordion, Button, CloseButton, Group, Radio, Stack } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FormTextInput } from "@/components/FormTextInput";
@@ -35,6 +35,18 @@ const SORT_OPTIONS = [
   { value: "price_low", label: "Price: low to high" },
   { value: "price_high", label: "Price: high to low" },
 ];
+
+const CLEAR_SEARCH_VALUES: PublicQuotesSearchDto = {
+  page: 1,
+  limit: 10,
+  keyword: undefined,
+  sort_by: "newest",
+  search_type: "state",
+  state: null,
+  category_id: undefined,
+  suburb_id: null,
+  radius_km: null,
+};
 
 const FormWrapper = ({ children }: { children: React.ReactNode }) => {
   const isMounted = useMounted();
@@ -78,6 +90,11 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
     mode: "onSubmit",
     resolver: zodResolver(publicQuotesSearchSchema),
   });
+
+  const handleClear = () => {
+    form.reset(CLEAR_SEARCH_VALUES);
+    router.push("/");
+  };
 
   const handleSubmit = (data: PublicQuotesSearchDto) => {
     const {
@@ -248,7 +265,10 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
               />
             </>
           )}
-          <Group>
+          <Group grow>
+            <Button mt="md" variant="default" onClick={handleClear}>
+              Clear filters
+            </Button>
             <FormSubmitButton mt="md" fullWidth variant="outline">
               Search
             </FormSubmitButton>
