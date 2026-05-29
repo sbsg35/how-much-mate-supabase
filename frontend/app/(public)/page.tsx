@@ -23,6 +23,7 @@ export default async function Home({
 
   const {
     page,
+    sort_by,
     search_type,
     state,
     keyword,
@@ -37,6 +38,7 @@ export default async function Home({
     page,
     limit,
     keyword,
+    sort_by,
     search_type,
     state,
     category_id,
@@ -50,6 +52,7 @@ export default async function Home({
       quotes={quotes}
       page={page}
       keyword={keyword}
+      sort_by={sort_by}
       search_type={search_type}
       state={state as AUState}
       limit={limit}

@@ -91,13 +91,21 @@ export type RadiusKm = (typeof RADIUS_OPTIONS)[number];
 
 const SEARCH_TYPES = ["state", "suburb"] as const;
 
+const PUBLIC_QUOTES_SORT_VALUES = [
+  "newest",
+  "price_low",
+  "price_high",
+] as const;
+
 export type SearchType = (typeof SEARCH_TYPES)[number];
+export type PublicQuotesSortBy = (typeof PUBLIC_QUOTES_SORT_VALUES)[number];
 
 // Schema for public quotes search
 export const publicQuotesSearchSchema = object({
   page: coerce.number().int().positive().default(1),
   limit: coerce.number().int().positive().max(20).default(10),
   keyword: stringTrimmed().optional(),
+  sort_by: z.enum(PUBLIC_QUOTES_SORT_VALUES).default("newest"),
   search_type: z.enum(SEARCH_TYPES).default("state"),
   state: z.enum(AU_STATES).optional().nullable(),
   category_id: coerce.number().int().positive().optional(),

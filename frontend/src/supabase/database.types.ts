@@ -170,6 +170,7 @@ export type Database = {
           p_page?: number
           p_radius_km?: number
           p_search_type?: string
+          p_sort_by?: string
           p_state?: string
           p_suburb_id?: string
         }

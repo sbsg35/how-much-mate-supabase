@@ -146021,12 +146021,6 @@ INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encryp
 	('00000000-0000-0000-0000-000000000000', '77a13489-2096-408d-8cdb-7b90b5ac1cf8', 'authenticated', 'authenticated', 'dywyhixy@gmail.com', '$2a$10$rz2y9Rt/vy/7XLDzCBhlyeabjyAZ5FRStUxkEcoZI/Z.mnJ92bMam', '2026-05-29 18:02:08.793025+00', NULL, '', '2026-05-29 18:02:02.298747+00', '', NULL, '', '', NULL, '2026-05-29 18:02:08.796491+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "77a13489-2096-408d-8cdb-7b90b5ac1cf8", "email": "dywyhixy@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-05-29 18:02:02.292143+00', '2026-05-29 18:02:08.79826+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
 
-INSERT INTO "public"."profile" ("profile_id", "created_at", "username", "email") VALUES
-	('6ca0b796-ea2c-4c7f-aac1-2a1cca6a0f66', '2026-05-29 18:01:50.655759+00', NULL, 'hisemozif@gmail.com'),
-	('77a13489-2096-408d-8cdb-7b90b5ac1cf8', '2026-05-29 18:02:02.291915+00', NULL, 'dywyhixy@gmail.com');
-
-
-
 DO $$
 DECLARE
     v_profile_id uuid;

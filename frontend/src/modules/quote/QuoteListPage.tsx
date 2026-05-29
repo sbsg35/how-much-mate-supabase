@@ -26,6 +26,7 @@ export const QuoteListPage = ({
   quotes,
   page,
   keyword,
+  sort_by,
   search_type,
   state,
   limit,
@@ -50,6 +51,7 @@ export const QuoteListPage = ({
               omitBy(
                 {
                   keyword,
+                  sort_by,
                   search_type,
                   state: state as AUState,
                   page,

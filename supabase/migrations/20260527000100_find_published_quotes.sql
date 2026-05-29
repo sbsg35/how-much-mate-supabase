@@ -1,4 +1,4 @@
-create or replace function public.find_published_quotes(
+ create or replace function public.find_published_quotes(
   p_page integer default 1,
   p_limit integer default 10,
   p_keyword text default null,
@@ -6,7 +6,8 @@ create or replace function public.find_published_quotes(
   p_state text default null,
   p_category_id bigint default null,
   p_suburb_id varchar default null,
-  p_radius_km integer default null
+  p_radius_km integer default null,
+  p_sort_by text default 'newest'
 )
 returns table (
   quote jsonb,
@@ -56,7 +57,10 @@ as $$
           true
       end
     )
-  order by q.created_at desc
+  order by
+    case when p_sort_by = 'price_low' then q.price end asc,
+    case when p_sort_by = 'price_high' then q.price end desc,
+    q.created_at desc
   limit (p_limit + 1)
   offset greatest((p_page - 1) * p_limit, 0);
 $$;
@@ -69,5 +73,6 @@ grant execute on function public.find_published_quotes(
   text,
   bigint,
   varchar,
-  integer
+  integer,
+  text
 ) to anon, authenticated;

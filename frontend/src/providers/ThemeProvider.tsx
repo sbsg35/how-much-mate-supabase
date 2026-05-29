@@ -48,6 +48,9 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
         colors: {
           hmw,
         },
+        other: {
+          containerSizes: CONTAINER_SIZES,
+        },
         components: {
           Container: Container.extend({
             vars: (_, { size, fluid }) => ({

@@ -1,6 +1,6 @@
 "use client";
 import { FC } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import {
   PublicQuotesSearchDto,
   publicQuotesSearchSchema,
@@ -15,7 +15,7 @@ import { FormTextInput } from "@/components/FormTextInput";
 import { FormSelect } from "@/components/FormSelect";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { FormRadioGroup } from "@/components/FormRadioGroup";
-import { useMediaQuery } from "@mantine/hooks";
+import { useMediaQuery, useMounted } from "@mantine/hooks";
 import { SuburbSelect } from "@/components/SuburbSelect";
 import { CategorySelect } from "@/components/CategorySelect";
 
@@ -30,8 +30,20 @@ const AUSTRALIAN_STATES = [
   { value: "NT", label: "Northern Territory" },
 ];
 
+const SORT_OPTIONS = [
+  { value: "newest", label: "Date created: newest to oldest" },
+  { value: "price_low", label: "Price: low to high" },
+  { value: "price_high", label: "Price: high to low" },
+];
+
 const FormWrapper = ({ children }: { children: React.ReactNode }) => {
+  const isMounted = useMounted();
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+
+  if (!isMounted) {
+    return <div>{children}</div>;
+  }
+
   if (isDesktop) {
     return (
       <div
@@ -68,8 +80,15 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
   });
 
   const handleSubmit = (data: PublicQuotesSearchDto) => {
-    const { keyword, search_type, state, category_id, suburb_id, radius_km } =
-      data;
+    const {
+      keyword,
+      sort_by,
+      search_type,
+      state,
+      category_id,
+      suburb_id,
+      radius_km,
+    } = data;
 
     // Build the search URL by cloning existing search params
     const params = new URLSearchParams(searchParams);
@@ -78,6 +97,12 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
       params.delete("keyword");
     } else {
       params.set("keyword", keyword.trim());
+    }
+
+    if (sort_by === "newest") {
+      params.delete("sort_by");
+    } else {
+      params.set("sort_by", sort_by);
     }
 
     // Set search_type
@@ -137,7 +162,14 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
     }
   };
 
-  const searchType = form.watch("search_type");
+  const searchType = useWatch({
+    control: form.control,
+    name: "search_type",
+  });
+  const keywordValue = useWatch({
+    control: form.control,
+    name: "keyword",
+  });
 
   return (
     <FormWrapper>
@@ -158,7 +190,7 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
                     aria-label="Clear input"
                     onClick={() => form.setValue("keyword", "")}
                     style={{
-                      display: form.watch("keyword") ? undefined : "none",
+                      display: keywordValue ? undefined : "none",
                     }}
                   />
                 </>
@@ -169,6 +201,12 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
           <CategorySelect
             name="category_id"
             label="Filter by category"
+            mt="md"
+          />
+          <FormSelect
+            label="Sort by"
+            data={SORT_OPTIONS}
+            name="sort_by"
             mt="md"
           />
           <FormRadioGroup
