@@ -22,6 +22,18 @@ Reference: https://www.youtube.com/watch?v=BceVcpiOlKM
 - `npx supabase link --project-ref <project ref>` - Connect local folder to remote project (enables running migrations, functions, etc. on production)
 - `npx supabase db remote set <connection string>` - Connect cloud database to local (optional)
 
+### Getting migration status
+
+- `npx supabase db remote status` - Shows the status of local vs remote migrations (which ones are pending, etc.)
+
+### Unlink
+
+- `npx supabase unlink` - Disconnect local from remote project (useful if you want to connect to a different project or just work locally without affecting production)
+
+### Get status of remote project
+
+- `npx supabase status` - Shows connection status and environment variables for the linked project
+
 ## Database Migrations
 
 The recommended workflow is to create and test migrations locally, then push them to the remote project once verified. This ensures that you can iterate quickly without affecting production data until you're ready.
@@ -70,3 +82,25 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
 ## Quirks
 
 - If you turn off email_confirmations, the user created prior that didn't verify their email will be stuck, since their status is not verified.
+
+## Pushing to dev
+
+```
+# check local vs remote migration status
+npx supabase migration list
+
+# push local migrations to remote with dry run first to check for errors
+npx supabase db push --dry-run
+
+# push local migrations to remote
+npx supabase db push
+
+# include seed
+npx supabase db push --with-seed
+
+# check local vs remote migration status again to confirm
+npx supabase migration list
+
+# push the seed file
+
+```

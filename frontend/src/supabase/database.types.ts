@@ -53,51 +53,51 @@ export type Database = {
       }
       quote: {
         Row: {
-          business_name: string | null
+          business_name: string
           category_id: number | null
-          completed: boolean | null
+          completed: boolean
           created_at: string
           description: string
           metadata: Json | null
-          price: number | null
-          profile_id: string | null
-          quote_date: string | null
+          price: number
+          profile_id: string
+          quote_date: string
           quote_id: string
           search_tsv: unknown
           status: string
-          suburb_id: string | null
+          suburb_id: string
           title: string
         }
         Insert: {
-          business_name?: string | null
+          business_name: string
           category_id?: number | null
-          completed?: boolean | null
+          completed?: boolean
           created_at?: string
           description: string
           metadata?: Json | null
-          price?: number | null
-          profile_id?: string | null
-          quote_date?: string | null
+          price: number
+          profile_id: string
+          quote_date: string
           quote_id?: string
           search_tsv?: unknown
           status?: string
-          suburb_id?: string | null
+          suburb_id: string
           title: string
         }
         Update: {
-          business_name?: string | null
+          business_name?: string
           category_id?: number | null
-          completed?: boolean | null
+          completed?: boolean
           created_at?: string
           description?: string
           metadata?: Json | null
-          price?: number | null
-          profile_id?: string | null
-          quote_date?: string | null
+          price?: number
+          profile_id?: string
+          quote_date?: string
           quote_id?: string
           search_tsv?: unknown
           status?: string
-          suburb_id?: string | null
+          suburb_id?: string
           title?: string
         }
         Relationships: [

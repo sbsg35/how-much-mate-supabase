@@ -10,7 +10,9 @@
     "supabase:restart": "npm run email:build && supabase stop && supabase start",
     "email:build": "mkdir -p supabase/templates && mjml supabase/templates/src/magic-link.mjml -o supabase/templates/magic-link.html && mjml supabase/templates/src/confirmation.mjml -o supabase/templates/confirmation.html",
     "email:watch": "mjml -w supabase/templates/src/magic-link.mjml -o supabase/templates/magic-link.html",
-    "email:watch:confirmation": "mjml -w supabase/templates/src/confirmation.mjml -o supabase/templates/confirmation.html"
+    "email:watch:confirmation": "mjml -w supabase/templates/src/confirmation.mjml -o supabase/templates/confirmation.html",
+    "link:dev": "supabase link --project-ref ghhzavhcgldjqdanjxgp",
+    "link:local": "supabase link --project-ref gbfbpochuudzenlocfll"
   },
   "repository": {
     "type": "git",

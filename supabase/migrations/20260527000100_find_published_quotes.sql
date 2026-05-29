@@ -17,7 +17,7 @@ language sql
 stable
 as $$
   with search_suburb as (
-    select s0.position::geography as search_position
+    select s0.position::extensions.geography as search_position
     from public.suburb s0
     where s0.suburb_id = p_suburb_id
   )
@@ -43,8 +43,8 @@ as $$
     and (
       case
         when p_suburb_id is not null and p_radius_km is not null then
-          st_dwithin(
-            s.position::geography,
+          extensions.st_dwithin(
+            s.position::extensions.geography,
             (select search_position from search_suburb),
             (p_radius_km * 1000)::double precision
           )

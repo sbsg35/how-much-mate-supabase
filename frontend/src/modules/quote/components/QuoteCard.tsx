@@ -51,7 +51,7 @@ export const QuoteCard: React.FC<QuoteCardProps> = ({
         </Text>
       </Stack>
 
-      <PriceBadge completed={completed} price={price} />
+      <PriceBadge completed={completed} price={price.toString()} />
 
       <Divider mb="sm" />
 
