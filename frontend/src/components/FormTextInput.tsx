@@ -45,6 +45,7 @@ export const FormTextInput = ({
       description={helperText}
       {...labelProps}
       {...field}
+      value={field.value ?? ""}
       onChange={handleChange}
     />
   );
