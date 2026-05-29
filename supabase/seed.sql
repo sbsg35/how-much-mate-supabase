@@ -145999,3 +145999,204 @@ VALUES
     ('Translation Services', 'translation-services'),
     ('Consulting Services', 'consulting-services'),
     ('Real Estate Services', 'real-estate-services');
+
+
+    -- CREATE SEED USER
+
+-- Example seed.sql snippet
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+INSERT INTO auth.users (id, email, encrypted_password, email_confirmed_at, raw_user_meta_data)
+VALUES (
+  gen_random_uuid(),
+  'user@example.com',
+  crypt('password123', gen_salt('bf')),
+  now(),
+  '{"first_name": "Demo"}'
+);
+
+
+
+INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
+	('00000000-0000-0000-0000-000000000000', '6ca0b796-ea2c-4c7f-aac1-2a1cca6a0f66', 'authenticated', 'authenticated', 'hisemozif@gmail.com', '$2a$10$iIr0/1/dQqv8vKSilqnweu6Xo542xIpwxh.UuBSSiCKE8cia3.S6K', '2026-05-29 18:01:56.650715+00', NULL, '', '2026-05-29 18:01:50.665965+00', '', NULL, '', '', NULL, '2026-05-29 18:01:56.653303+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "6ca0b796-ea2c-4c7f-aac1-2a1cca6a0f66", "email": "hisemozif@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-05-29 18:01:50.656024+00', '2026-05-29 18:01:56.655754+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
+	('00000000-0000-0000-0000-000000000000', '77a13489-2096-408d-8cdb-7b90b5ac1cf8', 'authenticated', 'authenticated', 'dywyhixy@gmail.com', '$2a$10$rz2y9Rt/vy/7XLDzCBhlyeabjyAZ5FRStUxkEcoZI/Z.mnJ92bMam', '2026-05-29 18:02:08.793025+00', NULL, '', '2026-05-29 18:02:02.298747+00', '', NULL, '', '', NULL, '2026-05-29 18:02:08.796491+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "77a13489-2096-408d-8cdb-7b90b5ac1cf8", "email": "dywyhixy@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-05-29 18:02:02.292143+00', '2026-05-29 18:02:08.79826+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
+
+
+INSERT INTO "public"."profile" ("profile_id", "created_at", "username", "email") VALUES
+	('6ca0b796-ea2c-4c7f-aac1-2a1cca6a0f66', '2026-05-29 18:01:50.655759+00', NULL, 'hisemozif@gmail.com'),
+	('77a13489-2096-408d-8cdb-7b90b5ac1cf8', '2026-05-29 18:02:02.291915+00', NULL, 'dywyhixy@gmail.com');
+
+
+
+DO $$
+DECLARE
+    v_profile_id uuid;
+    -- Updated suburb IDs as per requirements
+    suburb_ids text[] := ARRAY['4483', '9029', '4622', '4659', '4694', '8458', '5000', '4747', '1118'];
+    
+    current_suburb text;
+    quote_data record;
+BEGIN
+    -- Get the first profile created by the auth user seed above
+    SELECT profile_id INTO v_profile_id FROM public.profile LIMIT 1;
+    
+    IF v_profile_id IS NULL THEN
+        RAISE EXCEPTION 'No profile found in database. Please create a user first.';
+    END IF;
+
+    -- Loop through each suburb and insert quotes
+    FOR current_suburb IN SELECT unnest(suburb_ids) LOOP
+        -- Insert quotes for each category with realistic data
+        FOR quote_data IN SELECT * FROM (VALUES
+        -- Category 1: Plumbing
+        (1, 'Unblock toilet - residential', 'Emergency plumbing service to unblock a blocked toilet in residential property. Plumber arrived within 1 hour, cleared the blockage using professional equipment, and ensured everything was working properly. Very clean and professional service with no mess left behind. The plumber also checked other drains to prevent future issues.', 'Swift Plumbing Solutions', 150, 350),
+        (1, 'Fix leaking tap in kitchen', 'Kitchen tap was dripping constantly. Plumber replaced worn washers and O-rings, checked water pressure, and tested for any other leaks. Job completed in under an hour with quality replacement parts. Professional service and reasonable pricing.', 'Metro Plumbing Experts', 120, 280),
+        (1, 'Hot water system repair', 'Hot water system stopped working completely. Technician diagnosed faulty thermostat and heating element. Replaced both parts and restored hot water within 2 hours. Excellent service and explained everything clearly.', 'Aqua Flow Plumbing', 350, 650),
+        (1, 'Burst pipe emergency repair', 'Burst pipe in the wall causing water damage. Emergency call-out service responded quickly, isolated the leak, cut out damaged section and installed new copper piping. Professional work and cleaned up thoroughly afterwards.', 'Emergency Plumbing 24/7', 450, 850),
+        
+        -- Category 2: Electrical
+        (2, 'Install new powerpoint in living room', 'Had a new double powerpoint installed in the living room for additional appliances. Electrician ran new cabling through the wall cavity, installed the outlet, tested all connections and cleaned up. Professional job with all work certified and compliant with AS/NZS 3000 standards. Very happy with the neat installation.', 'Bright Spark Electrical', 180, 320),
+        (2, 'Add powerpoint in home office', 'Needed extra power outlets for home office setup with multiple computers and monitors. Electrician installed two new double powerpoints, upgraded the circuit breaker, and provided a certificate of compliance. Excellent workmanship and very tidy installation.', 'Power Plus Electricians', 200, 380),
+        (2, 'Install ceiling fan with light', 'Ceiling fan with integrated light fixture installed in master bedroom. Electrician removed old light fitting, installed new fan mounting bracket, wired everything properly and tested all functions. Fan runs quietly and looks great.', 'Elite Electrical Services', 280, 450),
+        (2, 'Replace switchboard to modern safety switch', 'Old ceramic fuse switchboard upgraded to modern circuit breaker panel with safety switches (RCDs). Full electrical inspection conducted, all circuits tested, and compliance certificate issued. Professional installation that brings the house up to current safety standards.', 'SafeHome Electrical', 1200, 2200),
+        
+        -- Category 3: Roofing
+        (3, 'Paint roof for 3 bedroom house', 'Complete roof painting service for 3 bedroom Colorbond house approximately 150sqm. High-pressure cleaning of all roof surfaces, treatment of any rust spots, application of roof primer and two coats of premium Dulux roof paint in Surfmist. Roof looks brand new and should last 10+ years. Includes 5 year warranty on workmanship.', 'Premier Roof Painting', 3500, 5500),
+        (3, 'Roof restoration and painting', 'Full roof restoration including repairs to damaged tiles, repointing of ridge capping, pressure cleaning, sealing and painting with premium roof membrane paint. Terracotta tiles restored to like-new condition. Professional team completed the job in 3 days with minimal disruption.', 'Apex Roofing Solutions', 4200, 6800),
+        (3, 'Fix roof leak and replace tiles', 'Roof was leaking in heavy rain. Roofer located damaged tiles in valley area, replaced 15 broken terracotta tiles, resealed valley flashing and tested with water. No more leaks and excellent attention to detail.', 'Guardian Roof Repairs', 450, 850),
+        (3, 'Repaint Colorbond roof', 'Colorbond roof showing signs of fading and chalking. Professional roof painting with specialized Colorbond paint system. High pressure wash, rust treatment, primer coat and two topcoats. Roof looks fantastic and color warranty provided.', 'Colorbond Roof Specialists', 3800, 6200),
+        
+        -- Category 4: Carpentry
+        (4, 'Install double glazed windows for 3 bedroom house', 'Complete window replacement for entire 3 bedroom house (12 windows total). Old aluminum windows removed and replaced with high-quality double glazed uPVC windows featuring Low-E glass for excellent thermal and acoustic insulation. Each window custom-measured and professionally installed with proper sealing and flashing. Energy efficiency rating of 5 stars. Makes a huge difference to temperature control and outside noise. Includes 10 year manufacturer warranty.', 'Premium Window Solutions', 9500, 15000),
+        (4, 'Double glazing retrofit for living areas', 'Retrofitted 6 existing windows with double glazing units in living room and dining areas. Secondary glazing system installed that preserves original window frames. Significant improvement in noise reduction and heat retention. Professional measurement and installation.', 'EcoGlaze Windows', 4500, 7500),
+        (4, 'Custom kitchen cabinetry', 'Full custom kitchen designed and installed with soft-close drawers, quality hinges, and modern handle-less design. Polyurethane finish in crisp white with Caesarstone benchtops. Storage maximized with custom pantry and corner solutions.', 'Master Carpenters & Co', 12000, 22000),
+        (4, 'Wardrobe renovation with new doors', 'Three built-in wardrobes updated with new mirror sliding doors. Old doors removed, new tracks installed, premium quality mirrors with smooth sliding action. Completely transformed the bedrooms.', 'Wardrobe Specialists', 2200, 3800),
+        
+        -- Category 5: Painting
+        (5, 'Interior painting - 3 bedroom house', 'Complete interior repaint of 3 bedroom house including all walls, ceilings, doors and trims. Walls prepared with sugar soap cleaning and minor repairs, two coats of premium Dulux paint throughout. Professional finish with clean lines and no paint spatter.', 'Quality Painters Pro', 4500, 7500),
+        (5, 'Exterior house painting', 'Full exterior house repaint including all weatherboards, fascias, gutters and window frames. Pressure washed, filled cracks, undercoated bare timber and two topcoats of Dulux Weathershield. House looks brand new.', 'Exterior Paint Masters', 6500, 11000),
+        
+        -- Category 6: Tiling
+        (6, 'Bathroom floor tiling', 'Complete bathroom floor retiled with large format porcelain tiles. Old tiles removed, substrate prepared and waterproofed to Australian standards, new tiles laid with precision and grouted with epoxy grout for durability.', 'Precision Tilers', 1800, 3200),
+        (6, 'Kitchen splashback installation', 'Modern subway tile splashback installed in kitchen. Neat cutting around power points and perfect alignment. Finished with matching grout and sealed properly.', 'Metro Tiling Services', 650, 1200),
+        
+        -- Category 7: Flooring  
+        (7, 'Hardwood floor installation', 'Beautiful solid blackbutt hardwood flooring installed throughout living areas (45sqm). Timber acclimatized for one week, professionally laid with precision, sanded and finished with three coats of water-based polyurethane. Absolutely stunning result.', 'Heritage Timber Floors', 5500, 9000),
+        (7, 'Hybrid flooring installation', 'Hybrid vinyl plank flooring installed in all bedrooms and hallway. Waterproof, scratch-resistant and looks like real timber. Quick installation with minimal mess and ready to use immediately.', 'Modern Flooring Co', 3200, 5500),
+        
+        -- Category 8: Concreting
+        (8, 'Concrete slab for shed', 'New 6m x 4m concrete slab poured for garden shed. Site leveled, steel mesh reinforcement installed, 100mm thick concrete with smooth trowel finish. Proper expansion joints and cured correctly. Perfect flat surface ready for shed installation.', 'Solid Concrete Solutions', 2800, 4200),
+        (8, 'Driveway concreting', 'New 40sqm concrete driveway with exposed aggregate finish. Excavation, compacted road base, steel reinforcement, and quality concrete pour. Beautiful decorative finish that will last for decades. Includes 7 year warranty.', 'Premier Concrete Works', 4500, 7500),
+        (8, 'Concrete path around house', 'Garden pathway poured around house perimeter (25 linear meters). Proper fall for drainage, control joints every 2 meters, broom finish for slip resistance. Great access all around the house now.', 'Pathway Concrete Pros', 2200, 3800),
+        
+        -- Category 9: Bricklaying
+        (9, 'Brick retaining wall', 'Sturdy brick retaining wall constructed (8m long x 1.2m high) to level sloping backyard. Proper concrete footing, weep holes for drainage, and reinforcement bars through the wall. Professional bricklaying with perfect mortar lines.', 'Heritage Brickwork', 4800, 7200),
+        (9, 'Brick fence construction', 'New brick fence built along front boundary (12 meters). Double brick construction with decorative capping, built on concrete footing. Matches house brickwork perfectly and provides excellent privacy and security.', 'Boundary Brick Specialists', 6500, 9500),
+        
+        -- Category 10: Waterproofing
+        (10, 'Bathroom waterproofing', 'Complete bathroom waterproofing prior to tiling. Membrane applied to floor and 150mm up walls, floor waste sealed properly, all penetrations sealed. Flood tested for 24 hours - passed perfectly. Comes with 10 year warranty.', 'AquaShield Waterproofing', 1200, 1800),
+        (10, 'Balcony waterproofing', 'Balcony waterproofing with membrane system. Old tiles removed, substrate repaired, waterproof membrane applied with proper detailing to drainage and upstands. Flood tested and certified before new tiles installed.', 'Balcony Seal Experts', 2500, 4000),
+        
+        -- Category 11: Fencing
+        (11, 'Colorbond fence installation', 'New Colorbond fence installed (30 linear meters). Steel posts set in concrete, quality Colorbond panels in Monument color, self-closing gate included. Professional installation and very sturdy fence.', 'Fenceline Contractors', 4200, 6500),
+        (11, 'Timber fence replacement', 'Old timber fence replaced with treated pine paling fence. New posts cemented in, rails and palings installed, capped and stained. Great privacy fence that should last 15+ years.', 'Timber Fence Masters', 3800, 6000),
+        
+        -- Category 12: Decking
+        (12, 'Composite deck construction', 'Beautiful composite deck built (4m x 6m) off living room. Treated pine frame on concrete piers, Trex composite decking boards with hidden fasteners, matching fascia and stainless steel cable balustrade. Low maintenance and looks amazing.', 'Deck Creations', 8500, 13000),
+        (12, 'Timber deck renovation', 'Existing timber deck restored - boards replaced where needed, entire deck sanded and oiled with three coats of Intergrain. Looks brand new again and properly protected.', 'Deck Revival Services', 2800, 4500),
+        
+        -- Category 13: Car Care
+        (13, 'Service Toyota 2014 RAV4', 'Complete major service for Toyota RAV4 2014 model at 90,000km. Engine oil and filter, air filter, cabin filter, brake fluid flush, coolant check, tire rotation, full mechanical inspection and diagnostic scan. All fluids topped up, brakes checked at 70% remaining. Service history stamped and next service due at 105,000km. Professional service using genuine Toyota parts.', 'AutoCare Service Centre', 380, 550),
+        (13, 'Change timing belt BMW X5', 'Timing belt replacement for BMW X5 (N55 engine). Timing belt, tensioner, idler pulleys and water pump all replaced as per BMW service schedule. Serpentine belt also replaced. Engine timing set precisely using BMW diagnostic tools. Complete service includes 2 year warranty on parts and labor. Essential service at 100,000km completed professionally.', 'European Auto Specialists', 1800, 2600),
+        (13, 'Car detailing service', 'Full interior and exterior car detail. Exterior hand wash, clay bar treatment, machine polish, wax protection. Interior vacuum, leather conditioning, dashboard and trim cleaning. Engine bay steam cleaned. Car looks showroom new again.', 'Premium Car Detailing', 280, 450),
+        (13, 'Brake pad replacement', 'Front and rear brake pads and rotors replaced. High-quality brake components used, brake fluid flushed, brakes properly bedded in. Stops perfectly now with no noise or vibration.', 'Brake Service Pros', 650, 950),
+        
+        -- Category 14: Home Maintenance
+        (14, 'Concrete slab repair and leveling', 'Existing concrete slab had subsided and cracked. Concrete leveled using mud jacking technique, cracks repaired with epoxy injection, surface sealed. Cost-effective solution that avoided complete replacement. Slab is now level and structurally sound with 5 year warranty on repairs.', 'Home Maintenance Solutions', 1200, 2200),
+        (14, 'General home maintenance package', 'Comprehensive maintenance including gutter cleaning, smoke alarm testing, tap washer replacement, door adjustments, window track cleaning, and general handyman fixes. Scheduled quarterly to keep home in perfect condition.', 'Complete Home Care', 350, 650),
+        (14, 'Gutter cleaning and repairs', 'All gutters cleaned out, downpipes flushed, minor gutter repairs completed, leaf guard installed in problem areas. Water flow tested to ensure proper drainage.', 'Gutter Guardian Services', 220, 380),
+        
+        -- Category 15: Landscaping & Gardening
+        (15, 'Prune large tree in backyard', 'Large 8 meter tall eucalyptus tree professionally pruned for safety and aesthetics. Dead branches removed, canopy shaped and thinned to reduce wind sail, all debris chipped and removed. Tree looks great and much safer now. Qualified arborist with full insurance and equipment. Complies with local council regulations and preserves tree health.', 'Tree Care Professionals', 650, 1200),
+        (15, 'Backyard landscaping with retaining wall', 'Complete backyard transformation including 12m rendered block retaining wall (1.5m high), raised garden beds, new lawn installation (80sqm), garden path with stepping stones, irrigation system, feature plants and mulching. Design included terracing to create usable flat areas on sloping block. Quality materials and professional landscaping that has completely changed how we use the backyard. Project completed in 2 weeks.', 'Ultimate Landscapes', 18000, 28000),
+        (15, 'Garden makeover with new plants', 'Complete front garden renovation. Old plants removed, garden beds edged with steel edging, new soil and compost added, selection of native plants installed for year-round color, mulched with hardwood mulch. Low maintenance design with drip irrigation.', 'Garden Design Studio', 3500, 6000),
+        (15, 'Lawn installation and landscaping', 'New instant turf laid (100sqm) including soil preparation, level grading, and starter fertilizer. Reticulation system upgraded with new pop-up sprinklers. Lawn is lush and green.', 'Lawn & Landscape Experts', 2800, 4500),
+        (15, 'Hedge trimming and garden tidy', 'All hedges trimmed to neat shape, garden beds weeded, plants pruned, edges defined, mulch topped up. Regular maintenance service to keep garden looking pristine.', 'Garden Care Services', 180, 320),
+        
+        -- Category 16: Cleaning
+        (16, 'Deep clean whole house', 'Professional deep clean of entire house. All rooms thoroughly cleaned including ceiling fans, light fixtures, windows, skirting boards. Kitchen deep cleaned including oven and rangehood. Bathrooms scrubbed and sanitized. House is spotless!', 'Sparkle Clean Home Services', 350, 600),
+        (16, 'End of lease cleaning', 'Complete end of lease clean to real estate standards. Every room detailed, carpets steam cleaned, windows inside and out, oven professionally cleaned. Passed inspection first time.', 'Bond Clean Specialists', 450, 750),
+        
+        -- Category 17: Pest Control
+        (17, 'Termite inspection and treatment', 'Full termite inspection found active termites in boundary fence. Treatment zone installed around house perimeter using Termidor, affected timber in fence replaced. 12 month warranty and annual inspection included.', 'Termite Protection Services', 1800, 2800),
+        (17, 'General pest control treatment', 'Internal and external pest spray for spiders, ants, cockroaches and other crawling insects. Safe for pets and children. 6 month warranty on treatment.', 'Pest Away Solutions', 180, 320),
+        
+        -- Category 18: Security & Automation
+        (18, 'CCTV camera system installation', '8 camera CCTV system installed. 4K cameras with night vision, NVR with 2TB storage, mobile app access, professional cable installation. Complete security coverage of property.', 'SecureHome Systems', 2200, 3800),
+        (18, 'Smart home automation setup', 'Smart home system installed including smart lights, motorized blinds, smart door locks, video doorbell and central hub. Everything controlled from phone app.', 'Home Automation Experts', 3500, 6500),
+        
+        -- Category 19: Appliance Services
+        (19, 'Dishwasher repair', 'Dishwasher not draining properly. Technician found blocked pump, cleaned out food debris, replaced faulty drain pump, tested all cycles. Works perfectly now.', 'Appliance Fix Pros', 180, 320),
+        (19, 'Washing machine repair', 'Washing machine making loud noise during spin cycle. Drum bearings replaced, new suspension springs fitted, door seal replaced. Machine is quiet again and works like new.', 'Whitegoods Repair Centre', 280, 480),
+        
+        -- Category 20: Health & Wellness
+        (20, 'Mobile massage therapy', 'Relaxing 1-hour full body massage in the comfort of home. Therapist brought massage table and oils. Professional deep tissue massage that relieved all tension and knots. Very convenient service.', 'Mobile Massage Therapists', 110, 180),
+        (20, 'Physiotherapy consultation', 'Initial physio assessment for lower back pain, followed by treatment including manual therapy, dry needling and exercise prescription. Significant improvement after first session.', 'Active Physio Services', 95, 150),
+        
+        -- Category 21: Professional Services
+        (21, 'Tax return preparation', 'Individual tax return prepared including rental property deductions, work-related expenses, and investment income. Thorough review of all receipts and deductions to maximize refund. Fast service with tax return lodged electronically and refund received in 2 weeks. Professional advice on tax planning for next financial year.', 'TaxPro Accountants', 150, 350),
+        (21, 'Will preparation service', 'Comprehensive will drafted by experienced solicitor including asset distribution, executor appointment, guardianship provisions for children, and funeral wishes. Legal advice provided on estate planning and tax implications. Document properly witnessed and sealed. Peace of mind that affairs are in order. Includes free updates for 12 months.', 'Estate Planning Lawyers', 450, 850),
+        (21, 'Business accounting services', 'Quarterly BAS lodgement, bookkeeping, GST compliance, PAYG calculations, financial reports. Professional accounting service keeping business compliant and financials in order.', 'Business Accountants Pro', 550, 950),
+        (21, 'Tax return for small business with PAYG', 'Complete tax return preparation for small business including business income and expenses, GST reconciliation, PAYG withholding summary, motor vehicle logbook, home office deductions, and depreciation schedule. Activity statements reviewed and lodged quarterly. Consultation regarding tax-effective business structure and planning for next year. Maximized deductions while ensuring full compliance with ATO requirements.', 'Small Business Tax Advisors', 650, 1200),
+        
+        -- Category 22: Events & Lifestyle
+        (22, 'Wedding planning service', 'Full wedding planning and coordination service. Vendor selection and management, timeline creation, budget tracking, on-day coordination. Perfect wedding day with zero stress.', 'Dream Weddings & Events', 3500, 6500),
+        (22, 'Birthday party setup', 'Complete party setup for 50 people including marquee, tables, chairs, decorations, balloon arrangements, and party equipment. Professional setup and packdown service.', 'Party Perfect Events', 850, 1500),
+        
+        -- Category 23: Pet Services
+        (23, 'Mobile dog wash service at home', 'Complete dog grooming service at home - your dog washed, dried, brushed, nails clipped and ears cleaned in a professional mobile grooming van. Convenient service with warm water hydrobath, premium shampoo and conditioner, thorough dry and brush out. Dog smells amazing and coat looks fantastic. No stress for the dog as they stay at home. Perfect for large dogs or anxious pets who don''t like going to groomers.', 'Pampered Paws Mobile Grooming', 65, 120),
+        (23, 'Dog grooming and styling', 'Full groom for medium-sized dog including bath, blow dry, haircut, nail trim, ear cleaning and cologne. Dog looks and smells wonderful. Professional groomer with gentle handling.', 'Pooch Parlour', 70, 130),
+        (23, 'Pet sitting service', 'Pet sitting for 2 dogs over weekend. Daily walks, feeding, medication administered, lots of play time and company. Sent photos and updates. Dogs were happy and well cared for.', 'Caring Pet Sitters', 55, 95),
+        (23, 'Cat grooming service', 'Long-haired cat groomed including bath, mat removal, brush out, nail trim. Cat much more comfortable without matted fur. Patient and experienced cat groomer.', 'Feline Grooming Specialists', 60, 110),
+        
+        -- Category 24: Trades & Construction
+        (24, 'Bathroom renovation', 'Complete bathroom renovation including removal of old fixtures, new tiles floor to ceiling, frameless glass shower screen, wall-hung vanity, new toilet, exhaust fan. Quality fixtures and professional finish throughout. Project managed from start to finish.', 'Renovations Plus', 15000, 25000),
+        (24, 'Kitchen renovation', 'Full kitchen renovation with custom cabinetry, stone benchtops, new appliances, tiled splashback, and LED downlights. Plumbing and electrical work coordinated. Beautiful modern kitchen completed in 3 weeks.', 'Elite Kitchen Renovations', 25000, 45000),
+        (24, 'Granny flat construction', 'New 60sqm granny flat built with 2 bedrooms, bathroom, kitchenette and living area. Fully compliant with council regulations, quality construction, connections to services. Turn-key solution completed in 4 months.', 'Granny Flat Builders', 85000, 125000)
+    ) AS t(category_id, title, description, business_name, price_min, price_max) LOOP
+        INSERT INTO quote (
+            profile_id,
+            suburb_id,
+            price,
+            business_name,
+            title,
+            description,
+            category_id,
+            completed,
+            status,
+            quote_date,
+            metadata,
+            created_at
+        ) VALUES (
+            v_profile_id,
+            current_suburb,
+            (quote_data.price_min + RANDOM() * (quote_data.price_max - quote_data.price_min))::decimal(10,2),
+            quote_data.business_name,
+            quote_data.title,
+            quote_data.description,
+            quote_data.category_id,
+            RANDOM() > 0.3,
+            'published',
+            CURRENT_DATE - (RANDOM() * 365)::int,
+            jsonb_build_object(
+                'images', jsonb_build_array(),
+                'like_count', (RANDOM() * 50)::int,
+                'dislike_count', (RANDOM() * 10)::int,
+                'seeded', true
+            ),
+            NOW() - (RANDOM() * interval '365 days')
+        );
+    END LOOP;
+    END LOOP;
+    
+    RAISE NOTICE 'Successfully created realistic quotes across % suburbs', array_length(suburb_ids, 1);
+END $$;
