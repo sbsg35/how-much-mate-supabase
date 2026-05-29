@@ -1,15 +1,10 @@
--- Optimize find_published_quotes filtering and sorting paths
-create index if not exists quote_published_created_at_idx
-on public.quote (created_at desc)
-where status = 'published';
+CREATE INDEX IF NOT EXISTS idx_quote_search_tsv_published
+ON public.quote USING gin (search_tsv)
+WHERE status = 'published';
 
-create index if not exists quote_published_category_created_at_idx
-on public.quote (category_id, created_at desc)
-where status = 'published';
+CREATE INDEX IF NOT EXISTS idx_suburb_geo_position_cast
+ON public.suburb USING gist ((position::extensions.geography));
 
-create index if not exists quote_published_suburb_created_at_idx
-on public.quote (suburb_id, created_at desc)
-where status = 'published';
-
-create index if not exists suburb_position_geog_gist_idx
-on public.suburb using gist ((position::extensions.geography));
+CREATE INDEX IF NOT EXISTS idx_quote_sort_and_filter
+ON public.quote (category_id, price ASC, created_at DESC)
+WHERE status = 'published';
