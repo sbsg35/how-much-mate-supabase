@@ -1,7 +1,8 @@
+import { useAuth } from "@/providers/AuthProvider";
 import { CreateQuoteDto } from "@/schema";
 import { supabaseBrowserClient } from "@/supabase/client";
 import { Database } from "@/supabase/database.types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 type QuoteRow = Database["public"]["Tables"]["quote"]["Row"];
 
@@ -69,4 +70,40 @@ export const quoteQueryKeys = {
   myQuotes: (page: number, limit: number) =>
     ["my-quotes", page, limit] as const,
   userQuote: (quoteId: string) => ["user-quote", quoteId] as const,
+};
+
+const myQuotesQuery = async (page: number, limit: number, userId: string) => {
+  const { data, error } = await supabaseBrowserClient()
+    .from("quote")
+    .select(
+      `
+      *,
+      category:category_id (category_id, name, slug),
+      suburb:suburb_id (suburb_id, locality, postcode, state),
+      profile:profile_id (username)
+    `,
+    )
+    .eq("profile_id", userId)
+    .order("created_at", { ascending: false })
+    .range((page - 1) * limit, page * limit - 1);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as Quote[];
+};
+
+export const useMyQuotes = (page: number, limit: number) => {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: quoteQueryKeys.myQuotes(page, limit),
+    queryFn: async () => {
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+      return myQuotesQuery(page, limit, user.id);
+    },
+  });
 };

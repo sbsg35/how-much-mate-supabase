@@ -10,9 +10,12 @@ import { Box, LoadingOverlay, Title } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+type UserUpdateFormValues = z.input<typeof userUpdateSchema>;
 
 export const ProfileForm: FC<{ user: Profile }> = ({ user }) => {
-  const form = useForm<UserUpdateDto>({
+  const form = useForm<UserUpdateFormValues, unknown, UserUpdateDto>({
     defaultValues: {
       username: user?.username || "",
     },
@@ -23,10 +26,15 @@ export const ProfileForm: FC<{ user: Profile }> = ({ user }) => {
   const isLoading = form.formState.isLoading || form.formState.isSubmitting;
 
   const handleUpdate = async (data: UserUpdateDto) => {
+    const payload = {
+      ...data,
+      username: data.username ?? null,
+    };
+
     try {
       const { data: response, error } = await supabaseBrowserClient()
         .from("profile")
-        .update(data)
+        .update(payload)
         .eq("profile_id", user.profile_id)
         .select("profile_id")
         .maybeSingle();

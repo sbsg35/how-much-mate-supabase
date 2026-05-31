@@ -41,7 +41,7 @@ export const CreateQuoteForm = () => {
     try {
       console.log("Submitting quote with data:", data);
       await createQuote(data);
-      router.push("/quote/list");
+      router.push("/user/my-quotes");
     } catch (error) {
       console.error("Error creating quote:", error);
       // Handle error (e.g., show notification)

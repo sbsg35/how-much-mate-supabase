@@ -62,3 +62,14 @@ export const formatDate = (date: Date | string): string => {
     day: "numeric",
   });
 };
+
+export const formatDateTime = (date: Date | string): string => {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return dateObj.toLocaleString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+};

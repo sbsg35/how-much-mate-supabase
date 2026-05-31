@@ -4,7 +4,7 @@ import {
   RegExpMatcher,
 } from "obscenity";
 import { InferType, stringTrimmed } from "@/lib/schema";
-import { object } from "zod";
+import { object, preprocess } from "zod";
 
 const matcher = new RegExpMatcher({
   ...englishDataset.build(),
@@ -24,8 +24,17 @@ const usernameSchema = stringTrimmed()
     { message: "Username cannot contain profanity" },
   );
 
+const nullableUsernameSchema = preprocess((value) => {
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  const trimmedValue = value.trim();
+  return trimmedValue === "" ? null : trimmedValue;
+}, usernameSchema.nullable().optional());
+
 export const userUpdateSchema = object({
-  username: usernameSchema.optional(),
+  username: nullableUsernameSchema,
 });
 
 export type UserUpdateDto = InferType<typeof userUpdateSchema>;

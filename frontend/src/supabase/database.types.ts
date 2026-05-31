@@ -15,18 +15,21 @@ export type Database = {
           created_at: string
           name: string
           slug: string
+          updated_at: string
         }
         Insert: {
           category_id?: number
           created_at?: string
           name: string
           slug: string
+          updated_at?: string
         }
         Update: {
           category_id?: number
           created_at?: string
           name?: string
           slug?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -35,18 +38,21 @@ export type Database = {
           created_at: string
           email: string
           profile_id: string
+          updated_at: string
           username: string | null
         }
         Insert: {
           created_at?: string
           email: string
           profile_id: string
+          updated_at?: string
           username?: string | null
         }
         Update: {
           created_at?: string
           email?: string
           profile_id?: string
+          updated_at?: string
           username?: string | null
         }
         Relationships: []
@@ -67,6 +73,7 @@ export type Database = {
           status: string
           suburb_id: string
           title: string
+          updated_at: string
         }
         Insert: {
           business_name: string
@@ -83,6 +90,7 @@ export type Database = {
           status?: string
           suburb_id: string
           title: string
+          updated_at?: string
         }
         Update: {
           business_name?: string
@@ -99,6 +107,7 @@ export type Database = {
           status?: string
           suburb_id?: string
           title?: string
+          updated_at?: string
         }
         Relationships: [
           {
