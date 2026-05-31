@@ -12,23 +12,21 @@ select
         '* * * * *', -- every minute
         $$
         select
-            net.http_post(
+            net.http_get(
                 url := (
                     select decrypted_secret
                     from vault.decrypted_secrets
                     where name = 'project_url'
                 ) || '/functions/v1/review_quote',
+                params := jsonb_build_object('trigger', 'cron'),
                 headers := jsonb_build_object(
-                    'Content-Type',
-                    'application/json',
-                    'apiKey',
+                    'apikey',
                     (
                         select decrypted_secret
                         from vault.decrypted_secrets
                         where name = 'project_secret'
                     )
-                ),
-                body := jsonb_build_object('trigger', 'cron')
+                )
             ) as request_id;
         $$
     );

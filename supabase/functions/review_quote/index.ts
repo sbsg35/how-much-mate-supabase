@@ -26,8 +26,8 @@ export default {
     }
     */
 
-
-    const { name } = await req.json();
+  const url = new URL(req.url);
+  const name = url.searchParams.get("name") ?? url.searchParams.get("trigger") ?? "cron";
 
     console.log("SUCCESS", { name });
 
@@ -42,7 +42,6 @@ export default {
   1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
   2. Make an HTTP request:
 
-curl -i --request GET 'http://127.0.0.1:54321/functions/v1/review_quote' \
+curl -i --request GET 'http://127.0.0.1:54321/functions/v1/review_quote?name=Functions' \
   --header 'apikey: sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz' \
-  --header 'Content-Type: application/json' 
 */
