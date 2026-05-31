@@ -6,6 +6,7 @@ create extension if not exists "pg_net"
 with
     schema "extensions";
 
+
 select
     cron.schedule(
         'invoke-review-quote-every-minute',
@@ -30,5 +31,3 @@ select
             ) as request_id;
         $$
     );
-
-    

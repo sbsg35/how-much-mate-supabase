@@ -112,3 +112,18 @@ npx supabase migration list
 - `npx supabase functions serve` - Start local server to test functions
 - `npx supabase functions deploy <function-name>` - Deploy a function to the linked remote project
 - `npx supabase functions list` - List deployed functions in the remote project
+
+## cron/queue
+
+-- Inspect latest HTTP responses produced by pg_net
+select
+id,
+status_code,
+timed_out,
+error_msg,
+content_type,
+left(content::text, 300) as body_preview,
+created
+from net.\_http_response
+order by created desc
+limit 20;

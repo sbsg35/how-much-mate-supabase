@@ -146220,7 +146220,7 @@ BEGIN
 END $$;
 
 
-select vault.create_secret('http://127.0.0.1:54321', 'project_url');
+select vault.create_secret('http://host.docker.internal:54321', 'project_url');
 -- or your hosted URL, e.g. https://<project-ref>.supabase.co
 
 -- only if not already created:
