@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf frontend/src/supabase/database.types.ts",
-    "supabase:gen": "npx supabase gen types typescript --schema public --local > frontend/src/supabase/database.types.ts",
+    "clean": "rm -rf frontend/src/supabase/database.types.ts supabase/functions/_shared/database.types.ts",
+    "supabase:gen": "mkdir -p supabase/functions/_shared && npx supabase gen types typescript --schema public --local > supabase/functions/_shared/database.types.ts && cp supabase/functions/_shared/database.types.ts frontend/src/supabase/database.types.ts",
     "supabase:types": "npm run clean && npm run supabase:gen",
     "supabase:reset": "supabase db reset && npm run supabase:types",
     "supabase:restart": "npm run email:build && supabase stop && supabase start",

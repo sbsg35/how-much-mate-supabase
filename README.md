@@ -54,6 +54,11 @@ We can make changes in the local supabase studio and then pull those changes dow
 
 - `supabase db reset` - Re-runs all migrations from scratch to test locally
 
+### Generated Types
+
+- `npm run supabase:types` - Generates DB types to `supabase/functions/_shared/database.types.ts` and syncs a copy to `frontend/src/supabase/database.types.ts`
+- Edge Function import example: `import type { Database } from "../_shared/database.types.ts";`
+
 ### Deploying Changes
 
 - `supabase db push` - Push tested migrations to your live Supabase project

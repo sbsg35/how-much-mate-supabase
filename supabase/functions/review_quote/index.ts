@@ -4,63 +4,84 @@
 
 // Setup type definitions for built-in Supabase Runtime APIs
 import "@supabase/functions-js/edge-runtime.d.ts";
-import { createSupabaseContext } from "@supabase/server";
+import { SupabaseContext, withSupabase } from "@supabase/server";
+import { createClient } from "@supabase/supabase-js";
+import type { Database } from "../_shared/database.types.ts";
 
+type PgmqReadArgs = {
+  queue_name: string;
+  vt?: number;
+  qty?: number;
+};
+
+type PgmqReadMessage = {
+  msg_id: number;
+  read_ct: number;
+  enqueued_at: string;
+  vt: string;
+  message: unknown;
+  headers: unknown;
+};
+
+type PgmqRpcClient = {
+  schema: (
+    schema: "pgmq",
+  ) => {
+    rpc: (
+      fn: "read",
+      args: PgmqReadArgs,
+    ) => Promise<{ data: PgmqReadMessage[] | null; error: unknown }>;
+  };
+};
 
 // This endpoint uses 'publishable' | 'secret' access, apiKey is required.
 // Use publishable for Client-facing, key-validated endpoints
 // Use secret for Server-to-server, internal calls
 export default {
-  fetch: async (req) => {
-    console.log("INVOKED", {
-      method: req.method,
-      url: req.url,
-      hasApiKey: Boolean(req.headers.get("apikey")),
-      hasAuthorization: Boolean(req.headers.get("authorization")),
-    });
+  fetch: withSupabase(
+    { auth: ["secret"] },
+    async (_req, _ctx: SupabaseContext<Database>) => {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL");
+      const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-    const { data: ctx, error } = await createSupabaseContext(req, { auth: ["secret"] });
+      if (!supabaseUrl || !serviceRoleKey) {
+        return Response.json({ error: "Missing Supabase env vars" }, {
+          status: 500,
+        });
+      }
 
-    if (error) {
-      console.error("AUTH_ERROR", {
-        code: error.code,
-        message: error.message,
-        status: error.status,
+      const admin = createClient<Database>(supabaseUrl, serviceRoleKey, {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+        },
       });
 
-      return Response.json(
-        {
-          message: error.message,
-          code: error.code,
-        },
-        { status: error.status },
-      );
-    }
+      const pgmq = admin as unknown as PgmqRpcClient;
 
-    console.log("AUTH_OK", { authMode: ctx.authMode });
+      const { data: messages, error } = await pgmq.schema("pgmq").rpc("read", {
+        queue_name: "quote_review",
+        vt: 30, // Visibility Timeout in seconds
+        qty: 5, // Number of messages to read
+      });
 
-    // Called by another service with a secret key
-    // ctx.supabaseAdmin bypasses RLS — use for privileged operations
-    /*
-    if (ctx.authMode === "secret") {
-      const { user_id } = await req.json();
-      const { data } = await ctx.supabaseAdmin.auth.admin.getUserById(user_id);
+      if (error) {
+        console.error("RPC_ERROR pgmq.read", error);
+        return Response.json(
+          { error: "Failed to read queue", details: error },
+          {
+            status: 500,
+          },
+        );
+      }
+
+      console.log("Messages read from pgmq.read:", messages);
 
       return Response.json({
-        email: data?.user?.email,
+        messages,
       });
-    }
-    */
-
-    const url = new URL(req.url);
-    const name = url.searchParams.get("name") ?? url.searchParams.get("trigger") ?? "cron";
-
-    console.log("SUCCESS", { name });
-
-    return Response.json({
-      message: `Hello ${name}!`,
-    });
-  },
+    },
+  ),
 };
 
 /* To invoke locally:
