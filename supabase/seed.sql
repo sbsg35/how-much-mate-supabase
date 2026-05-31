@@ -146218,3 +146218,10 @@ BEGIN
     
     RAISE NOTICE 'Successfully created realistic quotes across % suburbs', array_length(suburb_ids, 1);
 END $$;
+
+
+select vault.create_secret('http://127.0.0.1:54321', 'project_url');
+-- or your hosted URL, e.g. https://<project-ref>.supabase.co
+
+-- only if not already created:
+select vault.create_secret('sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz', 'project_secret');

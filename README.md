@@ -104,3 +104,11 @@ npx supabase migration list
 # push the seed file
 
 ```
+
+## Supabase functions
+
+### Local
+
+- `npx supabase functions serve` - Start local server to test functions
+- `npx supabase functions deploy <function-name>` - Deploy a function to the linked remote project
+- `npx supabase functions list` - List deployed functions in the remote project
