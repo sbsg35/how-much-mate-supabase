@@ -4,7 +4,7 @@ create table
     "created_at" timestamp
     with
       time zone not null default now (),
-      "username" text,
+      "username" text UNIQUE,
       "email" text not null
   );
 

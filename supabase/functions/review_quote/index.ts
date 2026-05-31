@@ -34,6 +34,9 @@ type PgmqRpcClient = {
   };
 };
 
+const processMessage = (message: PgmqReadMessage) => {
+};
+
 // This endpoint uses 'publishable' | 'secret' access, apiKey is required.
 // Use publishable for Client-facing, key-validated endpoints
 // Use secret for Server-to-server, internal calls

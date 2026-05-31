@@ -1,21 +1,41 @@
+import { useAuth } from "@/providers/AuthProvider";
 import { supabaseBrowserClient } from "../supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { Database } from "@/supabase/database.types";
 
-const getUser = async () => {
-  const {
-    data: { user },
-  } = await supabaseBrowserClient().auth.getUser();
-  console.log("Fetched user:", user);
-  if (!user) {
-    throw new Error("User not found");
+export type Profile = Database["public"]["Tables"]["profile"]["Row"];
+
+const getProfile = async (userId: string | undefined): Promise<Profile> => {
+  if (!userId) {
+    throw new Error("User not authenticated");
   }
 
-  return user;
+  const {
+    data,
+    error,
+  } = await supabaseBrowserClient().from("profile").select("*").eq(
+    "profile_id",
+    userId,
+  )
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!data) {
+    throw new Error("Profile not found");
+  }
+
+  return data;
 };
 
 export const useProfile = () => {
+  const { user } = useAuth();
+  console.log("Fetching profile for user:", user);
   return useQuery({
-    queryKey: ["profile"],
-    queryFn: getUser,
+    queryKey: ["profile", user?.id],
+    queryFn: async () => getProfile(user?.id),
+    enabled: !!user?.id,
   });
 };
