@@ -86,12 +86,3 @@ export default {
     },
   ),
 };
-
-/* To invoke locally:
-
-  1. Run `supabase start` (see: https://supabase.com/docs/reference/cli/supabase-start)
-  2. Make an HTTP request:
-
-curl -i --request GET 'http://127.0.0.1:54321/functions/v1/review_quote?name=Functions' \
-  --header 'apikey: sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz' \
-*/
