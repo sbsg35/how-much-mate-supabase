@@ -1,7 +1,15 @@
 import { Container, Title, Paper, Text } from "@mantine/core";
+import { CreateQuoteDto } from "@/schema";
+import type { CreateQuoteActionResult } from "./actions";
 import { CreateQuoteForm } from "./components/CreateQuoteForm";
 
-export const QuoteCreatePage = () => {
+type QuoteCreatePageProps = {
+  createQuoteAction: (
+    data: CreateQuoteDto,
+  ) => Promise<CreateQuoteActionResult | never>;
+};
+
+export const QuoteCreatePage = ({ createQuoteAction }: QuoteCreatePageProps) => {
   return (
     <Container size="sm">
       {/* for SEO */}
@@ -11,7 +19,7 @@ export const QuoteCreatePage = () => {
           Create Quote
         </Title>
         <Text c="dimmed">Share quotes and help the community</Text>
-        <CreateQuoteForm />
+        <CreateQuoteForm createQuoteAction={createQuoteAction} />
       </Paper>
     </Container>
   );

@@ -1,5 +1,5 @@
-import { MyQuotesPages } from "@/modules/quote/MyQuotesPages";
+import { QuoteUserListPage } from "@/modules/quote/QuoteUserListPage";
 
 export default function MyQuotesPage() {
-  return <MyQuotesPages />;
+  return <QuoteUserListPage />;
 }

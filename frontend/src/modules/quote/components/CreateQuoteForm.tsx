@@ -1,7 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox, Group, Stack } from "@mantine/core";
-import { useRouter } from "next/navigation";
 import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -14,14 +13,19 @@ import { CategorySelect } from "@/components/CategorySelect";
 import { CreateQuoteDto, createQuoteSchema } from "@/schema";
 import { FormNumberInput } from "@/components/FormNumberInput";
 import { SuburbSelect } from "@/components/SuburbSelect";
-import { useCreateQuoteMutation } from "@/service/quote";
+import type { CreateQuoteActionResult } from "../actions";
 
 type CreateQuoteFormValues = z.input<typeof createQuoteSchema>;
 
-export const CreateQuoteForm = () => {
-  const router = useRouter();
-  const { mutateAsync: createQuote } = useCreateQuoteMutation();
+type CreateQuoteFormProps = {
+  createQuoteAction: (
+    data: CreateQuoteDto,
+  ) => Promise<CreateQuoteActionResult | never>;
+};
 
+export const CreateQuoteForm = ({
+  createQuoteAction,
+}: CreateQuoteFormProps) => {
   const form = useForm<CreateQuoteFormValues, unknown, CreateQuoteDto>({
     defaultValues: {
       title: "",
@@ -39,12 +43,20 @@ export const CreateQuoteForm = () => {
 
   const handleSubmit = async (data: CreateQuoteDto) => {
     try {
-      console.log("Submitting quote with data:", data);
-      await createQuote(data);
-      router.push("/user/my-quotes");
+      const result = await createQuoteAction(data);
+
+      if (result?.error) {
+        form.setError("root.server", {
+          type: "server",
+          message: result.error,
+        });
+      }
     } catch (error) {
       console.error("Error creating quote:", error);
-      // Handle error (e.g., show notification)
+      form.setError("root.server", {
+        type: "server",
+        message: "Unable to submit quote right now",
+      });
     }
   };
 
@@ -101,6 +113,10 @@ export const CreateQuoteForm = () => {
           <Group justify="flex-end" mt="md">
             <FormSubmitButton>Submit Quote</FormSubmitButton>
           </Group>
+
+          {form.formState.errors.root?.server?.message ? (
+            <p>{form.formState.errors.root.server.message}</p>
+          ) : null}
         </Stack>
       </form>
     </HookFormProvider>

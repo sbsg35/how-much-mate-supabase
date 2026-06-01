@@ -49,6 +49,35 @@ export async function createQuote(data: CreateQuoteDto): Promise<Quote> {
 }
 
 /**
+ * Delete one of the authenticated user's quotes
+ * @param quoteId The quote to delete
+ */
+export async function deleteQuote(quoteId: string): Promise<string> {
+  const user = await supabaseBrowserClient().auth.getUser();
+  if (!user.data.user) {
+    throw new Error("User not authenticated");
+  }
+
+  const { data: deletedQuote, error } = await supabaseBrowserClient()
+    .from("quote")
+    .delete()
+    .eq("quote_id", quoteId)
+    .eq("profile_id", user.data.user.id)
+    .select("quote_id")
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!deletedQuote) {
+    throw new Error("Quote not found or you do not have permission to delete it");
+  }
+
+  return deletedQuote.quote_id;
+}
+
+/**
  * Hook to create a quote using react-query mutation
  */
 export const useCreateQuoteMutation = () => {
@@ -59,6 +88,22 @@ export const useCreateQuoteMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: quoteQueryKeys.allMyQuotes(),
+      });
+    },
+  });
+};
+
+export const useDeleteQuoteMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteQuote,
+    onSuccess: (quoteId) => {
+      queryClient.invalidateQueries({
+        queryKey: quoteQueryKeys.allMyQuotes(),
+      });
+      queryClient.removeQueries({
+        queryKey: quoteQueryKeys.userQuote(quoteId),
       });
     },
   });

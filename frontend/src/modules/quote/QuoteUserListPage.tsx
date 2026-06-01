@@ -1,6 +1,7 @@
 "use client";
 import { formatDateTime } from "@/lib/date";
 import { useMyQuotes } from "@/service/quote";
+import { QuoteDeleteButton } from "@/modules/quote/components/QuoteDeleteButton";
 import React, { useMemo, useState } from "react";
 import {
   Button,
@@ -23,7 +24,7 @@ import Link from "next/link";
 
 const columnHelper = createColumnHelper<Quote>();
 
-export const MyQuotesPages = () => {
+export const QuoteUserListPage = () => {
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 10,
@@ -80,9 +81,10 @@ export const MyQuotesPages = () => {
               >
                 Edit
               </Button>
-              <Button size="compact-sm" variant="outline" color="red">
-                Delete
-              </Button>
+              <QuoteDeleteButton
+                quoteId={quote.quote_id}
+                quoteTitle={quote.title}
+              />
             </Group>
           );
         },
