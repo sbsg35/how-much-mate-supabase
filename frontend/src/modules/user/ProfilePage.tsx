@@ -2,7 +2,7 @@
 import { Container, Paper, Title, VisuallyHidden } from "@mantine/core";
 import { ProfileForm } from "./components/ProfileForm";
 import { SecuritySettingsForm } from "./components/SecuritySettingsForm";
-import { ProfilePageSkeleton } from "./components/ProfilePageSkeleton";
+import { ProfilePageSkeleton } from "../quote/components/ProfilePageSkeleton";
 import { useProfile } from "@/service/profile";
 
 export const ProfilePage = () => {

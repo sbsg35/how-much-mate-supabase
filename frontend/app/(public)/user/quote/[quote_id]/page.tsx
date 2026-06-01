@@ -1,3 +1,5 @@
+import { QuoteEditPage } from "@/modules/quote/QuoteEditPage";
+
 export default async function EditQuotePage({
   params,
 }: {

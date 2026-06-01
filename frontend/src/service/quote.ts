@@ -1,5 +1,5 @@
 import { useAuth } from "@/providers/AuthProvider";
-import { CreateQuoteDto } from "@/schema";
+import { CreateQuoteDto, EditQuoteDto } from "@/schema";
 import { supabaseBrowserClient } from "@/supabase/client";
 import { Database } from "@/supabase/database.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -71,7 +71,9 @@ export async function deleteQuote(quoteId: string): Promise<string> {
   }
 
   if (!deletedQuote) {
-    throw new Error("Quote not found or you do not have permission to delete it");
+    throw new Error(
+      "Quote not found or you do not have permission to delete it",
+    );
   }
 
   return deletedQuote.quote_id;
@@ -117,6 +119,57 @@ export const quoteQueryKeys = {
   userQuote: (quoteId: string) => ["user-quote", quoteId] as const,
 };
 
+const userQuoteQuery = async (quoteId: string, userId: string) => {
+  const { data, error } = await supabaseBrowserClient()
+    .from("quote")
+    .select(
+      `
+      *,
+      category:category_id (category_id, name, slug),
+      suburb:suburb_id (suburb_id, locality, postcode, state)
+    `,
+    )
+    .eq("quote_id", quoteId)
+    .eq("profile_id", userId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as Quote;
+};
+
+export async function updateQuote(
+  quoteId: string,
+  data: EditQuoteDto,
+): Promise<Quote> {
+  const user = await supabaseBrowserClient().auth.getUser();
+  if (!user.data.user) {
+    throw new Error("User not authenticated");
+  }
+
+  const { data: updatedQuote, error } = await supabaseBrowserClient()
+    .from("quote")
+    .update(data)
+    .eq("quote_id", quoteId)
+    .eq("profile_id", user.data.user.id)
+    .select(
+      `
+      *,
+      category:category_id (category_id, name, slug),
+      suburb:suburb_id (suburb_id, locality, postcode, state)
+    `,
+    )
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return updatedQuote as Quote;
+}
+
 const myQuotesQuery = async (page: number, limit: number, userId: string) => {
   const { data, error } = await supabaseBrowserClient()
     .from("quote")
@@ -149,6 +202,38 @@ export const useMyQuotes = (page: number, limit: number) => {
         throw new Error("User not authenticated");
       }
       return myQuotesQuery(page, limit, user.id);
+    },
+  });
+};
+
+export const useUserQuote = (quoteId: string) => {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: quoteQueryKeys.userQuote(quoteId),
+    queryFn: async () => {
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
+      return userQuoteQuery(quoteId, user.id);
+    },
+    enabled: Boolean(user && quoteId),
+  });
+};
+
+export const useUpdateQuoteMutation = (quoteId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: EditQuoteDto) => updateQuote(quoteId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: quoteQueryKeys.allMyQuotes(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: quoteQueryKeys.userQuote(quoteId),
+      });
     },
   });
 };
