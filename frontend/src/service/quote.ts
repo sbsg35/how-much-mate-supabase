@@ -71,9 +71,7 @@ export async function deleteQuote(quoteId: string): Promise<string> {
   }
 
   if (!deletedQuote) {
-    throw new Error(
-      "Quote not found or you do not have permission to delete it",
-    );
+    throw new Error("Quote not found or you do not have permission to delete it");
   }
 
   return deletedQuote.quote_id;
