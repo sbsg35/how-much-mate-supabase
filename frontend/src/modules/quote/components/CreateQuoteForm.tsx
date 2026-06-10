@@ -14,6 +14,10 @@ import { CreateQuoteDto, createQuoteSchema } from "@/schema";
 import { FormNumberInput } from "@/components/FormNumberInput";
 import { SuburbSelect } from "@/components/SuburbSelect";
 import type { CreateQuoteActionResult } from "../actions";
+import { notifications } from "@mantine/notifications";
+import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { quoteQueryKeys } from "@/service/quote";
 
 type CreateQuoteFormValues = z.input<typeof createQuoteSchema>;
 
@@ -26,6 +30,9 @@ type CreateQuoteFormProps = {
 export const CreateQuoteForm = ({
   createQuoteAction,
 }: CreateQuoteFormProps) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   const form = useForm<CreateQuoteFormValues, unknown, CreateQuoteDto>({
     defaultValues: {
       title: "",
@@ -45,12 +52,31 @@ export const CreateQuoteForm = ({
     try {
       const result = await createQuoteAction(data);
 
+      if (result?.underReview) {
+        await queryClient.invalidateQueries({
+          queryKey: quoteQueryKeys.allMyQuotes(),
+        });
+        notifications.show({
+          title: "Quote under review",
+          message: "Your quote is under review.",
+          color: "yellow",
+        });
+        router.push("/user/my-quotes");
+        return;
+      }
+
       if (result?.error) {
         form.setError("root.server", {
           type: "server",
           message: result.error,
         });
+        return;
       }
+
+      await queryClient.invalidateQueries({
+        queryKey: quoteQueryKeys.allMyQuotes(),
+      });
+      router.push("/user/my-quotes");
     } catch (error) {
       console.error("Error creating quote:", error);
       form.setError("root.server", {

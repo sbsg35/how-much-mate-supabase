@@ -13,8 +13,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormNumberInput } from "@/components/FormNumberInput";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
-import { useUpdateQuoteMutation, type Quote } from "@/service/quote";
+import { quoteQueryKeys, type Quote } from "@/service/quote";
+import { updateQuoteAction } from "@/modules/quote/actions";
 import { z } from "zod";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface QuoteEditFormProps {
   quote: Quote;
@@ -22,7 +24,7 @@ interface QuoteEditFormProps {
 
 export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
   const router = useRouter();
-  const { mutateAsync: updateQuote } = useUpdateQuoteMutation(quote.quote_id);
+  const queryClient = useQueryClient();
 
   const form = useForm<z.input<typeof editQuoteSchema>, unknown, EditQuoteDto>({
     defaultValues: {
@@ -45,29 +47,47 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
   });
 
   const handleSubmit = async (data: EditQuoteDto) => {
-    try {
-      await updateQuote(data);
+    const result = await updateQuoteAction(quote.quote_id, data);
+
+    if (result.underReview) {
+      await queryClient.invalidateQueries({
+        queryKey: quoteQueryKeys.allMyQuotes(),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: quoteQueryKeys.userQuote(quote.quote_id),
+      });
       notifications.show({
-        title: "Quote updated successfully",
-        message: "Your quote has been updated.",
-        color: "green",
+        title: "Quote under review",
+        message: "Your quote is under review.",
+        color: "yellow",
       });
       router.push("/user/my-quotes");
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Unable to update quote";
+      return;
+    }
 
+    if (result.error) {
       notifications.show({
         title: "Update failed",
-        message,
+        message: result.error,
         color: "red",
       });
-
-      form.setError("root.server", {
-        type: "server",
-        message,
-      });
+      form.setError("root.server", { type: "server", message: result.error });
+      return;
     }
+
+    await queryClient.invalidateQueries({
+      queryKey: quoteQueryKeys.allMyQuotes(),
+    });
+    await queryClient.invalidateQueries({
+      queryKey: quoteQueryKeys.userQuote(quote.quote_id),
+    });
+
+    notifications.show({
+      title: "Quote updated successfully",
+      message: "Your quote has been updated.",
+      color: "green",
+    });
+    router.push("/user/my-quotes");
   };
 
   return (
