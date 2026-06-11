@@ -17,5 +17,4 @@ auth_settings = {
   external_google_enabled                    = true
   mailer_templates_magic_link_content_path   = "../../../templates/magic-link.html"
   mailer_templates_confirmation_content_path = "../../../templates/confirmation.html"
-
 }

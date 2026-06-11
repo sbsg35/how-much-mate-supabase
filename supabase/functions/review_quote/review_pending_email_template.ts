@@ -1,4 +1,5 @@
 export type ReviewPendingEmailTemplateParams = {
+  quoteId: string;
   reviewReason: string;
   title: string;
   businessName: string;
@@ -47,10 +48,11 @@ export function renderReviewPendingEmailMjml(
         <mj-preview>A quote has been set to pending and needs moderation.</mj-preview>
       </mj-head>
       <mj-body background-color="#f5f1e8">
-        <mj-section padding="24px 16px">
+        <mj-section padding="24px 16px 0">
           <mj-column
             background-color="#fffaf1"
             border="1px solid #d5ccb8"
+            border-bottom="none"
             padding="20px"
           >
             <mj-text
@@ -73,30 +75,23 @@ export function renderReviewPendingEmailMjml(
               This quote was automatically set to pending and needs a decision.
             </mj-text>
 
-            <mj-section
-              background-color="#f8ecdf"
-              border-left="4px solid #b85c38"
-              padding="10px 14px"
-              border-radius="2px"
-            >
-              <mj-column>
-                <mj-text
-                  font-size="12px"
-                  color="#8a5a2d"
-                  text-transform="uppercase"
-                  letter-spacing="1px"
-                  padding-bottom="4px"
-                >
-                  Why it was set to pending
-                </mj-text>
-                <mj-text font-size="18px" line-height="1.4" padding-top="0">
-                  ${escapeHtml(params.reviewReason)}
-                </mj-text>
-              </mj-column>
-            </mj-section>
+            <mj-text container-background-color="#f8ecdf" padding="10px 14px">
+              <div style="border-left:4px solid #b85c38;padding-left:10px;">
+                <p style="margin:0 0 4px;font-size:12px;color:#8a5a2d;text-transform:uppercase;letter-spacing:1px;">Why it was set to pending</p>
+                <p style="margin:0;font-size:18px;line-height:1.4;">${
+    escapeHtml(params.reviewReason)
+  }</p>
+              </div>
+            </mj-text>
 
             <mj-divider border-color="#eadfca" border-width="1px" />
             <mj-table>
+              <tr>
+                <td style="padding:8px 0;font-weight:700;vertical-align:top;width:160px;">Quote ID</td>
+                <td style="padding:8px 0;font-family:monospace;font-size:13px;">${
+    escapeHtml(params.quoteId)
+  }</td>
+              </tr>
               <tr>
                 <td style="padding:8px 0;font-weight:700;vertical-align:top;width:160px;">Title</td>
                 <td style="padding:8px 0;">${escapeHtml(params.title)}</td>
@@ -148,27 +143,39 @@ export function renderReviewPendingEmailMjml(
               Description
             </mj-text>
             <mj-text padding-top="0">${description}</mj-text>
-
-            <mj-group>
-              <mj-column width="50%">
-                <mj-button
-                  href="${escapeHtml(params.publishUrl)}"
-                  background-color="#25633b"
-                  align="left"
-                >
-                  Publish quote
-                </mj-button>
-              </mj-column>
-              <mj-column width="50%">
-                <mj-button
-                  href="${escapeHtml(params.flaggedUrl)}"
-                  background-color="#7a1f1f"
-                  align="right"
-                >
-                  Mark as flagged
-                </mj-button>
-              </mj-column>
-            </mj-group>
+          </mj-column>
+        </mj-section>
+        <mj-section padding="0 16px 24px">
+          <mj-column
+            width="50%"
+            background-color="#fffaf1"
+            border="1px solid #d5ccb8"
+            border-top="none"
+            border-right="none"
+            padding="16px 20px"
+          >
+            <mj-button
+              href="${escapeHtml(params.publishUrl)}"
+              background-color="#25633b"
+              align="left"
+            >
+              Publish quote
+            </mj-button>
+          </mj-column>
+          <mj-column
+            width="50%"
+            background-color="#fffaf1"
+            border="1px solid #d5ccb8"
+            border-top="none"
+            padding="16px 20px"
+          >
+            <mj-button
+              href="${escapeHtml(params.flaggedUrl)}"
+              background-color="#7a1f1f"
+              align="right"
+            >
+              Mark as flagged
+            </mj-button>
           </mj-column>
         </mj-section>
       </mj-body>

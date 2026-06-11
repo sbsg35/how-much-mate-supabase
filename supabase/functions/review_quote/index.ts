@@ -66,18 +66,9 @@ const ONE_WEEK_IN_SECONDS = 60 * 60 * 24 * 7;
 type QuoteReviewActionTokenInsert =
   Database["public"]["Tables"]["quote_review_action_token"]["Insert"];
 
-function getRequiredEnv(name: string) {
-  const value = Deno.env.get(name);
-
-  if (!value) {
-    throw new Error(`Missing required env var ${name}`);
-  }
-
-  return value;
-}
-
 function isLocalSupabaseUrl(url: string) {
-  return url.includes("127.0.0.1") || url.includes("localhost");
+  return url.includes("127.0.0.1") || url.includes("localhost") ||
+    url.includes("kong");
 }
 
 function formatCurrency(value: number) {
@@ -113,6 +104,7 @@ function buildEmailText(params: {
     `Why it was set to pending: ${quote.review_reason ?? "No reason supplied"}`,
     `Review source: ${quote.review_source ?? "unknown"}`,
     "",
+    `Quote ID: ${quote.quote_id}`,
     `Title: ${quote.title}`,
     `Business: ${quote.business_name}`,
     `Category: ${quote.category?.name ?? "Unknown"}`,
@@ -136,6 +128,7 @@ function buildEmailHtml(params: {
 }) {
   const { quote, publishUrl, flaggedUrl } = params;
   const mjmlTemplate = renderReviewPendingEmailMjml({
+    quoteId: quote.quote_id,
     reviewReason: quote.review_reason ?? "No reason supplied",
     title: quote.title,
     businessName: quote.business_name,
@@ -151,7 +144,7 @@ function buildEmailHtml(params: {
   });
 
   const compiled = mjml2html(mjmlTemplate, {
-    minify: true,
+    filePath: "",
     validationLevel: "soft",
   });
 
@@ -249,16 +242,23 @@ async function sendViaSes(params: {
 }) {
   const { subject, textBody, htmlBody, toEmail, fromEmail, fromName } = params;
 
+  const awsRegion = Deno.env.get("AWS_REGION");
+  const awsAccessKeyId = Deno.env.get("AWS_ACCESS_KEY_ID");
+  const awsSecretAccessKey = Deno.env.get("AWS_SECRET_ACCESS_KEY");
+
+  if (!awsRegion || !awsAccessKeyId || !awsSecretAccessKey) {
+    throw new Error(
+      "Missing required env vars for SES: AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY",
+    );
+  }
+
   const client = new SESv2Client({
-    region: getRequiredEnv("AWS_REGION"),
-    credentials: Deno.env.get("AWS_ACCESS_KEY_ID") &&
-        Deno.env.get("AWS_SECRET_ACCESS_KEY")
-      ? {
-        accessKeyId: getRequiredEnv("AWS_ACCESS_KEY_ID"),
-        secretAccessKey: getRequiredEnv("AWS_SECRET_ACCESS_KEY"),
-        sessionToken: Deno.env.get("AWS_SESSION_TOKEN"),
-      }
-      : undefined,
+    region: awsRegion,
+    credentials: {
+      accessKeyId: awsAccessKeyId,
+      secretAccessKey: awsSecretAccessKey,
+      sessionToken: Deno.env.get("AWS_SESSION_TOKEN"),
+    },
   });
 
   await client.send(
@@ -299,7 +299,9 @@ async function sendReviewEmail(params: {
   const fromName = Deno.env.get("REVIEW_NOTIFICATION_FROM_NAME") ??
     "How Much Mate";
   const actionBaseUrl = Deno.env.get("REVIEW_ACTION_BASE_URL") ??
-    `${supabaseUrl}/functions/v1/review_quote_action`;
+    (supabaseUrl.includes("kong")
+      ? "http://127.0.0.1:54321/functions/v1/review_quote_action"
+      : `${supabaseUrl}/functions/v1/review_quote_action`);
   const expiresAt = Math.floor(Date.now() / 1000) + ONE_WEEK_IN_SECONDS;
 
   const createToken = async (action: ReviewActionStatus) => {
@@ -341,7 +343,12 @@ async function sendReviewEmail(params: {
   const textBody = buildEmailText({ quote, publishUrl, flaggedUrl });
   const htmlBody = buildEmailHtml({ quote, publishUrl, flaggedUrl });
 
-  if (isLocalSupabaseUrl(supabaseUrl)) {
+  const hasAwsCredentials = Deno.env.get("AWS_REGION") &&
+    Deno.env.get("AWS_ACCESS_KEY_ID") &&
+    Deno.env.get("AWS_SECRET_ACCESS_KEY");
+  const isLocal = isLocalSupabaseUrl(supabaseUrl) || !hasAwsCredentials;
+
+  if (isLocal) {
     await sendViaLocalMailpit({
       subject,
       textBody,
@@ -419,6 +426,7 @@ export default {
     async (_req, _ctx: SupabaseContext<Database>) => {
       const supabaseUrl = Deno.env.get("SUPABASE_URL");
       const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+      console.log({ supabaseUrl, serviceRoleKey });
 
       if (!supabaseUrl || !serviceRoleKey) {
         return Response.json({ error: "Missing Supabase env vars" }, {
