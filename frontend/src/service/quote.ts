@@ -71,7 +71,9 @@ export async function deleteQuote(quoteId: string): Promise<string> {
   }
 
   if (!deletedQuote) {
-    throw new Error("Quote not found or you do not have permission to delete it");
+    throw new Error(
+      "Quote not found or you do not have permission to delete it",
+    );
   }
 
   return deletedQuote.quote_id;
@@ -129,6 +131,7 @@ const userQuoteQuery = async (quoteId: string, userId: string) => {
     )
     .eq("quote_id", quoteId)
     .eq("profile_id", userId)
+    .neq("status", "flagged")
     .single();
 
   if (error) {
@@ -180,6 +183,7 @@ const myQuotesQuery = async (page: number, limit: number, userId: string) => {
     `,
     )
     .eq("profile_id", userId)
+    .neq("status", "flagged")
     .order("created_at", { ascending: false })
     .range((page - 1) * limit, page * limit - 1);
 

@@ -69,6 +69,8 @@ export type Database = {
           profile_id: string
           quote_date: string
           quote_id: string
+          review_reason: string | null
+          review_source: string | null
           search_tsv: unknown
           status: string
           suburb_id: string
@@ -86,6 +88,8 @@ export type Database = {
           profile_id: string
           quote_date: string
           quote_id?: string
+          review_reason?: string | null
+          review_source?: string | null
           search_tsv?: unknown
           status?: string
           suburb_id: string
@@ -103,6 +107,8 @@ export type Database = {
           profile_id?: string
           quote_date?: string
           quote_id?: string
+          review_reason?: string | null
+          review_source?: string | null
           search_tsv?: unknown
           status?: string
           suburb_id?: string
@@ -130,6 +136,41 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "suburb"
             referencedColumns: ["suburb_id"]
+          },
+        ]
+      }
+      quote_review_action_token: {
+        Row: {
+          action: string
+          created_at: string
+          expires_at: string
+          quote_id: string
+          token_id: string
+          used_at: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          expires_at: string
+          quote_id: string
+          token_id?: string
+          used_at?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          expires_at?: string
+          quote_id?: string
+          token_id?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_review_action_token_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quote"
+            referencedColumns: ["quote_id"]
           },
         ]
       }

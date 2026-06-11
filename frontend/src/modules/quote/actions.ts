@@ -22,6 +22,26 @@ export type UpdateQuoteActionResult = {
   underReview?: boolean;
 };
 
+function buildReviewFields(params: {
+  flagged: boolean;
+  reason?: string;
+  source?: "moderation" | "gpt";
+}) {
+  const { flagged, reason, source } = params;
+
+  if (!flagged) {
+    return {
+      review_reason: null,
+      review_source: null,
+    };
+  }
+
+  return {
+    review_reason: reason ?? null,
+    review_source: source ?? null,
+  };
+}
+
 // async function isRateLimited(userId: string): Promise<boolean> {
 //   const oneDayAgo = new Date(Date.now() - 86_400_000).toISOString();
 //   const { count } = await supabaseAdminServerClient()
@@ -178,9 +198,20 @@ export async function createQuoteAction(
     reason: moderationReason,
   });
 
+  const reviewFields = buildReviewFields({
+    flagged,
+    reason: moderationReason,
+    source: moderationSource,
+  });
+
   const { error } = await supabaseAdminServerClient()
     .from("quote")
-    .insert({ ...parsedData.data, profile_id: user.id, status });
+    .insert({
+      ...parsedData.data,
+      ...reviewFields,
+      profile_id: user.id,
+      status,
+    });
 
   if (error) {
     console.error("[quote.createQuoteAction] Insert failed", {
@@ -270,9 +301,19 @@ export async function updateQuoteAction(
     reason: moderationReason,
   });
 
+  const reviewFields = buildReviewFields({
+    flagged,
+    reason: moderationReason,
+    source: moderationSource,
+  });
+
   const { error } = await supabaseAdminServerClient()
     .from("quote")
-    .update({ ...parsedData.data, status })
+    .update({
+      ...parsedData.data,
+      ...reviewFields,
+      status,
+    })
     .eq("quote_id", quoteId)
     .eq("profile_id", user.id);
 
