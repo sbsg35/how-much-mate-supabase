@@ -9,6 +9,7 @@ import { createClient } from "@supabase/supabase-js";
 import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
 import mjml2html from "mjml";
 import type { Database } from "../_shared/database.types.ts";
+import { getConfig } from "../_shared/config.ts";
 import { renderReviewPendingEmailMjml } from "./review_pending_email_template.ts";
 
 type ReviewActionStatus = "published" | "flagged";
@@ -298,10 +299,7 @@ async function sendReviewEmail(params: {
     "hello@howmuchmate.com.au";
   const fromName = Deno.env.get("REVIEW_NOTIFICATION_FROM_NAME") ??
     "How Much Mate";
-  const actionBaseUrl = Deno.env.get("REVIEW_ACTION_BASE_URL") ??
-    (supabaseUrl.includes("kong")
-      ? "http://127.0.0.1:54321/functions/v1/review_quote_action"
-      : `${supabaseUrl}/functions/v1/review_quote_action`);
+  const actionBaseUrl = `${getConfig().frontendUrl}/moderation`;
   const expiresAt = Math.floor(Date.now() / 1000) + ONE_WEEK_IN_SECONDS;
 
   const createToken = async (action: ReviewActionStatus) => {
