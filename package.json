@@ -8,12 +8,12 @@
     "supabase:gen": "mkdir -p supabase/functions/_shared && npx supabase gen types typescript --schema public --local > supabase/functions/_shared/database.types.ts && cp supabase/functions/_shared/database.types.ts frontend/src/supabase/database.types.ts",
     "supabase:types": "npm run clean && npm run supabase:gen",
     "supabase:reset": "supabase db reset && npm run supabase:types",
-    "supabase:restart": "npm run email:build && supabase stop && supabase start",
-    "email:build": "mkdir -p supabase/templates && mjml supabase/templates/src/magic-link.mjml -o supabase/templates/magic-link.html && mjml supabase/templates/src/confirmation.mjml -o supabase/templates/confirmation.html",
-    "email:watch": "mjml -w supabase/templates/src/magic-link.mjml -o supabase/templates/magic-link.html",
-    "email:watch:confirmation": "mjml -w supabase/templates/src/confirmation.mjml -o supabase/templates/confirmation.html",
+    "supabase:restart": "npm run email:build && npx supabase stop && npx supabase start",
+    "email:build": "tsx supabase/templates/build.tsx",
+    "email:watch": "tsx watch supabase/templates/build.tsx",
     "link:dev": "supabase link --project-ref ghhzavhcgldjqdanjxgp",
-    "link:local": "supabase link --project-ref gbfbpochuudzenlocfll"
+    "link:local": "supabase link --project-ref gbfbpochuudzenlocfll",
+    "serve": "supabase functions serve --workdir supabase --env-file supabase/.env.functions.local"
   },
   "repository": {
     "type": "git",
@@ -28,7 +28,10 @@
   },
   "homepage": "https://github.com/sbsg35/how-much-mate-supabase#readme",
   "devDependencies": {
-    "mjml": "^5.2.2",
-    "supabase": "^2.84.6"
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.1.0",
+    "react": "^19.2.7",
+    "supabase": "^2.84.6",
+    "tsx": "^4.23.1"
   }
 }

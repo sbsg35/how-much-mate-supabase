@@ -1,16 +1,18 @@
 // Follow this setup guide to integrate the Deno language server with your editor:
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
+// This is a cron function
+// it reads messages from the pgmq queue "quote_review" and sends an email to the review team for each message
 
 // Setup type definitions for built-in Supabase Runtime APIs
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { SupabaseContext, withSupabase } from "@supabase/server";
 import { createClient } from "@supabase/supabase-js";
 import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
-import mjml2html from "mjml";
+import { render } from "@react-email/render";
 import type { Database } from "../_shared/database.types.ts";
 import { getConfig } from "../_shared/config.ts";
-import { renderReviewPendingEmailMjml } from "./review_pending_email_template.ts";
+import { ReviewPendingEmail } from "./review_pending_email_template.tsx";
 
 type ReviewActionStatus = "published" | "flagged";
 
@@ -122,13 +124,13 @@ function buildEmailText(params: {
   ].join("\n");
 }
 
-function buildEmailHtml(params: {
+async function buildEmailHtml(params: {
   quote: ReviewQuoteRecord;
   publishUrl: string;
   flaggedUrl: string;
 }) {
   const { quote, publishUrl, flaggedUrl } = params;
-  const mjmlTemplate = renderReviewPendingEmailMjml({
+  return await render(ReviewPendingEmail({
     quoteId: quote.quote_id,
     reviewReason: quote.review_reason ?? "No reason supplied",
     title: quote.title,
@@ -142,18 +144,7 @@ function buildEmailHtml(params: {
     descriptionHtml: quote.description,
     publishUrl,
     flaggedUrl,
-  });
-
-  const compiled = mjml2html(mjmlTemplate, {
-    filePath: "",
-    validationLevel: "soft",
-  });
-
-  if (compiled.errors.length > 0) {
-    console.warn("MJML_TEMPLATE_WARNINGS", compiled.errors);
-  }
-
-  return compiled.html;
+  }));
 }
 
 async function deleteMessage(pgmq: PgmqRpcClient, message: PgmqReadMessage) {
@@ -339,7 +330,7 @@ async function sendReviewEmail(params: {
 
   const subject = buildEmailSubject(quote);
   const textBody = buildEmailText({ quote, publishUrl, flaggedUrl });
-  const htmlBody = buildEmailHtml({ quote, publishUrl, flaggedUrl });
+  const htmlBody = await buildEmailHtml({ quote, publishUrl, flaggedUrl });
 
   const hasAwsCredentials = Deno.env.get("AWS_REGION") &&
     Deno.env.get("AWS_ACCESS_KEY_ID") &&
