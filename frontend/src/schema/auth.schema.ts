@@ -65,11 +65,11 @@ export type PasswordResetRequestDto = InferType<
 >;
 
 export const passwordResetConfirmSchema = object({
-  passwordResetToken: stringTrimmed({
-    error: "Reset token is required",
-  }),
   password: passwordSchema,
-  botToken: botTokenSchema,
+  confirmPassword: stringTrimmed({ error: "Please confirm your password" }),
+}).refine(({ password, confirmPassword }) => password === confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
 });
 
 export type PasswordResetConfirmDto = InferType<

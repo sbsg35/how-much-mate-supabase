@@ -6,9 +6,14 @@ const authRoutes = [
   "/auth/sign-up",
   "/auth/check-email",
   "/auth/callback",
+  "/auth/forgot-password",
 ];
 
-const protectedRoutes = ["/user/profile", "/user/settings"];
+const protectedRoutes = [
+  "/user/profile",
+  "/user/settings",
+  "/auth/reset-password",
+];
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({

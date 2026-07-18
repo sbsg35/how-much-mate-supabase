@@ -4,6 +4,7 @@ import { render } from "@react-email/render";
 import React from "react";
 import { ConfirmationEmail } from "./src/confirmation";
 import { MagicLinkEmail } from "./src/magic-link";
+import { RecoveryEmail } from "./src/recovery";
 
 const templatesDirectory = join(process.cwd(), "supabase", "templates");
 
@@ -13,6 +14,7 @@ async function build() {
   const templates = [
     ["magic-link.html", <MagicLinkEmail />],
     ["confirmation.html", <ConfirmationEmail />],
+    ["recovery.html", <RecoveryEmail />],
   ] as const;
 
   await Promise.all(

@@ -3,7 +3,7 @@ organization_id = "cgdugjxdoazkaftxuluf"
 region          = "ap-southeast-2"
 auth_settings = {
   site_url                      = "https://dev.howmuchmate.com.au"
-  additional_redirect_urls      = ["https://dev.howmuchmate.com.au/auth/callback", "http://localhost:3000/auth/callback"]
+  additional_redirect_urls      = ["https://dev.howmuchmate.com.au/auth/callback", "https://dev.howmuchmate.com.au/auth/callback/password-recovery", "http://localhost:3000/auth/callback", "http://localhost:3000/auth/callback/password-recovery"]
   enable_refresh_token_rotation = true
   enable_signup                 = true
   enable_anonymous_sign_ins     = false
@@ -17,4 +17,5 @@ auth_settings = {
   external_google_enabled                    = true
   mailer_templates_magic_link_content_path   = "../../../templates/magic-link.html"
   mailer_templates_confirmation_content_path = "../../../templates/confirmation.html"
+  mailer_templates_recovery_content_path     = "../../../templates/recovery.html"
 }

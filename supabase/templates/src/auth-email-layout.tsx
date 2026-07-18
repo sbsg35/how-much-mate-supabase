@@ -18,8 +18,8 @@ type AuthEmailLayoutProps = {
   message: string;
   buttonLabel: string;
   buttonHref: string;
-  tokenPrompt: string;
-  token: string;
+  tokenPrompt?: string;
+  token?: string;
   footer: string;
 };
 
@@ -50,13 +50,16 @@ export function AuthEmailLayout(props: AuthEmailLayoutProps) {
             <Button href={props.buttonHref} style={button}>
               {props.buttonLabel}
             </Button>
-            <Section style={codePanel}>
-              <Text style={codeLabel}>{props.tokenPrompt}</Text>
-              <Text style={code}>{props.token}</Text>
-            </Section>
+            {props.tokenPrompt && props.token ? (
+              <Section style={codePanel}>
+                <Text style={codeLabel}>{props.tokenPrompt}</Text>
+                <Text style={code}>{props.token}</Text>
+              </Section>
+            ) : null}
             <Text style={securityNote}>
-              🔒 This secure link and code expire soon. How Much Mate will never
-              ask you to forward this email.
+              🔒 This secure link
+              {props.token ? " and code expire soon. " : " expires soon. "}
+              How Much Mate will never ask you to forward this email.
             </Text>
           </Section>
           <Section style={footerSection}>

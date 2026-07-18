@@ -4,9 +4,13 @@ import { ProfileForm } from "./components/ProfileForm";
 import { SecuritySettingsForm } from "./components/SecuritySettingsForm";
 import { ProfilePageSkeleton } from "../quote/components/ProfilePageSkeleton";
 import { useProfile } from "@/service/profile";
+import { AuthNotification } from "../auth/components/AuthNotification";
+import { useSearchParams } from "next/navigation";
 
 export const ProfilePage = () => {
+  const searchParams = useSearchParams();
   const { data: user, isLoading } = useProfile();
+  const alert = searchParams.get("alert");
 
   if (isLoading) {
     return <ProfilePageSkeleton />;
@@ -14,6 +18,7 @@ export const ProfilePage = () => {
 
   return (
     <Container size="sm">
+      <AuthNotification type={alert} cleanupPath="/user/profile" />
       {/* for SEO */}
       <VisuallyHidden>
         <Title order={1}>Profile page</Title>
