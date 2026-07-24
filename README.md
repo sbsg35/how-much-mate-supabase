@@ -19,8 +19,12 @@ Reference: https://www.youtube.com/watch?v=BceVcpiOlKM
 ## Remote Project Setup
 
 - `npx supabase login` - Authenticate with Supabase
+- `npx supabase projects list` - List all Supabase projects you have access to
 - `npx supabase link --project-ref <project ref>` - Connect local folder to remote project (enables running migrations, functions, etc. on production)
 - `npx supabase db remote set <connection string>` - Connect cloud database to local (optional)
+
+## Reset remote database
+- `npx supabase db reset --linked` - Drops all tables and re-runs all migrations on the remote database (use with caution!)
 
 ### Getting migration status
 
@@ -117,6 +121,22 @@ npx supabase migration list
 - `npx supabase functions serve` - Start local server to test functions
 - `npx supabase functions deploy <function-name>` - Deploy a function to the linked remote project
 - `npx supabase functions list` - List deployed functions in the remote project
+
+### Review quote email
+
+The `review_quote` function sends email through SMTP using Nodemailer. Configure
+these function secrets in deployed environments:
+
+- `SMTP_HOST` (required)
+- `SMTP_PORT` (optional, defaults to `587`)
+- `SMTP_SECURE` (optional, `true` or `false`; defaults to `true` for port `465`)
+- `SMTP_USER` and `SMTP_PASS` (optional, but must be provided together)
+- `REVIEW_NOTIFICATION_TO_EMAIL`, `REVIEW_NOTIFICATION_FROM_EMAIL`, and
+  `REVIEW_NOTIFICATION_FROM_NAME` (optional)
+
+Local Supabase uses Mailpit at `inbucket:1025` on the internal Docker network by
+default. Set the SMTP variables in `supabase/.env.functions.local` to override
+it.
 
 ## cron/queue
 

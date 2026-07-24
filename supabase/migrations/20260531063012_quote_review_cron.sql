@@ -10,7 +10,7 @@ with
 select
     cron.schedule(
         'invoke-review-quote-every-minute',
-        '* * * * *', -- every minute
+        '*/20 * * * * *', -- every 20 seconds
         $$
         select
             net.http_get(

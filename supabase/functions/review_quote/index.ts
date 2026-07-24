@@ -8,7 +8,7 @@
 import "@supabase/functions-js/edge-runtime.d.ts";
 import { SupabaseContext, withSupabase } from "@supabase/server";
 import { createClient } from "@supabase/supabase-js";
-import { SendEmailCommand, SESv2Client } from "@aws-sdk/client-sesv2";
+import nodemailer from "nodemailer";
 import { render } from "@react-email/render";
 import type { Database } from "../_shared/database.types.ts";
 import { getConfig } from "../_shared/config.ts";
@@ -45,10 +45,6 @@ type PgmqRpcClient = {
       args: PgmqReadArgs | PgmqDeleteArgs,
     ) => Promise<{ data: PgmqReadMessage[] | boolean | null; error: unknown }>;
   };
-};
-
-type ReviewMessage = {
-  quote_id: string;
 };
 
 type ReviewQuoteRecord = Database["public"]["Tables"]["quote"]["Row"] & {
@@ -186,96 +182,69 @@ async function loadQuote(
   return data as ReviewQuoteRecord | null;
 }
 
-async function sendViaLocalMailpit(params: {
+async function sendViaSmtp(params: {
   subject: string;
   textBody: string;
   htmlBody: string;
   toEmail: string;
   fromEmail: string;
   fromName: string;
+  isLocal: boolean;
 }) {
-  const { subject, textBody, htmlBody, toEmail, fromEmail, fromName } = params;
-  const url = Deno.env.get("LOCAL_REVIEW_EMAIL_API_URL") ??
-    "http://host.docker.internal:54324/api/v1/send";
+  const {
+    subject,
+    textBody,
+    htmlBody,
+    toEmail,
+    fromEmail,
+    fromName,
+    isLocal,
+  } = params;
+  const host = Deno.env.get("SMTP_HOST") ??
+    (isLocal ? "inbucket" : undefined);
+  const portValue = Deno.env.get("SMTP_PORT") ?? (isLocal ? "1025" : "587");
+  const port = Number(portValue);
+  const user = Deno.env.get("SMTP_USER");
+  const pass = Deno.env.get("SMTP_PASS");
 
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      From: {
-        Name: fromName,
-        Email: fromEmail,
-      },
-      To: [
-        {
-          Email: toEmail,
-        },
-      ],
-      Subject: subject,
-      Text: textBody,
-      HTML: htmlBody,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Local mail API returned ${response.status}`);
-  }
-}
-
-async function sendViaSes(params: {
-  subject: string;
-  textBody: string;
-  htmlBody: string;
-  toEmail: string;
-  fromEmail: string;
-  fromName: string;
-}) {
-  const { subject, textBody, htmlBody, toEmail, fromEmail, fromName } = params;
-
-  const awsRegion = Deno.env.get("AWS_REGION");
-  const awsAccessKeyId = Deno.env.get("AWS_ACCESS_KEY_ID");
-  const awsSecretAccessKey = Deno.env.get("AWS_SECRET_ACCESS_KEY");
-
-  if (!awsRegion || !awsAccessKeyId || !awsSecretAccessKey) {
-    throw new Error(
-      "Missing required env vars for SES: AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY",
-    );
+  if (!host) {
+    throw new Error("Missing required env var: SMTP_HOST");
   }
 
-  const client = new SESv2Client({
-    region: awsRegion,
-    credentials: {
-      accessKeyId: awsAccessKeyId,
-      secretAccessKey: awsSecretAccessKey,
-      sessionToken: Deno.env.get("AWS_SESSION_TOKEN"),
-    },
+  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+    throw new Error(`Invalid SMTP_PORT: ${portValue}`);
+  }
+
+  if (Boolean(user) !== Boolean(pass)) {
+    throw new Error("SMTP_USER and SMTP_PASS must be provided together");
+  }
+
+  const secureValue = Deno.env.get("SMTP_SECURE");
+  if (
+    secureValue !== undefined &&
+    secureValue !== "true" &&
+    secureValue !== "false"
+  ) {
+    throw new Error("SMTP_SECURE must be either true or false");
+  }
+
+  const transporter = nodemailer.createTransport({
+    host,
+    port,
+    secure: secureValue === undefined ? port === 465 : secureValue === "true",
+    auth: user && pass ? { user, pass } : undefined,
   });
 
-  await client.send(
-    new SendEmailCommand({
-      Destination: {
-        ToAddresses: [toEmail],
-      },
-      FromEmailAddress: `${fromName} <${fromEmail}>`,
-      Content: {
-        Simple: {
-          Subject: {
-            Data: subject,
-          },
-          Body: {
-            Text: {
-              Data: textBody,
-            },
-            Html: {
-              Data: htmlBody,
-            },
-          },
-        },
-      },
-    }),
-  );
+  await transporter.sendMail({
+    from: {
+      name: fromName,
+      address: fromEmail,
+    },
+    to: toEmail,
+    subject,
+    text: textBody,
+    html: htmlBody,
+  });
 }
 
 async function sendReviewEmail(params: {
@@ -332,30 +301,14 @@ async function sendReviewEmail(params: {
   const textBody = buildEmailText({ quote, publishUrl, flaggedUrl });
   const htmlBody = await buildEmailHtml({ quote, publishUrl, flaggedUrl });
 
-  const hasAwsCredentials = Deno.env.get("AWS_REGION") &&
-    Deno.env.get("AWS_ACCESS_KEY_ID") &&
-    Deno.env.get("AWS_SECRET_ACCESS_KEY");
-  const isLocal = isLocalSupabaseUrl(supabaseUrl) || !hasAwsCredentials;
-
-  if (isLocal) {
-    await sendViaLocalMailpit({
-      subject,
-      textBody,
-      htmlBody,
-      toEmail,
-      fromEmail,
-      fromName,
-    });
-    return;
-  }
-
-  await sendViaSes({
+  await sendViaSmtp({
     subject,
     textBody,
     htmlBody,
     toEmail,
     fromEmail,
     fromName,
+    isLocal: isLocalSupabaseUrl(supabaseUrl),
   });
 }
 
@@ -415,7 +368,6 @@ export default {
     async (_req, _ctx: SupabaseContext<Database>) => {
       const supabaseUrl = Deno.env.get("SUPABASE_URL");
       const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-      console.log({ supabaseUrl, serviceRoleKey });
 
       if (!supabaseUrl || !serviceRoleKey) {
         return Response.json({ error: "Missing Supabase env vars" }, {

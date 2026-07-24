@@ -1,11 +1,11 @@
 {
   "imports": {
-    "@aws-sdk/client-sesv2": "npm:@aws-sdk/client-sesv2@^3.917.0",
     "@supabase/functions-js": "jsr:@supabase/functions-js@^2",
     "@supabase/server": "npm:@supabase/server@^1",
     "@supabase/supabase-js": "npm:@supabase/supabase-js@^2",
     "@react-email/components": "npm:@react-email/components@^1.0.12",
     "@react-email/render": "npm:@react-email/render@^2.1.0",
+    "nodemailer": "npm:nodemailer@^7.0.11",
     "react": "npm:react@^19.2.7",
     "react/jsx-runtime": "npm:react@^19.2.7/jsx-runtime",
     "@types/react": "npm:@types/react@^19.2.14"
