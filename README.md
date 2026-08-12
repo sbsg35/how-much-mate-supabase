@@ -20,7 +20,7 @@ Reference: https://www.youtube.com/watch?v=BceVcpiOlKM
 
 - `npx supabase login` - Authenticate with Supabase
 - `npx supabase projects list` - List all Supabase projects you have access to
-- `npx supabase link --project-ref <project ref>` - Connect local folder to remote project (enables running migrations, functions, etc. on production)
+- `npx supabase link --project-ref ghhzavhcgldjqdanjxgp` - Connect local folder to remote project (enables running migrations, functions, etc. on production)
 - `npx supabase db remote set <connection string>` - Connect cloud database to local (optional)
 
 ## Reset remote database
@@ -124,8 +124,11 @@ npx supabase migration list
 
 ### Review quote email
 
-The `review_quote` function sends email through SMTP using Nodemailer. Configure
-these function secrets in deployed environments:
+When moderation moves a quote to `pending`, the application invokes the
+`review_quote` function synchronously and waits for it to send the review email.
+Email failures are logged without removing the pending quote. The function sends
+email through SMTP using Nodemailer. Configure these function secrets in deployed
+environments:
 
 - `SMTP_HOST` (required)
 - `SMTP_PORT` (optional, defaults to `587`)
@@ -137,18 +140,3 @@ these function secrets in deployed environments:
 Local Supabase uses Mailpit at `inbucket:1025` on the internal Docker network by
 default. Set the SMTP variables in `supabase/.env.functions.local` to override
 it.
-
-## cron/queue
-
--- Inspect latest HTTP responses produced by pg_net
-select
-id,
-status_code,
-timed_out,
-error_msg,
-content_type,
-left(content::text, 300) as body_preview,
-created
-from net.\_http_response
-order by created desc
-limit 20;

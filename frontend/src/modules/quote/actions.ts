@@ -61,6 +61,29 @@ async function getCategoryName(categoryId: number): Promise<string> {
   return data?.name ?? "Unknown";
 }
 
+async function notifyReviewTeam(quoteId: string): Promise<void> {
+  try {
+    const { error } = await supabaseAdminServerClient().functions.invoke(
+      "review_quote",
+      {
+        body: { quote_id: quoteId },
+      },
+    );
+
+    if (error) {
+      console.error("[quote.notifyReviewTeam] Review email failed", {
+        quoteId,
+        error: error.message,
+      });
+    }
+  } catch (error) {
+    console.error("[quote.notifyReviewTeam] Review email failed", {
+      quoteId,
+      error: error instanceof Error ? error.message : String(error),
+    });
+  }
+}
+
 async function checkContent(params: {
   title: string;
   business_name: string;
@@ -204,14 +227,16 @@ export async function createQuoteAction(
     source: moderationSource,
   });
 
-  const { error } = await supabaseAdminServerClient()
+  const { data: createdQuote, error } = await supabaseAdminServerClient()
     .from("quote")
     .insert({
       ...parsedData.data,
       ...reviewFields,
       profile_id: user.id,
       status,
-    });
+    })
+    .select("quote_id")
+    .single();
 
   if (error) {
     console.error("[quote.createQuoteAction] Insert failed", {
@@ -224,6 +249,7 @@ export async function createQuoteAction(
   }
 
   if (flagged) {
+    await notifyReviewTeam(createdQuote.quote_id);
     return {
       underReview: true,
     };
@@ -307,7 +333,24 @@ export async function updateQuoteAction(
     source: moderationSource,
   });
 
-  const { error } = await supabaseAdminServerClient()
+  const admin = supabaseAdminServerClient();
+  const { data: existingQuote, error: existingQuoteError } = await admin
+    .from("quote")
+    .select("status")
+    .eq("quote_id", quoteId)
+    .eq("profile_id", user.id)
+    .maybeSingle();
+
+  if (existingQuoteError || !existingQuote) {
+    console.error("[quote.updateQuoteAction] Quote lookup failed", {
+      quoteId,
+      userId: user.id,
+      error: existingQuoteError?.message ?? "Quote not found",
+    });
+    return { error: existingQuoteError?.message ?? "Quote not found" };
+  }
+
+  const { data: updatedQuote, error } = await admin
     .from("quote")
     .update({
       ...parsedData.data,
@@ -315,7 +358,9 @@ export async function updateQuoteAction(
       status,
     })
     .eq("quote_id", quoteId)
-    .eq("profile_id", user.id);
+    .eq("profile_id", user.id)
+    .select("quote_id")
+    .single();
 
   if (error) {
     console.error("[quote.updateQuoteAction] Update failed", {
@@ -329,6 +374,9 @@ export async function updateQuoteAction(
   }
 
   if (flagged) {
+    if (existingQuote.status !== "pending") {
+      await notifyReviewTeam(updatedQuote.quote_id);
+    }
     return {
       underReview: true,
     };

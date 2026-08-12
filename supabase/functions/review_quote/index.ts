@@ -1,8 +1,7 @@
 // Follow this setup guide to integrate the Deno language server with your editor:
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
-// This is a cron function
-// it reads messages from the pgmq queue "quote_review" and sends an email to the review team for each message
+// Sends a moderation email synchronously for a pending quote.
 
 // Setup type definitions for built-in Supabase Runtime APIs
 import "@supabase/functions-js/edge-runtime.d.ts";
@@ -15,37 +14,6 @@ import { getConfig } from "../_shared/config.ts";
 import { ReviewPendingEmail } from "./review_pending_email_template.tsx";
 
 type ReviewActionStatus = "published" | "flagged";
-
-type PgmqReadArgs = {
-  queue_name: string;
-  vt?: number;
-  qty?: number;
-};
-
-type PgmqDeleteArgs = {
-  queue_name: string;
-  msg_id: number;
-};
-
-type PgmqReadMessage = {
-  msg_id: number;
-  read_ct: number;
-  enqueued_at: string;
-  vt: string;
-  message: unknown;
-  headers: unknown;
-};
-
-type PgmqRpcClient = {
-  schema: (
-    schema: "pgmq",
-  ) => {
-    rpc: (
-      fn: "read" | "delete",
-      args: PgmqReadArgs | PgmqDeleteArgs,
-    ) => Promise<{ data: PgmqReadMessage[] | boolean | null; error: unknown }>;
-  };
-};
 
 type ReviewQuoteRecord = Database["public"]["Tables"]["quote"]["Row"] & {
   category:
@@ -141,21 +109,6 @@ async function buildEmailHtml(params: {
     publishUrl,
     flaggedUrl,
   }));
-}
-
-async function deleteMessage(pgmq: PgmqRpcClient, message: PgmqReadMessage) {
-  const { error } = await pgmq.schema("pgmq").rpc("delete", {
-    queue_name: "quote_review",
-    msg_id: message.msg_id,
-  });
-
-  if (error) {
-    throw new Error(
-      `Failed to delete queue message ${message.msg_id}: ${
-        JSON.stringify(error)
-      }`,
-    );
-  }
 }
 
 async function loadQuote(
@@ -297,66 +250,35 @@ async function sendReviewEmail(params: {
   const publishUrl = toTokenUrl(publishTokenId);
   const flaggedUrl = toTokenUrl(flaggedTokenId);
 
-  const subject = buildEmailSubject(quote);
-  const textBody = buildEmailText({ quote, publishUrl, flaggedUrl });
-  const htmlBody = await buildEmailHtml({ quote, publishUrl, flaggedUrl });
+  try {
+    const subject = buildEmailSubject(quote);
+    const textBody = buildEmailText({ quote, publishUrl, flaggedUrl });
+    const htmlBody = await buildEmailHtml({ quote, publishUrl, flaggedUrl });
 
-  await sendViaSmtp({
-    subject,
-    textBody,
-    htmlBody,
-    toEmail,
-    fromEmail,
-    fromName,
-    isLocal: isLocalSupabaseUrl(supabaseUrl),
-  });
-}
-
-async function processMessage(params: {
-  admin: ReturnType<typeof createClient<Database>>;
-  message: PgmqReadMessage;
-  pgmq: PgmqRpcClient;
-  supabaseUrl: string;
-}) {
-  const { admin, message, pgmq, supabaseUrl } = params;
-  const payload = message.message;
-
-  if (
-    !payload ||
-    typeof payload !== "object" ||
-    !("quote_id" in payload) ||
-    typeof payload.quote_id !== "string"
-  ) {
-    console.error("INVALID_REVIEW_MESSAGE", message);
-    await deleteMessage(pgmq, message);
-    return { ok: false, reason: "invalid_payload" };
-  }
-
-  const quote = await loadQuote(admin, payload.quote_id);
-
-  if (!quote) {
-    console.warn("REVIEW_QUOTE_NOT_FOUND", { quoteId: payload.quote_id });
-    await deleteMessage(pgmq, message);
-    return { ok: true, reason: "quote_missing" };
-  }
-
-  if (quote.status !== "pending") {
-    console.info("REVIEW_QUOTE_ALREADY_RESOLVED", {
-      quoteId: quote.quote_id,
-      status: quote.status,
+    await sendViaSmtp({
+      subject,
+      textBody,
+      htmlBody,
+      toEmail,
+      fromEmail,
+      fromName,
+      isLocal: isLocalSupabaseUrl(supabaseUrl),
     });
-    await deleteMessage(pgmq, message);
-    return { ok: true, reason: "quote_not_pending" };
+  } catch (error) {
+    const { error: cleanupError } = await admin
+      .from("quote_review_action_token")
+      .delete()
+      .in("token_id", [publishTokenId, flaggedTokenId]);
+
+    if (cleanupError) {
+      console.error("REVIEW_TOKEN_CLEANUP_FAILED", {
+        quoteId: quote.quote_id,
+        error: cleanupError.message,
+      });
+    }
+
+    throw error;
   }
-
-  await sendReviewEmail({
-    admin,
-    supabaseUrl,
-    quote,
-  });
-  await deleteMessage(pgmq, message);
-
-  return { ok: true, reason: "email_sent" };
 }
 
 // This endpoint uses 'publishable' | 'secret' access, apiKey is required.
@@ -365,7 +287,7 @@ async function processMessage(params: {
 export default {
   fetch: withSupabase(
     { auth: ["secret"] },
-    async (_req, _ctx: SupabaseContext<Database>) => {
+    async (req, _ctx: SupabaseContext<Database>) => {
       const supabaseUrl = Deno.env.get("SUPABASE_URL");
       const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
@@ -382,55 +304,52 @@ export default {
         },
       });
 
-      const pgmq = admin as unknown as PgmqRpcClient;
-
-      const { data: messagesData, error } = await pgmq.schema("pgmq").rpc(
-        "read",
-        {
-          queue_name: "quote_review",
-          vt: 30, // Visibility Timeout in seconds
-          qty: 5, // Number of messages to read
-        },
-      );
-
-      const messages = (messagesData ?? []) as PgmqReadMessage[];
-
-      if (error) {
-        console.error("RPC_ERROR pgmq.read", error);
-        return Response.json(
-          { error: "Failed to read queue", details: error },
-          {
-            status: 500,
-          },
-        );
+      let payload: unknown;
+      try {
+        payload = await req.json();
+      } catch {
+        return Response.json({ error: "Request body must be valid JSON" }, {
+          status: 400,
+        });
       }
 
-      const results = [];
-      for (const message of messages) {
-        try {
-          results.push(
-            await processMessage({
-              admin,
-              message,
-              pgmq,
-              supabaseUrl,
-            }),
-          );
-        } catch (processError) {
-          console.error("PROCESS_REVIEW_MESSAGE_FAILED", {
-            msgId: message.msg_id,
-            error: processError instanceof Error
-              ? processError.message
-              : String(processError),
-          });
-          results.push({ ok: false, reason: "processing_failed" });
+      if (
+        !payload ||
+        typeof payload !== "object" ||
+        !("quote_id" in payload) ||
+        typeof payload.quote_id !== "string"
+      ) {
+        return Response.json({ error: "quote_id is required" }, {
+          status: 400,
+        });
+      }
+
+      try {
+        const quote = await loadQuote(admin, payload.quote_id);
+
+        if (!quote) {
+          return Response.json({ error: "Quote not found" }, { status: 404 });
         }
-      }
 
-      return Response.json({
-        processed: messages.length,
-        results,
-      });
+        if (quote.status !== "pending") {
+          return Response.json(
+            { error: "Quote is not pending review", status: quote.status },
+            { status: 409 },
+          );
+        }
+
+        await sendReviewEmail({ admin, supabaseUrl, quote });
+
+        return Response.json({ ok: true, reason: "email_sent" });
+      } catch (error) {
+        console.error("REVIEW_EMAIL_FAILED", {
+          quoteId: payload.quote_id,
+          error: error instanceof Error ? error.message : String(error),
+        });
+        return Response.json({ error: "Failed to send review email" }, {
+          status: 500,
+        });
+      }
     },
   ),
 };
