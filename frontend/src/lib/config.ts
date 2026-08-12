@@ -4,6 +4,7 @@ import { env } from "@/libs/envlib";
 
 const environment = env.APP_ENV;
 
+console.log("=======APP_ENV:====", environment);
 const environmentConfig = {
     local: {
         frontendUrl: "http://localhost:3000",
