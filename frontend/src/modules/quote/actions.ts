@@ -9,6 +9,7 @@ import {
 import { createSsrClientFromNextCookies } from "@/supabase/server";
 import { supabaseAdminServerClient } from "@/supabase/admin";
 import { moderateContent, reviewQuoteContent } from "@/lib/moderation";
+import { sendReviewEmail } from "@/modules/moderation/sendReviewEmail";
 
 // const DAILY_QUOTE_LIMIT = 100;
 
@@ -63,19 +64,7 @@ async function getCategoryName(categoryId: number): Promise<string> {
 
 async function notifyReviewTeam(quoteId: string): Promise<void> {
   try {
-    const { error } = await supabaseAdminServerClient().functions.invoke(
-      "review_quote",
-      {
-        body: { quote_id: quoteId },
-      },
-    );
-
-    if (error) {
-      console.error("[quote.notifyReviewTeam] Review email failed", {
-        quoteId,
-        error: error.message,
-      });
-    }
+    await sendReviewEmail(quoteId);
   } catch (error) {
     console.error("[quote.notifyReviewTeam] Review email failed", {
       quoteId,

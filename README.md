@@ -60,7 +60,7 @@ We can make changes in the local supabase studio and then pull those changes dow
 
 ### Generated Types
 
-- `npm run supabase:types` - Generates DB types to `supabase/functions/_shared/database.types.ts` and syncs a copy to `frontend/src/supabase/database.types.ts`
+- `npm run supabase:types` - Generates DB types directly to `frontend/src/supabase/database.types.ts`
 - Edge Function import example: `import type { Database } from "../_shared/database.types.ts";`
 
 ### Deploying Changes
@@ -114,21 +114,12 @@ npx supabase migration list
 
 ```
 
-## Supabase functions
-
-### Local
-
-- `npx supabase functions serve` - Start local server to test functions
-- `npx supabase functions deploy <function-name>` - Deploy a function to the linked remote project
-- `npx supabase functions list` - List deployed functions in the remote project
-
-### Review quote email
+## Review quote email
 
 When moderation moves a quote to `pending`, the application invokes the
-`review_quote` function synchronously and waits for it to send the review email.
-Email failures are logged without removing the pending quote. The function sends
-email through SMTP using Nodemailer. Configure these function secrets in deployed
-environments:
+Next.js email service synchronously and waits for it to send the review email.
+Email failures are logged without removing the pending quote. Configure these
+environment variables in the frontend deployment:
 
 - `SMTP_HOST` (required)
 - `SMTP_PORT` (optional, defaults to `587`)
@@ -136,7 +127,9 @@ environments:
 - `SMTP_USER` and `SMTP_PASS` (optional, but must be provided together)
 - `REVIEW_NOTIFICATION_TO_EMAIL`, `REVIEW_NOTIFICATION_FROM_EMAIL`, and
   `REVIEW_NOTIFICATION_FROM_NAME` (optional)
+- `NEXT_PUBLIC_APP_URL` (optional moderation-link origin; otherwise derived from
+  `NEXT_PUBLIC_APP_ENV`)
 
-Local Supabase uses Mailpit at `inbucket:1025` on the internal Docker network by
-default. Set the SMTP variables in `supabase/.env.functions.local` to override
-it.
+Local development defaults to Mailpit SMTP at `127.0.0.1:54325`. Messages can be
+viewed at `http://127.0.0.1:54324`. Set the SMTP variables in `frontend/.env` to
+override it.
