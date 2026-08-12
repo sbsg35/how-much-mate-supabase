@@ -3,6 +3,7 @@ import "server-only";
 import { render } from "@react-email/render";
 import nodemailer from "nodemailer";
 
+import { getAppConfig } from "@/lib/config";
 import { supabaseAdminServerClient } from "@/supabase/admin";
 import { Database } from "@/supabase/database.types";
 import { ReviewPendingEmail } from "./ReviewPendingEmail";
@@ -23,31 +24,6 @@ type ReviewQuote = Database["public"]["Tables"]["quote"]["Row"] & {
 };
 
 const ONE_WEEK_IN_MILLISECONDS = 7 * 24 * 60 * 60 * 1000;
-
-function isLocalEnvironment() {
-  const appEnv = process.env.NEXT_PUBLIC_APP_ENV ?? "local";
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-  return (
-    appEnv === "local" ||
-    supabaseUrl.includes("127.0.0.1") ||
-    supabaseUrl.includes("localhost")
-  );
-}
-
-function getFrontendUrl() {
-  if (process.env.NEXT_PUBLIC_APP_URL) {
-    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
-  }
-
-  switch (process.env.NEXT_PUBLIC_APP_ENV ?? "local") {
-    case "prod":
-      return "https://howmuchmate.com.au";
-    case "dev":
-      return "https://dev.howmuchmate.com.au";
-    default:
-      return "http://localhost:3000";
-  }
-}
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-AU", {
@@ -154,39 +130,28 @@ async function deleteActionTokens(tokenIds: string[]) {
 }
 
 function createSmtpTransport() {
-  const isLocal = isLocalEnvironment();
-  const host = process.env.SMTP_HOST ?? (isLocal ? "127.0.0.1" : undefined);
-  const portValue = process.env.SMTP_PORT ?? (isLocal ? "54325" : "587");
-  const port = Number(portValue);
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_PASS;
+  const { smtp } = getAppConfig();
+  const { host, port, secure, user, pass } = smtp;
 
   if (!host) throw new Error("Missing required env var: SMTP_HOST");
-  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
-    throw new Error(`Invalid SMTP_PORT: ${portValue}`);
-  }
   if (Boolean(user) !== Boolean(pass)) {
     throw new Error("SMTP_USER and SMTP_PASS must be provided together");
-  }
-
-  const secureValue = process.env.SMTP_SECURE;
-  if (secureValue !== undefined && secureValue !== "true" && secureValue !== "false") {
-    throw new Error("SMTP_SECURE must be either true or false");
   }
 
   return nodemailer.createTransport({
     host,
     port,
-    secure: secureValue === undefined ? port === 465 : secureValue === "true",
+    secure,
     auth: user && pass ? { user, pass } : undefined,
   });
 }
 
 export async function sendReviewEmail(quoteId: string): Promise<void> {
+  const config = getAppConfig();
   const quote = await loadPendingQuote(quoteId);
   const { publishTokenId, flaggedTokenId } = await createActionTokens(quoteId);
   const tokenIds = [publishTokenId, flaggedTokenId];
-  const moderationUrl = `${getFrontendUrl()}/moderation`;
+  const moderationUrl = `${config.frontendUrl.replace(/\/$/, "")}/moderation`;
   const publishUrl = `${moderationUrl}/${publishTokenId}`;
   const flaggedUrl = `${moderationUrl}/${flaggedTokenId}`;
 
@@ -214,11 +179,10 @@ export async function sendReviewEmail(quoteId: string): Promise<void> {
 
     await createSmtpTransport().sendMail({
       from: {
-        name: process.env.REVIEW_NOTIFICATION_FROM_NAME ?? "How Much Mate",
-        address:
-          process.env.REVIEW_NOTIFICATION_FROM_EMAIL ?? "hello@howmuchmate.com.au",
+        name: config.smtp.fromName,
+        address: config.smtp.fromEmail,
       },
-      to: process.env.REVIEW_NOTIFICATION_TO_EMAIL ?? "hello@howmuchmate.com.au",
+      to: config.smtp.reviewToEmail,
       subject: `Quote pending review: ${quote.title}`,
       text,
       html,

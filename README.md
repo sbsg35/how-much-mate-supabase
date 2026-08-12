@@ -121,14 +121,12 @@ Next.js email service synchronously and waits for it to send the review email.
 Email failures are logged without removing the pending quote. Configure these
 environment variables in the frontend deployment:
 
-- `SMTP_HOST` (required)
-- `SMTP_PORT` (optional, defaults to `587`)
-- `SMTP_SECURE` (optional, `true` or `false`; defaults to `true` for port `465`)
+- `APP_ENV` (`local`, `dev`, or `prod`)
+- `APP_URL` (optional moderation-link origin; defaults by environment)
+- `SMTP_HOST` (required in dev/prod; local defaults to Mailpit)
 - `SMTP_USER` and `SMTP_PASS` (optional, but must be provided together)
 - `REVIEW_NOTIFICATION_TO_EMAIL`, `REVIEW_NOTIFICATION_FROM_EMAIL`, and
   `REVIEW_NOTIFICATION_FROM_NAME` (optional)
-- `NEXT_PUBLIC_APP_URL` (optional moderation-link origin; otherwise derived from
-  `NEXT_PUBLIC_APP_ENV`)
 
 Local development defaults to Mailpit SMTP at `127.0.0.1:54325`. Messages can be
 viewed at `http://127.0.0.1:54324`. Set the SMTP variables in `frontend/.env` to
