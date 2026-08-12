@@ -6,6 +6,7 @@ const publicEnvSchema = z.object({
 });
 
 const serverEnvSchema = publicEnvSchema.extend({
+  APP_ENV: z.enum(["local", "dev", "prod"]),
   SMTP_PASS: z.string().min(1),
   OPENAI_API_KEY: z.string().min(1),
   SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET: z.string().min(1),
@@ -21,6 +22,7 @@ export const env = (
   typeof window === "undefined"
     ? serverEnvSchema.parse({
         ...publicEnv,
+        APP_ENV: process.env.APP_ENV,
         SMTP_PASS: process.env.SMTP_PASS,
         OPENAI_API_KEY: process.env.OPENAI_API_KEY,
         SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET:

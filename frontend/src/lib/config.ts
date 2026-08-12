@@ -2,7 +2,7 @@ import "server-only";
 
 import { env } from "@/libs/envlib";
 
-const environment = process.env.APP_ENV ?? "local";
+const environment = env.APP_ENV;
 
 const environmentConfig = {
     local: {
@@ -28,12 +28,7 @@ const environmentConfig = {
     },
 };
 
-if (!(environment in environmentConfig)) {
-    throw new Error(`Invalid APP_ENV: ${environment}`);
-}
-
-const selectedConfig =
-    environmentConfig[environment as keyof typeof environmentConfig];
+const selectedConfig = environmentConfig[environment];
 
 export function getAppConfig() {
     return {
