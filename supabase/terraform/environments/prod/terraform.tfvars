@@ -1,3 +1,21 @@
 project_name    = "how-much-mate-prod"
 organization_id = "cgdugjxdoazkaftxuluf"
 region          = "ap-southeast-2"
+auth_settings = {
+  site_url                                   = "https://howmuchmate.com.au"
+  additional_redirect_urls                   = ["https://howmuchmate.com.au/auth/callback", "https://howmuchmate.com.au/auth/callback/password-recovery", "http://localhost:3000/auth/callback", "http://localhost:3000/auth/callback/password-recovery"]
+  enable_refresh_token_rotation              = true
+  enable_signup                              = true
+  enable_anonymous_sign_ins                  = false
+  minimum_password_length                    = 6
+  mailer_otp_exp                             = 3600
+  mailer_otp_length                          = 6
+  security_captcha_enabled                   = true
+  security_captcha_provider                  = "turnstile"
+  security_captcha_secret                    = "0x4AAAAAABdQCglMU9gaRmEr"
+  external_google_client_id                  = "778035252919-kfjl3fr5co8lv204m8er08hjihb02r02.apps.googleusercontent.com"
+  external_google_enabled                    = true
+  mailer_templates_magic_link_content_path   = "../../../templates/magic-link.html"
+  mailer_templates_confirmation_content_path = "../../../templates/confirmation.html"
+  mailer_templates_recovery_content_path     = "../../../templates/recovery.html"
+}
