@@ -1,5 +1,7 @@
 import "server-only";
 
+import { env } from "@/libs/envlib";
+
 const environment = process.env.APP_ENV ?? "local";
 
 const environmentConfig = {
@@ -14,7 +16,7 @@ const environmentConfig = {
         frontendUrl: "https://dev.howmuchmate.com.au",
         smtpHost: "sandbox.smtp.mailtrap.io",
         user: "ee076af183dc09",
-        smtpPort: 2525,
+        smtpPort: 587,
         smtpSecure: false,
     },
     prod: {
@@ -35,13 +37,13 @@ const selectedConfig =
 
 export function getAppConfig() {
     return {
-        frontendUrl: process.env.APP_URL ?? selectedConfig.frontendUrl,
+        frontendUrl: selectedConfig.frontendUrl,
         smtp: {
             host: selectedConfig.smtpHost,
             port: selectedConfig.smtpPort,
             secure: selectedConfig.smtpSecure,
             user: selectedConfig.user,
-            pass: process.env.SMTP_PASS,
+            pass: environment === "local" ? undefined : env.SMTP_PASS,
             fromEmail: "hello@howmuchmate.com.au",
             fromName: "How Much Mate",
             reviewToEmail: "hello@howmuchmate.com.au",

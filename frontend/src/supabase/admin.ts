@@ -2,15 +2,12 @@ import "server-only";
 
 import { createClient } from "@supabase/supabase-js";
 
+import { env } from "@/libs/envlib";
 import { Database } from "./database.types";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseSecretKey =
   process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl) {
-  throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
-}
 
 if (!supabaseSecretKey) {
   throw new Error(

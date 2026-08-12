@@ -1,8 +1,9 @@
 import "server-only";
 import OpenAI from "openai";
 import { z } from "zod";
+import { env } from "@/libs/envlib";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 
 export async function moderateContent(
   text: string,

@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 
+import { env } from "@/libs/envlib";
 import { Database } from "./database.types";
 
 type CookieStore = {
@@ -9,13 +10,13 @@ type CookieStore = {
   set: unknown;
 };
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 export const createSsrClient = (
   cookieStore: CookieStore | Promise<CookieStore>,
 ) =>
-  createServerClient<Database>(supabaseUrl!, supabaseKey!, {
+  createServerClient<Database>(supabaseUrl, supabaseKey, {
     cookies: {
       // the purpose of this getAll function is to retrieve cookies from the request headers when called from a Server Component.
       async getAll() {
