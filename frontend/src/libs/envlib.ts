@@ -20,10 +20,10 @@ const publicEnv = {
 export const env = (
   typeof window === "undefined"
     ? serverEnvSchema.parse({
-        ...publicEnv,
-        APP_ENV: process.env.APP_ENV,
-        SMTP_PASS: process.env.SMTP_PASS,
-        OPENAI_API_KEY: process.env.OPENAI_API_KEY,
-      })
+      ...publicEnv,
+      APP_ENV: process.env.APP_ENV,
+      SMTP_PASS: process.env.SMTP_PASS,
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    })
     : publicEnvSchema.parse(publicEnv)
 ) as z.infer<typeof serverEnvSchema>;
