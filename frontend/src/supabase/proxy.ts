@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { type NextRequest, NextResponse } from "next/server";
-import { env } from "@/libs/envlib";
+import { env } from "@/lib/envlib";
 
 const authRoutes = [
   "/auth/login",

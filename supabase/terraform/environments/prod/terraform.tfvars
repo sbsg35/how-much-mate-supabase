@@ -12,7 +12,6 @@ auth_settings = {
   mailer_otp_length                          = 6
   security_captcha_enabled                   = true
   security_captcha_provider                  = "turnstile"
-  security_captcha_secret                    = "0x4AAAAAABdQCglMU9gaRmEr"
   external_google_client_id                  = "778035252919-kfjl3fr5co8lv204m8er08hjihb02r02.apps.googleusercontent.com"
   external_google_enabled                    = true
   mailer_templates_magic_link_content_path   = "../../../templates/magic-link.html"

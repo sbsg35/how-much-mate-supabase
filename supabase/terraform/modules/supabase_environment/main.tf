@@ -27,6 +27,9 @@ resource "supabase_settings" "this" {
       var.auth_settings,
       var.external_google_secret == null ? {} : {
         external_google_secret = var.external_google_secret
+      },
+      var.security_captcha_secret == null ? {} : {
+        security_captcha_secret = var.security_captcha_secret
       }
     )
   )

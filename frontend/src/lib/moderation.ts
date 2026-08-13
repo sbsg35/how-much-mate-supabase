@@ -1,7 +1,7 @@
 import "server-only";
 import OpenAI from "openai";
 import { z } from "zod";
-import { env } from "@/libs/envlib";
+import { env } from "@/lib/envlib";
 
 const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 

@@ -1,6 +1,6 @@
 import "server-only";
 
-import { env } from "@/libs/envlib";
+import { env } from "@/lib/envlib";
 
 const environment = env.APP_ENV;
 

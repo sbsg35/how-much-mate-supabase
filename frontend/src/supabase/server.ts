@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 
-import { env } from "@/libs/envlib";
+import { env } from "@/lib/envlib";
 import { Database } from "./database.types";
 
 type CookieStore = {
@@ -39,7 +39,7 @@ export const createSsrClient = (
           ) => unknown;
 
           cookiesToSet.forEach(({ name, value, options }) =>
-            setCookie(name, value, options),
+            setCookie(name, value, options)
           );
         } catch {
           // The `setAll` method was called from a Client Component.
