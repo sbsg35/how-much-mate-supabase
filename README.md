@@ -1,134 +1,205 @@
-# Setup
+# How Much Mate
 
-Reference: https://www.youtube.com/watch?v=BceVcpiOlKM
+How Much Mate is a Next.js application backed by Supabase. This repository
+contains the frontend, database migrations and seed data, email templates, and
+infrastructure configuration.
+
+## Repository structure
+
+```text
+.
+├── frontend/             Next.js application
+├── supabase/
+│   ├── migrations/       Database migrations
+│   ├── templates/        Supabase email templates
+│   ├── terraform/        Remote infrastructure configuration
+│   ├── config.toml       Local Supabase configuration
+│   └── seed.sql          Local seed data
+└── package.json          Supabase and email-template scripts
+```
 
 ## Prerequisites
 
-- Docker setup
-- Supabase CLI installed
+- Node.js 24 or later
+- Docker
+- Supabase CLI (available through the root package dependencies)
 
-## Initial Setup
+## Quick start
 
-- `npx supabase init` - Creates a supabase folder
+1. Install the root and frontend dependencies:
 
-## Local Development
+   ```bash
+   npm install
+   npm --prefix frontend install
+   ```
 
-- `npx supabase start` - Downloads the docker images and starts the containers (postgres, auth, storage, functions, etc.)
-- `npx supabase stop` - Stops the containers
+2. Create the frontend environment file:
 
-## Remote Project Setup
+   ```bash
+   cp frontend/.env.example frontend/.env
+   ```
 
-- `npx supabase login` - Authenticate with Supabase
-- `npx supabase projects list` - List all Supabase projects you have access to
-- `npx supabase link --project-ref ghhzavhcgldjqdanjxgp` - Connect local folder to remote project (enables running migrations, functions, etc. on production)
-- `npx supabase db remote set <connection string>` - Connect cloud database to local (optional)
+3. Start the local Supabase services:
 
-## Reset remote database
-- `npx supabase db reset --linked` - Drops all tables and re-runs all migrations on the remote database (use with caution!)
+   ```bash
+   npx supabase start
+   ```
 
-### Getting migration status
+4. Copy the local publishable and secret keys shown by the following command
+   into `frontend/.env`:
 
-- `npx supabase db remote status` - Shows the status of local vs remote migrations (which ones are pending, etc.)
+   ```bash
+   npx supabase status
+   ```
 
-### Unlink
+5. Generate the local database types:
 
-- `npx supabase unlink` - Disconnect local from remote project (useful if you want to connect to a different project or just work locally without affecting production)
+   ```bash
+   npm run supabase:types
+   ```
 
-### Get status of remote project
+6. Start the frontend:
 
-- `npx supabase status` - Shows connection status and environment variables for the linked project
+   ```bash
+   npm --prefix frontend run dev
+   ```
 
-## Database Migrations
+The application will be available at <http://localhost:3000>. Supabase Studio
+is at <http://localhost:54323>, and locally captured email is available in
+Mailpit at <http://localhost:54324>.
 
-The recommended workflow is to create and test migrations locally, then push them to the remote project once verified. This ensures that you can iterate quickly without affecting production data until you're ready.
+## Local development
 
-### Creating Migrations
+### Supabase services
 
-- `supabase migration new <name>` - Create a blank migration file
-  - Manual: Write SQL directly in the file
-  - Auto-Diff: Use the local Studio UI (localhost:54323) to create tables/columns, then run `supabase db diff -f <name>` to generate SQL automatically
-
-### Pulling from Remote
-
-We can make changes in the local supabase studio and then pull those changes down to our local environment to test before pushing to production.
-
-- `npx supabase db pull` - Pull current database schema from remote project and create a migration file locally
-
-### Testing Changes
-
-- `supabase db reset` - Re-runs all migrations from scratch to test locally
-
-### Generated Types
-
-- `npm run supabase:types` - Generates DB types directly to `frontend/src/supabase/database.types.ts`
-- Edge Function import example: `import type { Database } from "../_shared/database.types.ts";`
-
-### Deploying Changes
-
-- `supabase db push` - Push tested migrations to your live Supabase project
-
-## Database Synchronization
-
-- `supabase link --project-ref <your-id>` - Connects local to remote
-- `supabase db pull` - Downloads the remote schema
-- `supabase db reset` - Applies downloaded schema to local Docker database
-
-## Local keys
-
-Run `npx supbase status`
-
-```
-NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
+```bash
+npx supabase start       # Start the local Supabase stack
+npx supabase status      # Show local service URLs and keys
+npx supabase stop        # Stop the local Supabase stack
+npm run supabase:restart # Rebuild email templates and restart Supabase
 ```
 
-The Supabase URL is selected from `frontend/src/lib/config.ts` using `APP_ENV`.
+### Database migrations
 
-## TODO for dev & prod
+Use migrations for every schema change:
 
-- [ ] Add environment variables for local and production
-- [ ] Add captcha secret
-- [ ] Add redirect URLS for auth/callback
-
-## Quirks
-
-- If you turn off email_confirmations, the user created prior that didn't verify their email will be stuck, since their status is not verified.
-
-## Pushing to dev
-
+```bash
+npx supabase migration new <migration_name> # Create an empty migration
+npx supabase db diff -f <migration_name>     # Generate one from local changes
+npm run supabase:reset                       # Rebuild locally and regenerate types
 ```
-# check local vs remote migration status
+
+A typical workflow is:
+
+1. Make schema changes in a migration or in local Supabase Studio.
+2. Generate a migration with `npx supabase db diff -f <migration_name>` if the
+   changes were made through Studio.
+3. Run `npm run supabase:reset` to apply all migrations and seed data from
+   scratch.
+4. Review the generated SQL and test the frontend.
+
+To update the generated TypeScript types without resetting the database, run:
+
+```bash
+npm run supabase:types
+```
+
+The generated file is `frontend/src/supabase/database.types.ts`.
+
+### Pulling a remote schema
+
+After linking the intended remote project, pull its schema with:
+
+```bash
+npx supabase db pull
+```
+
+This creates a local migration representing remote schema changes. Review it
+before applying or committing it.
+
+### Email templates
+
+```bash
+npm run email:build # Build the Supabase auth email templates once
+npm run email:watch # Rebuild templates while editing
+```
+
+Local application email uses Mailpit on `127.0.0.1:54325` by default, so it is
+captured rather than delivered. SMTP values in `frontend/.env` can override the
+local defaults.
+
+When moderation moves a quote to `pending`, the application sends the review
+notification synchronously. A delivery failure is logged without removing the
+pending quote.
+
+## Remote database workflow
+
+Authenticate and link the target project before running remote commands:
+
+```bash
+npx supabase login
+npx supabase projects list
+npx supabase link --project-ref <project_ref>
+```
+
+The root package also provides `npm run link:dev` for the configured development
+project. Confirm the linked project before pushing changes:
+
+```bash
 npx supabase migration list
-
-# push local migrations to remote with dry run first to check for errors
 npx supabase db push --dry-run
-
-# push local migrations to remote
 npx supabase db push
-
-# include seed
-npx supabase db push --with-seed
-
-# check local vs remote migration status again to confirm
+npx supabase db push --linked # run it for linked project
 npx supabase migration list
-
-# push the seed file
-
 ```
 
-## Review quote email
+Use `npx supabase db push --with-seed` only when the remote environment should
+also receive the seed data.
 
-When moderation moves a quote to `pending`, the application invokes the
-Next.js email service synchronously and waits for it to send the review email.
-Email failures are logged without removing the pending quote. Configure these
-environment variables in the frontend deployment:
+To disconnect the repository from a remote project, run:
 
-- `APP_ENV` (`local`, `dev`, or `prod`)
-- `APP_URL` (optional moderation-link origin; defaults by environment)
-- `SMTP_HOST` (required in dev/prod; local defaults to Mailpit)
-- `SMTP_USER` and `SMTP_PASS` (optional, but must be provided together)
-- `REVIEW_NOTIFICATION_TO_EMAIL`, `REVIEW_NOTIFICATION_FROM_EMAIL`, and
-  `REVIEW_NOTIFICATION_FROM_NAME` (optional)
+```bash
+npx supabase unlink
+```
 
-Local development defaults to Mailpit SMTP at `127.0.0.1:54325`. Messages can be
-viewed at `http://127.0.0.1:54324`. Set the SMTP variables in `frontend/.env` to
-override it.
+> [!CAUTION]
+> `npx supabase db reset --linked` drops and rebuilds the linked remote database.
+> Verify the target project and backups before using it.
+
+## Environment configuration
+
+Start with `frontend/.env.example`. The main settings are:
+
+| Variable | Purpose |
+| --- | --- |
+| `APP_ENV` | Selects `local`, `dev`, or `prod` application configuration |
+| `APP_URL` | Public application origin |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Browser-safe Supabase key |
+| `SUPABASE_SECRET_KEY` | Server-only Supabase key |
+| `OPENAI_API_KEY` | Server-only OpenAI API key |
+| `SMTP_HOST` | SMTP server; optional when using local Mailpit |
+| `SMTP_USER` / `SMTP_PASS` | SMTP credentials; provide both when authentication is required |
+
+Never commit secret or service-role keys. The Supabase URL is selected by
+`APP_ENV` in `frontend/src/lib/config.ts`.
+
+## Troubleshooting
+
+- If local services fail to start, make sure Docker is running and retry
+  `npx supabase start`.
+- Use `npx supabase status` to check local URLs, ports, and keys.
+- If the generated database types are stale, run `npm run supabase:types`.
+- Disabling email confirmation does not automatically verify existing users.
+  Accounts created earlier with unconfirmed email may need to be handled
+  separately.
+
+## Further reference
+
+- [Supabase local development documentation](https://supabase.com/docs/guides/local-development)
+- [Original setup walkthrough](https://www.youtube.com/watch?v=BceVcpiOlKM)
+
+## Project TODO
+
+- [ ] Finalize local, development, and production environment variables.
+- [ ] Add the CAPTCHA secret.
+- [ ] Confirm authentication callback URLs for every environment.
