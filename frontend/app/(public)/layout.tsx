@@ -36,7 +36,7 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
                 <Button
                   display={{ base: "none", md: "inline-flex" }}
                   component={NextLink}
-                  href="/quote/post"
+                  href="/quote/create"
                   leftSection={<IconPlus />}
                 >
                   Post quote

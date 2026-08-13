@@ -7,7 +7,11 @@ export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const { searchParams, origin } = requestUrl;
   const code = searchParams.get("code");
-  const next = searchParams.get("next") ?? "/user/profile";
+  const requestedNext = searchParams.get("next");
+  const next =
+    requestedNext?.startsWith("/") && !requestedNext.startsWith("//")
+      ? requestedNext
+      : "/user/profile";
 
   if (code) {
     const supabase = createSsrClient(cookies());
@@ -21,6 +25,6 @@ export async function GET(request: NextRequest) {
   }
 
   const loginUrl = new URL("/auth/login", origin);
-  loginUrl.searchParams.set("error", "auth_callback_error");
+  loginUrl.searchParams.set("alert", "auth_callback_error");
   return NextResponse.redirect(loginUrl);
 }

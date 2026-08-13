@@ -44,15 +44,53 @@ variable "external_google_secret" {
   default     = null
 }
 
+variable "security_captcha_secret" {
+  description = "Dev captcha provider secret, supplied via TF_VAR_security_captcha_secret."
+  type        = string
+  sensitive   = true
+  default     = "1x0000000000000000000000000000000AA"
+}
+
+locals {
+  magic_link_template_path   = var.auth_settings.mailer_templates_magic_link_content_path
+  confirmation_template_path = var.auth_settings.mailer_templates_confirmation_content_path
+  recovery_template_path     = var.auth_settings.mailer_templates_recovery_content_path
+
+  auth_settings_without_template_path = var.auth_settings == null ? null : {
+    for key, value in var.auth_settings : key => value if !contains([
+      "mailer_templates_magic_link_content_path",
+      "mailer_templates_confirmation_content_path",
+      "mailer_templates_recovery_content_path",
+    ], key)
+  }
+
+  auth_settings = local.auth_settings_without_template_path == null ? null : merge(
+    local.auth_settings_without_template_path,
+    {
+      mailer_templates_magic_link_content = file(local.magic_link_template_path)
+    },
+    {
+      mailer_templates_confirmation_content = file(local.confirmation_template_path)
+    },
+    {
+      mailer_templates_recovery_content = file(local.recovery_template_path)
+    }
+  )
+}
+
+
+
 module "supabase_environment" {
   source = "../../modules/supabase_environment"
 
-  project_name           = var.project_name
-  organization_id        = var.organization_id
-  region                 = var.region
-  database_password      = var.database_password
-  instance_size          = var.instance_size
-  api_settings           = var.api_settings
-  auth_settings          = var.auth_settings
-  external_google_secret = var.external_google_secret
+  project_name            = var.project_name
+  organization_id         = var.organization_id
+  region                  = var.region
+  database_password       = var.database_password
+  instance_size           = var.instance_size
+  api_settings            = var.api_settings
+  auth_settings           = local.auth_settings
+  external_google_secret  = var.external_google_secret
+  security_captcha_secret = var.security_captcha_secret
+
 }

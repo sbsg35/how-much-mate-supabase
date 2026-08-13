@@ -9,91 +9,120 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      category: {
+        Row: {
+          category_id: number
+          created_at: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          category_id?: number
+          created_at?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: number
+          created_at?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profile: {
         Row: {
           created_at: string
+          email: string
           profile_id: string
+          updated_at: string
           username: string | null
         }
         Insert: {
           created_at?: string
+          email: string
           profile_id: string
+          updated_at?: string
           username?: string | null
         }
         Update: {
           created_at?: string
+          email?: string
           profile_id?: string
+          updated_at?: string
           username?: string | null
         }
         Relationships: []
       }
-      project: {
+      quote: {
         Row: {
-          category: string | null
+          business_name: string
+          category_id: number | null
+          completed: boolean
           created_at: string
           description: string
+          metadata: Json | null
+          price: number
           profile_id: string
-          project_id: string
+          quote_date: string
+          quote_id: string
+          review_reason: string | null
+          review_source: string | null
+          search_tsv: unknown
+          status: string
+          suburb_id: string
           title: string
+          updated_at: string
         }
         Insert: {
-          category?: string | null
+          business_name: string
+          category_id?: number | null
+          completed?: boolean
           created_at?: string
           description: string
+          metadata?: Json | null
+          price: number
           profile_id: string
-          project_id?: string
+          quote_date: string
+          quote_id?: string
+          review_reason?: string | null
+          review_source?: string | null
+          search_tsv?: unknown
+          status?: string
+          suburb_id: string
           title: string
+          updated_at?: string
         }
         Update: {
-          category?: string | null
+          business_name?: string
+          category_id?: number | null
+          completed?: boolean
           created_at?: string
           description?: string
+          metadata?: Json | null
+          price?: number
           profile_id?: string
-          project_id?: string
+          quote_date?: string
+          quote_id?: string
+          review_reason?: string | null
+          review_source?: string | null
+          search_tsv?: unknown
+          status?: string
+          suburb_id?: string
           title?: string
+          updated_at?: string
         }
         Relationships: [
           {
-            foreignKeyName: "project_profile_id_fkey"
-            columns: ["profile_id"]
+            foreignKeyName: "quote_category_id_fkey"
+            columns: ["category_id"]
             isOneToOne: false
-            referencedRelation: "profile"
-            referencedColumns: ["profile_id"]
+            referencedRelation: "category"
+            referencedColumns: ["category_id"]
           },
-        ]
-      }
-      quote: {
-        Row: {
-          business_name: string | null
-          created_at: string
-          metadata: Json | null
-          price: number | null
-          profile_id: string | null
-          project_id: string | null
-          quote_id: number
-          suburb_id: string | null
-        }
-        Insert: {
-          business_name?: string | null
-          created_at?: string
-          metadata?: Json | null
-          price?: number | null
-          profile_id?: string | null
-          project_id?: string | null
-          quote_id?: number
-          suburb_id?: string | null
-        }
-        Update: {
-          business_name?: string | null
-          created_at?: string
-          metadata?: Json | null
-          price?: number | null
-          profile_id?: string | null
-          project_id?: string | null
-          quote_id?: number
-          suburb_id?: string | null
-        }
-        Relationships: [
           {
             foreignKeyName: "quote_profile_id_fkey"
             columns: ["profile_id"]
@@ -102,18 +131,46 @@ export type Database = {
             referencedColumns: ["profile_id"]
           },
           {
-            foreignKeyName: "quote_project_id_fkey"
-            columns: ["project_id"]
-            isOneToOne: false
-            referencedRelation: "project"
-            referencedColumns: ["project_id"]
-          },
-          {
             foreignKeyName: "quote_suburb_id_fkey"
             columns: ["suburb_id"]
             isOneToOne: false
             referencedRelation: "suburb"
             referencedColumns: ["suburb_id"]
+          },
+        ]
+      }
+      quote_review_action_token: {
+        Row: {
+          action: string
+          created_at: string
+          expires_at: string
+          quote_id: string
+          token_id: string
+          used_at: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          expires_at: string
+          quote_id: string
+          token_id?: string
+          used_at?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          expires_at?: string
+          quote_id?: string
+          token_id?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quote_review_action_token_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quote"
+            referencedColumns: ["quote_id"]
           },
         ]
       }
@@ -155,7 +212,24 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      find_published_quotes: {
+        Args: {
+          p_category_id?: number
+          p_keyword?: string
+          p_limit?: number
+          p_page?: number
+          p_radius_km?: number
+          p_search_type?: string
+          p_sort_by?: string
+          p_state?: string
+          p_suburb_id?: string
+        }
+        Returns: {
+          category: Json
+          quote: Json
+          suburb: Json
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

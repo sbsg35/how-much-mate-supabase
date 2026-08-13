@@ -4,9 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf frontend/src/supabase/database.types.ts",
+    "clean": "rm -f frontend/src/supabase/database.types.ts",
     "supabase:gen": "npx supabase gen types typescript --schema public --local > frontend/src/supabase/database.types.ts",
-    "supabase:types": "npm run clean && npm run supabase:gen"
+    "supabase:types": "npm run clean && npm run supabase:gen",
+    "supabase:reset": "supabase db reset && npm run supabase:types",
+    "supabase:restart": "npm run email:build && npx supabase stop && npx supabase start",
+    "email:build": "tsx supabase/templates/build.tsx",
+    "email:watch": "tsx watch supabase/templates/build.tsx",
+    "link:dev": "supabase link --project-ref ghhzavhcgldjqdanjxgp",
+    "link:local": "supabase link --project-ref gbfbpochuudzenlocfll"
   },
   "repository": {
     "type": "git",
@@ -21,6 +27,10 @@
   },
   "homepage": "https://github.com/sbsg35/how-much-mate-supabase#readme",
   "devDependencies": {
-    "supabase": "^2.84.6"
+    "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.1.0",
+    "react": "^19.2.7",
+    "supabase": "^2.84.6",
+    "tsx": "^4.23.1"
   }
 }

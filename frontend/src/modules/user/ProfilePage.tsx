@@ -1,10 +1,35 @@
 "use client";
-import { Container } from "@mantine/core";
+import { Container, Paper, Title, VisuallyHidden } from "@mantine/core";
+import { ProfileForm } from "./components/ProfileForm";
+import { SecuritySettingsForm } from "./components/SecuritySettingsForm";
+import { ProfilePageSkeleton } from "../quote/components/ProfilePageSkeleton";
+import { useProfile } from "@/service/profile";
+import { AuthNotification } from "../auth/components/AuthNotification";
+import { useSearchParams } from "next/navigation";
 
 export const ProfilePage = () => {
+  const searchParams = useSearchParams();
+  const { data: user, isLoading } = useProfile();
+  const alert = searchParams.get("alert");
+
+  if (isLoading) {
+    return <ProfilePageSkeleton />;
+  }
+
   return (
-    <>
-      <Container size="sm">Protected page</Container>
-    </>
+    <Container size="sm">
+      <AuthNotification type={alert} cleanupPath="/user/profile" />
+      {/* for SEO */}
+      <VisuallyHidden>
+        <Title order={1}>Profile page</Title>
+      </VisuallyHidden>
+      <Paper withBorder shadow="md" p={30} radius="md" mt="sm" pos="relative">
+        {user && <ProfileForm user={user} />}
+      </Paper>
+
+      <Paper withBorder shadow="md" p={30} radius="md" mt="sm" pos="relative">
+        <SecuritySettingsForm />
+      </Paper>
+    </Container>
   );
 };

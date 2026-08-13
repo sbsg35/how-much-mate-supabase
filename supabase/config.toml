@@ -101,7 +101,7 @@ enabled = true
 # Port to use for the email testing server web interface.
 port = 54324
 # Uncomment to expose additional ports for testing user applications that send emails.
-# smtp_port = 54325
+smtp_port = 54325
 # pop3_port = 54326
 # admin_email = "admin@email.com"
 # sender_name = "Admin"
@@ -153,7 +153,7 @@ enabled = true
 # in emails.
 site_url = "http://localhost:3000"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-additional_redirect_urls = ["http://localhost:3000/auth/callback"]
+additional_redirect_urls = ["http://localhost:3000/auth/callback", "http://localhost:3000/auth/callback/password-recovery"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to the local API URL (http://127.0.0.1:<port>/auth/v1).
@@ -230,6 +230,18 @@ otp_expiry = 3600
 # [auth.email.template.invite]
 # subject = "You have been invited"
 # content_path = "./supabase/templates/invite.html"
+
+[auth.email.template.magic_link]
+subject = "Sign in to How Much Mate"
+content_path = "./supabase/templates/magic-link.html"
+
+[auth.email.template.confirmation]
+subject = "Confirm your email address"
+content_path = "./supabase/templates/confirmation.html"
+
+[auth.email.template.recovery]
+subject = "Reset your How Much Mate password"
+content_path = "./supabase/templates/recovery.html"
 
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]

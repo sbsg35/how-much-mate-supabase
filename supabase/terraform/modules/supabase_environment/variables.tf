@@ -43,3 +43,10 @@ variable "external_google_secret" {
   sensitive   = true
   default     = null
 }
+
+variable "security_captcha_secret" {
+  description = "Optional captcha provider secret to inject into auth_settings.security_captcha_secret."
+  type        = string
+  sensitive   = true
+  default     = null
+}

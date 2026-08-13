@@ -19,8 +19,24 @@ Reference: https://www.youtube.com/watch?v=BceVcpiOlKM
 ## Remote Project Setup
 
 - `npx supabase login` - Authenticate with Supabase
-- `npx supabase link --project-ref <project ref>` - Connect local folder to remote project (enables running migrations, functions, etc. on production)
+- `npx supabase projects list` - List all Supabase projects you have access to
+- `npx supabase link --project-ref ghhzavhcgldjqdanjxgp` - Connect local folder to remote project (enables running migrations, functions, etc. on production)
 - `npx supabase db remote set <connection string>` - Connect cloud database to local (optional)
+
+## Reset remote database
+- `npx supabase db reset --linked` - Drops all tables and re-runs all migrations on the remote database (use with caution!)
+
+### Getting migration status
+
+- `npx supabase db remote status` - Shows the status of local vs remote migrations (which ones are pending, etc.)
+
+### Unlink
+
+- `npx supabase unlink` - Disconnect local from remote project (useful if you want to connect to a different project or just work locally without affecting production)
+
+### Get status of remote project
+
+- `npx supabase status` - Shows connection status and environment variables for the linked project
 
 ## Database Migrations
 
@@ -28,7 +44,7 @@ The recommended workflow is to create and test migrations locally, then push the
 
 ### Creating Migrations
 
-- `supabase db migration new <name>` - Create a blank migration file
+- `supabase migration new <name>` - Create a blank migration file
   - Manual: Write SQL directly in the file
   - Auto-Diff: Use the local Studio UI (localhost:54323) to create tables/columns, then run `supabase db diff -f <name>` to generate SQL automatically
 
@@ -41,6 +57,11 @@ We can make changes in the local supabase studio and then pull those changes dow
 ### Testing Changes
 
 - `supabase db reset` - Re-runs all migrations from scratch to test locally
+
+### Generated Types
+
+- `npm run supabase:types` - Generates DB types directly to `frontend/src/supabase/database.types.ts`
+- Edge Function import example: `import type { Database } from "../_shared/database.types.ts";`
 
 ### Deploying Changes
 
@@ -57,12 +78,57 @@ We can make changes in the local supabase studio and then pull those changes dow
 Run `npx supbase status`
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
 ```
+
+The Supabase URL is selected from `frontend/src/lib/config.ts` using `APP_ENV`.
 
 ## TODO for dev & prod
 
 - [ ] Add environment variables for local and production
 - [ ] Add captcha secret
 - [ ] Add redirect URLS for auth/callback
+
+## Quirks
+
+- If you turn off email_confirmations, the user created prior that didn't verify their email will be stuck, since their status is not verified.
+
+## Pushing to dev
+
+```
+# check local vs remote migration status
+npx supabase migration list
+
+# push local migrations to remote with dry run first to check for errors
+npx supabase db push --dry-run
+
+# push local migrations to remote
+npx supabase db push
+
+# include seed
+npx supabase db push --with-seed
+
+# check local vs remote migration status again to confirm
+npx supabase migration list
+
+# push the seed file
+
+```
+
+## Review quote email
+
+When moderation moves a quote to `pending`, the application invokes the
+Next.js email service synchronously and waits for it to send the review email.
+Email failures are logged without removing the pending quote. Configure these
+environment variables in the frontend deployment:
+
+- `APP_ENV` (`local`, `dev`, or `prod`)
+- `APP_URL` (optional moderation-link origin; defaults by environment)
+- `SMTP_HOST` (required in dev/prod; local defaults to Mailpit)
+- `SMTP_USER` and `SMTP_PASS` (optional, but must be provided together)
+- `REVIEW_NOTIFICATION_TO_EMAIL`, `REVIEW_NOTIFICATION_FROM_EMAIL`, and
+  `REVIEW_NOTIFICATION_FROM_NAME` (optional)
+
+Local development defaults to Mailpit SMTP at `127.0.0.1:54325`. Messages can be
+viewed at `http://127.0.0.1:54324`. Set the SMTP variables in `frontend/.env` to
+override it.

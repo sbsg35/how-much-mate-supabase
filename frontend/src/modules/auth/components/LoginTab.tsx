@@ -18,7 +18,8 @@ import { Box, Divider, Group, VisuallyHidden } from "@mantine/core";
 
 import { SocialLogins } from "./SocialLogins";
 import { supabaseBrowserClient } from "@/supabase/client";
-import { notifications } from "@mantine/notifications";
+
+import { handleSupabaseAuthError } from "@/lib/error";
 
 export const LoginTab = () => {
   const navigate = useRouter();
@@ -45,26 +46,31 @@ export const LoginTab = () => {
 
   const handleLogin = async (data: PasswordLoginDto) => {
     try {
-      const result =
-        await supabaseBrowserClient().auth.signInWithPassword(data);
-      if (!result.data.user) throw new Error("No user returned from Supabase");
+      const result = await supabaseBrowserClient().auth.signInWithPassword({
+        email: data.email,
+        password: data.password,
+        options: {
+          captchaToken: data.botToken,
+        },
+      });
+
+      if (result.error) throw result.error;
       navigate.push("/user/profile");
     } catch (error) {
       console.error("Login error:", error);
       resetTurnstile();
 
-      notifications.show({
-        title: "Error",
-        message:
-          "Failed to log in. Please check your credentials and try again.",
-        color: "red",
+      handleSupabaseAuthError(error, {
+        resetForm: () => form.reset({ email: data.email, password: "" }),
+        fallbackMessage:
+          "Login failed. Please check your credentials and try again.",
       });
     }
   };
 
   return (
     <>
-      <HookFormProvider {...form}>
+      <HookFormProvider form={form}>
         <form onSubmit={form.handleSubmit(handleLogin)}>
           <FormTextInput name="email" label="Email" mt="md" />
           <FormPasswordInput name="password" label="Password" mt="md" />

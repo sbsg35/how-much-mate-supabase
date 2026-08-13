@@ -1,13 +1,21 @@
 import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
+import { getAppConfig } from "@/lib/config";
+import { env } from "@/lib/envlib";
 
-const publicRoutes = [
-  "/",
+const authRoutes = [
   "/auth/login",
   "/auth/sign-up",
-  "/random",
   "/auth/check-email",
   "/auth/callback",
+  "/auth/forgot-password",
+];
+
+const protectedRoutes = [
+  "/user/profile",
+  "/user/settings",
+  "/auth/reset-password",
+  "/user/my-quotes",
 ];
 
 export async function updateSession(request: NextRequest) {
@@ -15,15 +23,15 @@ export async function updateSession(request: NextRequest) {
     request,
   });
   const pathname = request.nextUrl.pathname;
-  const isPublicRoute = publicRoutes.some(
+  const isProtectedRoute = protectedRoutes.some(
     (route) => pathname === route || pathname.startsWith(`${route}/`),
   );
 
   // With Fluid compute, don't put this client in a global environment
   // variable. Always create a new one on each request.
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    getAppConfig().supabaseUrl,
+    env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
       cookies: {
         getAll() {
@@ -31,13 +39,13 @@ export async function updateSession(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
+            request.cookies.set(name, value)
           );
           supabaseResponse = NextResponse.next({
             request,
           });
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
+            supabaseResponse.cookies.set(name, value, options)
           );
         },
       },
@@ -53,10 +61,22 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
-  if (!isPublicRoute && !user) {
+  if (isProtectedRoute && !user) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
+    return NextResponse.redirect(url);
+  }
+
+  const isAuthRoute = authRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+
+  if (isAuthRoute && user) {
+    // user is trying to access an auth route but they are already logged in, so
+    // redirect them to the profile
+    const url = request.nextUrl.clone();
+    url.pathname = "/user/profile";
     return NextResponse.redirect(url);
   }
 

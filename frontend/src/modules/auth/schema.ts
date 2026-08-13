@@ -28,25 +28,8 @@ export const passwordlessLoginSchema = object({
   }),
 });
 
-export const forgotPasswordSchema = object({
-  email: emailSchema,
-  botToken: stringTrimmed({
-    error: "Bot detection verification failed",
-  }),
-});
-
 export const signupSchema = object({
   email: emailSchema,
-  password: passwordSchema,
-  botToken: stringTrimmed({
-    error: "Bot detection verification failed",
-  }),
-});
-
-export const resetPasswordSchema = object({
-  passwordResetToken: stringTrimmed({
-    error: "Password reset token is required",
-  }),
   password: passwordSchema,
   botToken: stringTrimmed({
     error: "Bot detection verification failed",
@@ -62,12 +45,8 @@ export const otpSchema = object({
 
 export type OtpDto = InferType<typeof otpSchema>;
 
-export type ForgotPasswordDto = InferType<typeof forgotPasswordSchema>;
-
 export type PasswordlessSigninDto = InferType<typeof passwordlessLoginSchema>;
 
 export type LoginDto = InferType<typeof loginSchema>;
 
 export type SignupDto = InferType<typeof signupSchema>;
-
-export type ResetPasswordDto = InferType<typeof resetPasswordSchema>;

@@ -1,0 +1,9 @@
+{
+  "deno.enable": true,
+  "deno.path": "/Users/ghuman/.deno/bin/deno",
+  "deno.enablePaths": ["./supabase/functions"],
+  "deno.config": "./supabase/functions/review_quote/deno.json",
+  "[typescript]": {
+    "editor.defaultFormatter": "denoland.vscode-deno"
+  }
+}
