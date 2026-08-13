@@ -29,3 +29,12 @@ create table public.role_permissions (
 
 comment on table public.role_permissions is
   'Application permissions for each role.';
+
+insert into public.role_permissions (role, permission)
+values
+  ('moderator', 'quotes.moderate'),
+  ('moderator', 'quotes.delete_any'),
+  ('admin', 'quotes.moderate'),
+  ('admin', 'quotes.delete_any'),
+  ('admin', 'categories.manage'),
+  ('admin', 'users.manage');
