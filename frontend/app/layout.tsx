@@ -5,14 +5,32 @@ import "@mantine/notifications/styles.css";
 import "@mantine/dropzone/styles.css";
 
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
+import type { Metadata } from "next";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import AuthProvider from "@/providers/AuthProvider";
 import Providers from "@/providers/Providers";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "How Much Mate - Find Quotes from Service Providers",
   description:
     "Connect with trusted service providers in Australia. Browse quotes, compare prices, and find the right professional for your project.",
+  icons: {
+    icon: [
+      { url: "/favicon/favicon.svg", type: "image/svg+xml" },
+      {
+        url: "/favicon/favicon-96x96.png",
+        sizes: "96x96",
+        type: "image/png",
+      },
+    ],
+    shortcut: "/favicon/favicon.ico",
+    apple: {
+      url: "/favicon/apple-touch-icon.png",
+      sizes: "180x180",
+      type: "image/png",
+    },
+  },
+  manifest: "/favicon/site.webmanifest",
 };
 
 export default function RootLayout({
