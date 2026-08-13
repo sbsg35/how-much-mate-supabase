@@ -22,10 +22,10 @@ const environmentConfig = {
     },
     prod: {
         frontendUrl: "https://howmuchmate.com.au",
-        smtpHost: process.env.SMTP_HOST,
+        smtpHost: "sandbox.smtp.mailtrap.io",
+        user: "ee076af183dc09",
         smtpPort: 587,
         smtpSecure: false,
-        user: "",
     },
 };
 
