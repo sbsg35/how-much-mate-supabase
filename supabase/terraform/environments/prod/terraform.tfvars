@@ -18,4 +18,5 @@ auth_settings = {
   mailer_templates_confirmation_content_path = "../../../templates/confirmation.html"
   mailer_templates_recovery_content_path     = "../../../templates/recovery.html"
   hook_custom_access_token_enabled           = true
+  hook_custom_access_token_uri               = "pg-functions://postgres/public/custom_access_token_hook"
 }
