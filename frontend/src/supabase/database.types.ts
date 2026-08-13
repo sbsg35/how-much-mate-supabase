@@ -174,6 +174,24 @@ export type Database = {
           },
         ]
       }
+      role_permissions: {
+        Row: {
+          id: number
+          permission: Database["public"]["Enums"]["app_permission"]
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Insert: {
+          id?: number
+          permission: Database["public"]["Enums"]["app_permission"]
+          role: Database["public"]["Enums"]["app_role"]
+        }
+        Update: {
+          id?: number
+          permission?: Database["public"]["Enums"]["app_permission"]
+          role?: Database["public"]["Enums"]["app_role"]
+        }
+        Relationships: []
+      }
       suburb: {
         Row: {
           created_at: string
@@ -207,6 +225,24 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: number
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: number
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: number
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -232,7 +268,12 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_permission:
+        | "quotes.moderate"
+        | "quotes.delete_any"
+        | "categories.manage"
+        | "users.manage"
+      app_role: "admin" | "moderator"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -359,7 +400,15 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_permission: [
+        "quotes.moderate",
+        "quotes.delete_any",
+        "categories.manage",
+        "users.manage",
+      ],
+      app_role: ["admin", "moderator"],
+    },
   },
 } as const
 
