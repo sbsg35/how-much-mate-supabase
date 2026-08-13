@@ -17,4 +17,5 @@ auth_settings = {
   mailer_templates_magic_link_content_path   = "../../../templates/magic-link.html"
   mailer_templates_confirmation_content_path = "../../../templates/confirmation.html"
   mailer_templates_recovery_content_path     = "../../../templates/recovery.html"
+  hook_custom_access_token_enabled           = true
 }

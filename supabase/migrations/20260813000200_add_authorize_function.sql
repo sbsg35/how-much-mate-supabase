@@ -1,9 +1,9 @@
 -- Checks whether the current user has a requested application permission.
 -- The user's role comes from the custom user_role claim added to their JWT by
--- custom_access_token_hook. That role is matched against role_permissions, and
+-- custom_access_token_hook. That role is matched against role_permission, and
 -- the function returns true when the requested permission is assigned to it.
 -- SECURITY DEFINER allows this lookup to work without exposing the underlying
--- role_permissions table directly to the caller.
+-- role_permission table directly to the caller.
 create or replace function public.authorize(
   requested_permission public.app_permission
 )
@@ -18,9 +18,9 @@ begin
   -- Count mappings between that role and the requested permission.
   select count(*)
   into bind_permissions
-  from public.role_permissions
-  where role_permissions.permission = requested_permission
-    and role_permissions.role = user_role;
+  from public.role_permission
+  where role_permission.permission = requested_permission
+    and role_permission.role = user_role;
 
   return bind_permissions > 0;
 end;

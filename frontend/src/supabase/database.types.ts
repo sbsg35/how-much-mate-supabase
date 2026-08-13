@@ -174,7 +174,7 @@ export type Database = {
           },
         ]
       }
-      role_permissions: {
+      role_permission: {
         Row: {
           id: number
           permission: Database["public"]["Enums"]["app_permission"]
@@ -225,7 +225,7 @@ export type Database = {
         }
         Relationships: []
       }
-      user_roles: {
+      user_role: {
         Row: {
           id: number
           role: Database["public"]["Enums"]["app_role"]

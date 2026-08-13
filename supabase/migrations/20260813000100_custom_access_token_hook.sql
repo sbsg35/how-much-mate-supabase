@@ -9,7 +9,7 @@ declare
 begin
   select role
   into user_role
-  from public.user_roles
+  from public.user_role
   where user_id = (event->>'user_id')::uuid;
 
   claims := event->'claims';
@@ -37,15 +37,15 @@ on function public.custom_access_token_hook(jsonb)
 from authenticated, anon, public;
 
 grant all
-on table public.user_roles
+on table public.user_role
 to supabase_auth_admin;
 
 revoke all
-on table public.user_roles
+on table public.user_role
 from authenticated, anon, public;
 
 create policy "Allow auth admin to read user roles"
-on public.user_roles
+on public.user_role
 as permissive
 for select
 to supabase_auth_admin
