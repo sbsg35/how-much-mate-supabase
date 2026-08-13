@@ -172,7 +172,7 @@ Start with `frontend/.env.example`. The main settings are:
 
 | Variable | Purpose |
 | --- | --- |
-| `APP_ENV` | Selects `local`, `dev`, or `prod` application configuration |
+| `NEXT_PUBLIC_APP_ENV` | Selects `local`, `dev`, or `prod` application configuration |
 | `APP_URL` | Public application origin |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Browser-safe Supabase key |
 | `SUPABASE_SECRET_KEY` | Server-only Supabase key |
@@ -181,7 +181,7 @@ Start with `frontend/.env.example`. The main settings are:
 | `SMTP_USER` / `SMTP_PASS` | SMTP credentials; provide both when authentication is required |
 
 Never commit secret or service-role keys. The Supabase URL is selected by
-`APP_ENV` in `frontend/src/lib/config.ts`.
+`NEXT_PUBLIC_APP_ENV` in `frontend/src/lib/config.ts`.
 
 ## Troubleshooting
 

@@ -1,4 +1,4 @@
-const environment = process.env.APP_ENV ?? "local";
+const environment = process.env.NEXT_PUBLIC_APP_ENV ?? "local";
 
 const environmentConfig = {
     local: {
@@ -28,7 +28,7 @@ const environmentConfig = {
 };
 
 if (!(environment in environmentConfig)) {
-    throw new Error(`Invalid APP_ENV: ${environment}`);
+    throw new Error(`Invalid NEXT_PUBLIC_APP_ENV: ${environment}`);
 }
 
 const selectedConfig = environmentConfig[
