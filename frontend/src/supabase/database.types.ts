@@ -248,6 +248,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      custom_access_token_hook: { Args: { event: Json }; Returns: Json }
       find_published_quotes: {
         Args: {
           p_category_id?: number
