@@ -51,6 +51,13 @@ variable "security_captcha_secret" {
   default     = "1x0000000000000000000000000000000AA"
 }
 
+variable "smtp_password" {
+  description = "Dev custom SMTP password, supplied via secrets.auto.tfvars."
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
 locals {
   magic_link_template_path   = var.auth_settings.mailer_templates_magic_link_content_path
   confirmation_template_path = var.auth_settings.mailer_templates_confirmation_content_path
@@ -64,7 +71,7 @@ locals {
     ], key)
   }
 
-  auth_settings = local.auth_settings_without_template_path == null ? null : merge(
+  auth_settings_with_template_content = local.auth_settings_without_template_path == null ? null : merge(
     local.auth_settings_without_template_path,
     {
       mailer_templates_magic_link_content = file(local.magic_link_template_path)
@@ -74,6 +81,13 @@ locals {
     },
     {
       mailer_templates_recovery_content = file(local.recovery_template_path)
+    }
+  )
+
+  auth_settings = local.auth_settings_with_template_content == null ? null : merge(
+    local.auth_settings_with_template_content,
+    var.smtp_password == null ? {} : {
+      smtp_pass = var.smtp_password
     }
   )
 }
@@ -92,5 +106,4 @@ module "supabase_environment" {
   auth_settings           = local.auth_settings
   external_google_secret  = var.external_google_secret
   security_captcha_secret = var.security_captcha_secret
-
 }

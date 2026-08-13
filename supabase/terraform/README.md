@@ -16,7 +16,14 @@ Create `secrets.auto.tfvars` in the environment directory before running Terrafo
 database_password       = "your-database-password"
 external_google_secret  = "your-google-oauth-client-secret"
 security_captcha_secret = "your-turnstile-secret"
+smtp_password           = "your-custom-smtp-password"
 ```
+
+Custom SMTP's non-secret settings belong in the environment's `auth_settings`
+object in `terraform.tfvars`. Keep `smtp_password` in the ignored
+`secrets.auto.tfvars`; the module sends it to Supabase as `smtp_pass`.
+As with other Terraform-managed credentials, the SMTP password is stored in
+Terraform state, so keep the environment's local state file protected.
 
 Use the credentials for the environment you are deploying. The Supabase access token authenticates the provider, so continue to supply it through the `SUPABASE_ACCESS_TOKEN` environment variable.
 

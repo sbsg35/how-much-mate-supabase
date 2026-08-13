@@ -51,6 +51,43 @@ variable "security_captcha_secret" {
   default     = null
 }
 
+variable "smtp_password" {
+  description = "Production custom SMTP password, supplied via secrets.auto.tfvars."
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
+locals {
+  magic_link_template_path   = var.auth_settings.mailer_templates_magic_link_content_path
+  confirmation_template_path = var.auth_settings.mailer_templates_confirmation_content_path
+  recovery_template_path     = var.auth_settings.mailer_templates_recovery_content_path
+
+  auth_settings_without_template_path = var.auth_settings == null ? null : {
+    for key, value in var.auth_settings : key => value if !contains([
+      "mailer_templates_magic_link_content_path",
+      "mailer_templates_confirmation_content_path",
+      "mailer_templates_recovery_content_path",
+    ], key)
+  }
+
+  auth_settings = local.auth_settings_without_template_path == null ? null : merge(
+    local.auth_settings_without_template_path,
+    {
+      mailer_templates_magic_link_content = file(local.magic_link_template_path)
+    },
+    {
+      mailer_templates_confirmation_content = file(local.confirmation_template_path)
+    },
+    {
+      mailer_templates_recovery_content = file(local.recovery_template_path)
+    },
+    var.smtp_password == null ? {} : {
+      smtp_pass = var.smtp_password
+    }
+  )
+}
+
 module "supabase_environment" {
   source = "../../modules/supabase_environment"
 
@@ -60,7 +97,7 @@ module "supabase_environment" {
   database_password       = var.database_password
   instance_size           = var.instance_size
   api_settings            = var.api_settings
-  auth_settings           = var.auth_settings
+  auth_settings           = local.auth_settings
   external_google_secret  = var.external_google_secret
   security_captcha_secret = var.security_captcha_secret
 }
