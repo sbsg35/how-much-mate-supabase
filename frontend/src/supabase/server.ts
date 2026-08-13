@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 
+import { getAppConfig } from "@/lib/config";
 import { env } from "@/lib/envlib";
 import { Database } from "./database.types";
 
@@ -10,7 +11,7 @@ type CookieStore = {
   set: unknown;
 };
 
-const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseUrl = getAppConfig().supabaseUrl;
 const supabaseKey = env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 export const createSsrClient = (

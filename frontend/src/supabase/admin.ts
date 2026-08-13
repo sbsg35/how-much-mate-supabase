@@ -2,10 +2,10 @@ import "server-only";
 
 import { createClient } from "@supabase/supabase-js";
 
-import { env } from "@/lib/envlib";
+import { getAppConfig } from "@/lib/config";
 import { Database } from "./database.types";
 
-const supabaseUrl = env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseUrl = getAppConfig().supabaseUrl;
 const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY ??
   process.env.SUPABASE_SERVICE_ROLE_KEY;
 

@@ -78,9 +78,10 @@ We can make changes in the local supabase studio and then pull those changes dow
 Run `npx supbase status`
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
 ```
+
+The Supabase URL is selected from `frontend/src/lib/config.ts` using `APP_ENV`.
 
 ## TODO for dev & prod
 
