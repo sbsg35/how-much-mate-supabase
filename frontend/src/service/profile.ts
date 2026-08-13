@@ -32,7 +32,6 @@ const getProfile = async (userId: string | undefined): Promise<Profile> => {
 
 export const useProfile = () => {
   const { user } = useAuth();
-  console.log("Fetching profile for user:", user);
   return useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => getProfile(user?.id),
