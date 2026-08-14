@@ -1,8 +1,0 @@
-.quoteCard {
-  transition: var(--mantine-transition-default);
-
-  --paper-shadow: var(--mantine-shadow-md);
-  &:hover {
-    --paper-shadow: var(--mantine-shadow-xl);
-  }
-}

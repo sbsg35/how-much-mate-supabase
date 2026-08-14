@@ -20,6 +20,7 @@ import { Quote } from "@/service/quote";
 type QuoteListPageProps = {
   quotes: Quote[];
   has_more: boolean;
+  renderedAt: string;
 } & PublicQuotesSearchDto;
 
 export const QuoteListPage = ({
@@ -34,6 +35,7 @@ export const QuoteListPage = ({
   suburb_id,
   radius_km,
   has_more,
+  renderedAt,
 }: QuoteListPageProps) => {
   // This effect will run when the component mounts using the initial props
   // In a real app, you might want to fetch new data when page or keyword changes
@@ -76,21 +78,12 @@ export const QuoteListPage = ({
               </Text>
             </Box>
           ) : (
-            <SimpleGrid cols={{ base: 1 }}>
+            <SimpleGrid cols={{ base: 1, lg: 2 }}>
               {quotes.map((quote: Quote) => (
                 <QuoteCard
                   key={quote.quote_id}
-                  quote_id={quote.quote_id}
-                  title={quote.title}
-                  price={quote.price}
-                  description={quote.description}
-                  like_count={quote.like_count}
-                  dislike_count={quote.dislike_count}
-                  categoryName={quote.category?.name}
-                  suburbName={quote.suburb?.locality}
-                  suburbState={quote.suburb?.state}
-                  completed={quote.completed}
-                  quote_date={quote.quote_date}
+                  quote={quote}
+                  renderedAt={renderedAt}
                 />
               ))}
             </SimpleGrid>

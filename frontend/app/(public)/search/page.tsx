@@ -28,6 +28,7 @@ export default async function Search({
       state={filters.state as AUState}
       quotes={quotes}
       has_more={has_more}
+      renderedAt={new Date().toISOString()}
     />
   );
 }
