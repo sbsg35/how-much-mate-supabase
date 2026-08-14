@@ -100,7 +100,7 @@ export const QuoteListPage = ({
             page={page}
             previousPage={page - 1}
             has_more={has_more}
-            basePath="/"
+            basePath="/search"
           />
         </Grid.Col>
       </Grid>

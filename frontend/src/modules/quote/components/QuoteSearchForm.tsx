@@ -93,7 +93,7 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
 
   const handleClear = () => {
     form.reset(CLEAR_SEARCH_VALUES);
-    router.push("/");
+    router.push("/search");
   };
 
   const handleSubmit = (data: PublicQuotesSearchDto) => {
@@ -163,7 +163,7 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
     params.set("page", "1");
 
     // Navigate to the search results
-    router.push(`/?${params.toString()}`);
+    router.push(`/search?${params.toString()}`);
   };
 
   // When search type changes, clear the fields that are not relevant

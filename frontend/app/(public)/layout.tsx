@@ -25,9 +25,23 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
       <AppShell.Header>
         <DefaultContainer h="100%">
           <Group justify="space-between" h="100%">
-            <NextLink href="/">
+            <NextLink href="/" underline="never">
               <Logo />
             </NextLink>
+
+            <Group
+              gap="xl"
+              ml="auto"
+              mr="xl"
+              display={{ base: "none", md: "flex" }}
+            >
+              <NextLink href="/search" underline="never">
+                Browse quotes
+              </NextLink>
+              <NextLink href="/quote/create" underline="never">
+                Add a quote
+              </NextLink>
+            </Group>
 
             {isLoading ? (
               <Skeleton height={36} width={120} radius="md" />
@@ -55,9 +69,7 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
           </Group>
         </DefaultContainer>
       </AppShell.Header>
-      <AppShell.Main>
-        <DefaultContainer>{children}</DefaultContainer>
-      </AppShell.Main>
+      <AppShell.Main>{children}</AppShell.Main>
       <AppShell.Footer>
         <Footer />
       </AppShell.Footer>

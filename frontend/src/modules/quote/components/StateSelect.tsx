@@ -38,7 +38,7 @@ export const StateSelect: React.FC<StateSelectProps> = ({
     params.delete("page");
 
     // Navigate to the updated URL
-    router.push(`/?${params.toString()}`);
+    router.push(`/search?${params.toString()}`);
   };
 
   return (
