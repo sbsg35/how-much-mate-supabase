@@ -192,7 +192,6 @@ export const LandingPage = () => {
                     size="md"
                     fullWidth
                     style={{
-                      background: "linear-gradient(135deg, #12ad6d, #008b52)",
                       boxShadow: "0 8px 18px rgba(0, 142, 84, .2)",
                     }}
                   >

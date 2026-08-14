@@ -3,8 +3,7 @@ import {
   rem,
   Container,
   MantineColorsTuple,
-  Title,
-  Text,
+  Button,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import React, { FC, ReactNode } from "react";
@@ -52,6 +51,12 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
           containerSizes: CONTAINER_SIZES,
         },
         components: {
+          Button: Button.extend({
+            defaultProps: {
+              variant: "gradient",
+              gradient: { from: "hmw.4", to: "hmw.6", deg: 135 },
+            },
+          }),
           Container: Container.extend({
             vars: (_, { size, fluid }) => ({
               root: {

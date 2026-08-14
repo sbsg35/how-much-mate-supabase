@@ -12,6 +12,7 @@ const authRoutes = [
 ];
 
 const protectedRoutes = [
+  "/quote/create",
   "/user/profile",
   "/user/settings",
   "/auth/reset-password",
@@ -63,9 +64,11 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
 
   if (isProtectedRoute && !user) {
-    // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
+    const requiresRegistration =
+      pathname === "/quote/create" || pathname.startsWith("/quote/create/");
+
+    url.pathname = requiresRegistration ? "/auth/sign-up" : "/auth/login";
     return NextResponse.redirect(url);
   }
 
