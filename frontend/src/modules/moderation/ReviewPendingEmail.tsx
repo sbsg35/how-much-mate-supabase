@@ -46,17 +46,28 @@ export function ReviewPendingEmail(props: ReviewPendingEmailProps) {
       <Preview>A quote is waiting for a moderation decision.</Preview>
       <Body style={styles.body}>
         <Container style={styles.container}>
-          <Section style={styles.header}>
-            <Text style={styles.brand}>HowMuchMate?</Text>
-            <Text style={styles.brandSubtitle}>
-              Community pricing for everyday services
-            </Text>
+          <Section style={styles.brandBand}>
+            <table role="presentation" cellPadding="0" cellSpacing="0">
+              <tbody>
+                <tr>
+                  <td style={styles.logoMark}>$?</td>
+                  <td style={styles.brandCopy}>
+                    <Text style={styles.brandName}>How Much</Text>
+                    <Text style={styles.brandMate}>Mate</Text>
+                    <Text style={styles.brandSubtitle}>
+                      Community pricing for everyday services
+                    </Text>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </Section>
+          <Section style={styles.content}>
+            <Text style={styles.eyebrow}>Moderation required</Text>
             <Heading style={styles.heading}>Quote pending review</Heading>
             <Text style={styles.intro}>
               A community submission needs your decision.
             </Text>
-          </Section>
-          <Section style={styles.content}>
             <Section style={styles.reasonBox}>
               <Text style={styles.label}>Why it was held</Text>
               <Text style={styles.reason}>{props.reviewReason}</Text>
@@ -99,6 +110,13 @@ export function ReviewPendingEmail(props: ReviewPendingEmailProps) {
               These links are single-use and expire in seven days.
             </Text>
           </Section>
+          <Section style={styles.footerSection}>
+            <Text style={styles.footerText}>
+              This moderation email is intended for authorised How Much Mate
+              reviewers only.
+            </Text>
+            <Text style={styles.footerBrand}>HowMuchMate? · Australia</Text>
+          </Section>
         </Container>
       </Body>
     </Html>
@@ -118,18 +136,50 @@ const styles: Record<string, CSSProperties> = {
     border: "1px solid #dee2e6",
     borderRadius: "8px",
     boxShadow: "0 4px 14px rgba(33, 37, 41, 0.07)",
-    maxWidth: "640px",
+    maxWidth: "560px",
     overflow: "hidden",
   },
-  header: { borderBottom: "1px solid #dee2e6", padding: "24px 34px 25px" },
-  brand: {
-    color: "#198755",
+  brandBand: { borderBottom: "1px solid #dee2e6", padding: "16px 28px" },
+  logoMark: {
+    backgroundColor: "#23bd78",
+    borderRadius: "50%",
+    color: "#ffffff",
     fontFamily: "'Courier New', monospace",
-    fontSize: "16px",
+    fontSize: "13px",
     fontWeight: 800,
+    height: "36px",
+    textAlign: "center",
+    width: "36px",
+  },
+  brandCopy: { paddingLeft: "9px" },
+  brandName: {
+    color: "#111111",
+    fontSize: "15px",
+    fontWeight: 800,
+    lineHeight: 1,
     margin: 0,
   },
-  brandSubtitle: { color: "#868e96", fontSize: "12px", margin: "3px 0 24px" },
+  brandMate: {
+    color: "#198755",
+    fontSize: "15px",
+    fontWeight: 800,
+    lineHeight: 1,
+    margin: "2px 0 0",
+  },
+  brandSubtitle: {
+    color: "#868e96",
+    fontSize: "11px",
+    lineHeight: 1.2,
+    margin: "4px 0 0",
+  },
+  eyebrow: {
+    color: "#198755",
+    fontSize: "12px",
+    fontWeight: 800,
+    letterSpacing: "1px",
+    margin: "0 0 10px",
+    textTransform: "uppercase",
+  },
   heading: {
     color: "#212529",
     fontSize: "27px",
@@ -137,8 +187,8 @@ const styles: Record<string, CSSProperties> = {
     lineHeight: 1.25,
     margin: "0 0 8px",
   },
-  intro: { color: "#495057", fontSize: "15px", margin: 0 },
-  content: { padding: "30px 34px 32px" },
+  intro: { color: "#495057", fontSize: "15px", margin: "0 0 24px" },
+  content: { padding: "34px 36px 30px" },
   reasonBox: {
     backgroundColor: "#fff4e6",
     borderLeft: "4px solid #f76707",
@@ -193,7 +243,7 @@ const styles: Record<string, CSSProperties> = {
   },
   actions: { marginTop: "28px" },
   button: {
-    borderRadius: "7px",
+    borderRadius: "8px",
     color: "#ffffff",
     fontSize: "14px",
     fontWeight: 700,
@@ -201,4 +251,22 @@ const styles: Record<string, CSSProperties> = {
     textDecoration: "none",
   },
   note: { color: "#868e96", fontSize: "11px", margin: "17px 0 0" },
+  footerSection: {
+    backgroundColor: "#f8f9fa",
+    borderTop: "1px solid #dee2e6",
+    padding: "20px 36px 24px",
+  },
+  footerText: {
+    color: "#868e96",
+    fontSize: "12px",
+    lineHeight: 1.55,
+    margin: "0 0 10px",
+  },
+  footerBrand: {
+    color: "#adb5bd",
+    fontFamily: "'Courier New', monospace",
+    fontSize: "10px",
+    fontWeight: 700,
+    margin: 0,
+  },
 };

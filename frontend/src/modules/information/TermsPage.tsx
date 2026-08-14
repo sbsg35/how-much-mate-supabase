@@ -125,7 +125,6 @@ export const TermsPage = () => {
             <ListItem>
               manipulate pricing or unfairly promote or damage a business
             </ListItem>
-            <ListItem>scrape or harvest information at unreasonable scale</ListItem>
             <ListItem>
               interfere with the service or attempt unauthorised access
             </ListItem>
@@ -138,7 +137,43 @@ export const TermsPage = () => {
           </Text>
         </TermsSection>
 
-        <TermsSection title="8. Accuracy, availability, and your decisions">
+        <TermsSection title="8. Automated access and data extraction">
+          <Text>
+            Unless we have expressly authorised it, you must not use bots,
+            crawlers, scrapers, scripts, or other automated means to access,
+            extract, copy, monitor, download, or collect content or data from
+            How Much Mate.
+          </Text>
+          <Text>You must not:</Text>
+          <List spacing="xs">
+            <ListItem>
+              bypass rate limits, access controls, security measures, or
+              instructions in our robots.txt file
+            </ListItem>
+            <ListItem>
+              disguise automated activity by rotating accounts, identifiers,
+              or network addresses
+            </ListItem>
+            <ListItem>
+              reproduce, aggregate, republish, resell, or commercially exploit
+              collected data
+            </ListItem>
+            <ListItem>
+              use collected content to create a competing service, pricing
+              database, or AI training dataset
+            </ListItem>
+            <ListItem>place an unreasonable load on the service</ListItem>
+          </List>
+          <Text>
+            General-purpose search engines may crawl publicly accessible pages
+            solely to create a public search index, provided they follow our
+            technical instructions. We may rate-limit or block automated access
+            that breaches these Terms. This section does not restrict activity
+            expressly permitted by law or authorised by us.
+          </Text>
+        </TermsSection>
+
+        <TermsSection title="9. Accuracy, availability, and your decisions">
           <Text>
             We aim to make How Much Mate useful and reliable, but do not
             guarantee that it will always be available, uninterrupted, or
@@ -152,7 +187,7 @@ export const TermsPage = () => {
           </Text>
         </TermsSection>
 
-        <TermsSection title="9. Liability">
+        <TermsSection title="10. Liability">
           <Text>
             To the maximum extent permitted by law, How Much Mate is not
             responsible for loss arising solely from reliance on
@@ -166,7 +201,7 @@ export const TermsPage = () => {
           </Text>
         </TermsSection>
 
-        <TermsSection title="10. Intellectual property">
+        <TermsSection title="11. Intellectual property">
           <Text>
             The How Much Mate name, branding, website design, software, and
             materials created by us remain our property or that of our
@@ -176,14 +211,14 @@ export const TermsPage = () => {
           </Text>
         </TermsSection>
 
-        <TermsSection title="11. Privacy">
+        <TermsSection title="12. Privacy">
           <Text>
             Our handling of personal information is explained in our{" "}
             <NextLink href="/privacy">Privacy Policy</NextLink>.
           </Text>
         </TermsSection>
 
-        <TermsSection title="12. Changes to these Terms">
+        <TermsSection title="13. Changes to these Terms">
           <Text>
             We may update these Terms as the service changes. The latest version
             will be published here with its last-updated date. We may provide

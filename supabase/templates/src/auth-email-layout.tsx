@@ -13,17 +13,32 @@ import {
 
 type AuthEmailLayoutProps = {
   eyebrow: string;
-  title: string;
+  title?: string;
   preview: string;
   message: string;
   buttonLabel: string;
   buttonHref: string;
+  actionVariant?: "button" | "link";
+  actionAfterToken?: boolean;
   tokenPrompt?: string;
   token?: string;
   footer: string;
 };
 
 export function AuthEmailLayout(props: AuthEmailLayoutProps) {
+  const action =
+    props.actionVariant === "link" ? (
+      <Text style={linkRow}>
+        <a href={props.buttonHref} style={linkAction}>
+          {props.buttonLabel}
+        </a>
+      </Text>
+    ) : (
+      <Button href={props.buttonHref} style={button}>
+        {props.buttonLabel}
+      </Button>
+    );
+
   return (
     <Html lang="en">
       <Head />
@@ -36,7 +51,8 @@ export function AuthEmailLayout(props: AuthEmailLayoutProps) {
                 <tr>
                   <td style={logoMark}>$?</td>
                   <td style={brandCopy}>
-                    <Text style={brand}>HowMuchMate?</Text>
+                    <Text style={brandName}>How Much</Text>
+                    <Text style={brandMate}>Mate</Text>
                     <Text style={tagline}>Community pricing for everyday services</Text>
                   </td>
                 </tr>
@@ -45,17 +61,16 @@ export function AuthEmailLayout(props: AuthEmailLayoutProps) {
           </Section>
           <Section style={content}>
             <Text style={eyebrow}>{props.eyebrow}</Text>
-            <Heading style={heading}>{props.title}</Heading>
+            {props.title ? <Heading style={heading}>{props.title}</Heading> : null}
             <Text style={copy}>{props.message}</Text>
-            <Button href={props.buttonHref} style={button}>
-              {props.buttonLabel}
-            </Button>
+            {props.actionAfterToken ? null : action}
             {props.tokenPrompt && props.token ? (
               <Section style={codePanel}>
                 <Text style={codeLabel}>{props.tokenPrompt}</Text>
                 <Text style={code}>{props.token}</Text>
               </Section>
             ) : null}
+            {props.actionAfterToken ? action : null}
             <Text style={securityNote}>
               🔒 This secure link
               {props.token ? " and code expire soon. " : " expires soon. "}
@@ -89,7 +104,7 @@ const container: CSSProperties = {
 };
 const brandBand: CSSProperties = {
   borderBottom: "1px solid #dee2e6",
-  padding: "20px 28px",
+  padding: "16px 28px",
 };
 const logoMark: CSSProperties = {
   backgroundColor: "#23bd78",
@@ -103,17 +118,25 @@ const logoMark: CSSProperties = {
   width: "36px",
 };
 const brandCopy: CSSProperties = { paddingLeft: "9px" };
-const brand: CSSProperties = {
-  color: "#198755",
-  fontFamily: "'Courier New', monospace",
+const brandName: CSSProperties = {
+  color: "#111111",
   fontSize: "15px",
   fontWeight: 800,
+  lineHeight: 1,
   margin: 0,
+};
+const brandMate: CSSProperties = {
+  color: "#198755",
+  fontSize: "15px",
+  fontWeight: 800,
+  lineHeight: 1,
+  margin: "2px 0 0",
 };
 const tagline: CSSProperties = {
   color: "#868e96",
-  fontSize: "12px",
-  margin: "3px 0 0",
+  fontSize: "11px",
+  lineHeight: 1.2,
+  margin: "4px 0 0",
 };
 const content: CSSProperties = { padding: "34px 36px 30px" };
 const eyebrow: CSSProperties = {
@@ -121,7 +144,7 @@ const eyebrow: CSSProperties = {
   fontSize: "12px",
   fontWeight: 800,
   letterSpacing: "1px",
-  margin: "0 0 10px",
+  margin: "0 0 14px",
   textTransform: "uppercase",
 };
 const heading: CSSProperties = {
@@ -146,6 +169,15 @@ const button: CSSProperties = {
   fontWeight: 700,
   padding: "13px 22px",
   textDecoration: "none",
+};
+const linkRow: CSSProperties = {
+  fontSize: "14px",
+  margin: "18px 0 0",
+};
+const linkAction: CSSProperties = {
+  color: "#198755",
+  fontWeight: 700,
+  textDecoration: "underline",
 };
 const codePanel: CSSProperties = {
   backgroundColor: "#f5fdf9",
