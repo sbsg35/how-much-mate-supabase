@@ -28,6 +28,8 @@ import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { CategoriesSection } from "./CategoriesSection";
 import type { Category } from "@/service/category.server";
+import type { Quote } from "@/service/admin-quote";
+import { RecentlySharedQuotes } from "./RecentlySharedQuotes";
 
 const states = [
   { value: "", label: "Suburb or state" },
@@ -47,7 +49,15 @@ const proofPoints = [
   "Free to use",
 ];
 
-export const LandingPage = ({ categories }: { categories: Category[] }) => {
+export const LandingPage = ({
+  categories,
+  recentQuotes,
+  renderedAt,
+}: {
+  categories: Category[];
+  recentQuotes: Quote[];
+  renderedAt: string;
+}) => {
   const router = useRouter();
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -214,6 +224,7 @@ export const LandingPage = ({ categories }: { categories: Category[] }) => {
         </Container>
       </Box>
       <CategoriesSection categories={categories} />
+      <RecentlySharedQuotes quotes={recentQuotes} renderedAt={renderedAt} />
     </>
   );
 };
