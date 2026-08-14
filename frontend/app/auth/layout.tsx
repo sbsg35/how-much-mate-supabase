@@ -8,7 +8,7 @@ import { ReactNode, FC } from "react";
 
 const Layout: FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <AppShell header={{ height: 65 }} footer={{ height: 60 }}>
+    <AppShell header={{ height: 73 }} footer={{ height: 60 }}>
       <AppShell.Header>
         <DefaultContainer h="100%">
           <Group justify="space-between" h="100%">
