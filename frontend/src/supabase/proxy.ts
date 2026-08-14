@@ -16,6 +16,7 @@ const protectedRoutes = [
   "/user/settings",
   "/auth/reset-password",
   "/user/my-quotes",
+  "/admin",
 ];
 
 export async function updateSession(request: NextRequest) {
@@ -65,6 +66,14 @@ export async function updateSession(request: NextRequest) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = "/auth/login";
+    return NextResponse.redirect(url);
+  }
+
+  const isAdminRoute = pathname === "/admin" || pathname.startsWith("/admin/");
+
+  if (isAdminRoute && user?.user_role !== "admin") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
     return NextResponse.redirect(url);
   }
 
