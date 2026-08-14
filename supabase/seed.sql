@@ -145947,8 +145947,11 @@ VALUES
     );
 
 -- INSERT CATEGORIES
-INSERT INTO
-    category (name, slug)
+how-much-mate-categories.sql
+
+
+-- How Much Mate categories
+INSERT INTO category (name, slug)
 VALUES
     ('Plumbing', 'plumbing'),
     ('Electrical', 'electrical'),
@@ -145964,10 +145967,7 @@ VALUES
     ('Decking', 'decking'),
     ('Car Care', 'car-care'),
     ('Home Maintenance', 'home-maintenance'),
-    (
-        'Landscaping & Gardening',
-        'landscaping-gardening'
-    ),
+    ('Landscaping & Gardening', 'landscaping-gardening'),
     ('Cleaning', 'cleaning'),
     ('Pest Control', 'pest-control'),
     ('Security & Automation', 'security-automation'),
@@ -145980,10 +145980,7 @@ VALUES
     ('Legal Services', 'legal-services'),
     ('Financial Services', 'financial-services'),
     ('IT & Tech Support', 'it-tech-support'),
-    (
-        'Marketing & Advertising',
-        'marketing-advertising'
-    ),
+    ('Marketing & Advertising', 'marketing-advertising'),
     ('Education & Tutoring', 'education-tutoring'),
     ('Travel & Tourism', 'travel-tourism'),
     ('Food & Catering', 'food-catering'),
@@ -145991,14 +145988,20 @@ VALUES
     ('Fitness & Sports', 'fitness-sports'),
     ('Arts & Entertainment', 'arts-entertainment'),
     ('Wellness & Spa', 'wellness-spa'),
-    (
-        'Photography & Videography',
-        'photography-videography'
-    ),
+    ('Photography & Videography', 'photography-videography'),
     ('Writing & Editing', 'writing-editing'),
     ('Translation Services', 'translation-services'),
     ('Consulting Services', 'consulting-services'),
-    ('Real Estate Services', 'real-estate-services');
+    ('Real Estate Services', 'real-estate-services'),
+    ('Moving & Removals', 'moving-removals'),
+    ('Solar & Batteries', 'solar-batteries'),
+    ('Heating & Air Conditioning', 'heating-air-conditioning'),
+    ('Locksmiths', 'locksmiths'),
+    ('Rubbish Removal', 'rubbish-removal'),
+    ('Tree Services', 'tree-services'),
+    ('Pools & Spas', 'pools-spas'),
+    ('Windows & Glass', 'windows-glass'),
+    ('Handyman', 'handyman');
 
 
     -- CREATE SEED USER

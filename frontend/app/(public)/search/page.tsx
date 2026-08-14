@@ -8,7 +8,7 @@ import {
 } from "@/schema";
 
 export const metadata: Metadata = {
-  title: "Browse quotes | HowMuchMate?",
+  title: "Browse quotes | How Much Mate?",
   description: "Browse community-submitted quotes for services in your area.",
 };
 

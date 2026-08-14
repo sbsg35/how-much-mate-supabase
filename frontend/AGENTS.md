@@ -14,6 +14,7 @@ Pages in `app/` are **thin async server components** — data fetching only. Ren
 1. **`app/…/page.tsx`**: Fetch data, resolve params/searchParams, return a module component. No inline view components. No server actions.
 2. **`src/modules/{domain}/actions.ts`**: All server actions for the domain. Must have `"use server"` at the top of the file.
 3. **`src/modules/{domain}/{DomainNamePage}.tsx`**: View components. Named exports. No `"use client"` unless hooks or browser APIs are required.
+4. **Component styling**: Prefer Mantine style props and inline CSS-in-JS. Do not create CSS modules (`*.module.css`).
 
 ## Example
 

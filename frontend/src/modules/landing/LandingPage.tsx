@@ -26,6 +26,8 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
+import { CategoriesSection } from "./CategoriesSection";
+import type { Category } from "@/service/category.server";
 
 const states = [
   { value: "", label: "Suburb or state" },
@@ -45,7 +47,7 @@ const proofPoints = [
   "Free to use",
 ];
 
-export const LandingPage = () => {
+export const LandingPage = ({ categories }: { categories: Category[] }) => {
   const router = useRouter();
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
@@ -65,16 +67,17 @@ export const LandingPage = () => {
   };
 
   return (
-    <Box
-      component="section"
-      mih={{ base: "calc(100vh - 65px)", md: "calc(100vh - 125px)" }}
-      style={{
-        overflow: "hidden",
-        background:
-          "radial-gradient(circle at 76% 45%, rgba(179, 235, 211, .42), transparent 30%), linear-gradient(115deg, #f7fcfa 0%, #f4fbf8 55%, #fbfefd 100%)",
-      }}
-    >
-      <Container size="xxl" py={{ base: 36, sm: 52, lg: 72 }}>
+    <>
+      <Box
+        component="section"
+        mih={{ base: "calc(100vh - 65px)", md: "calc(100vh - 125px)" }}
+        style={{
+          overflow: "hidden",
+          background:
+            "radial-gradient(circle at 76% 45%, rgba(179, 235, 211, .42), transparent 30%), linear-gradient(115deg, #f7fcfa 0%, #f4fbf8 55%, #fbfefd 100%)",
+        }}
+      >
+        <Container size="xxl" py={{ base: 36, sm: 52, lg: 72 }}>
         <Grid align="center" gap={{ base: 0, lg: 36 }}>
           <Grid.Col span={{ base: 12, lg: 7 }}>
             <Stack gap={0} pos="relative" style={{ zIndex: 3 }}>
@@ -208,7 +211,9 @@ export const LandingPage = () => {
             </Box>
           </Grid.Col>
         </Grid>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
+      <CategoriesSection categories={categories} />
+    </>
   );
 };

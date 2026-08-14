@@ -1,0 +1,247 @@
+[
+  {
+    "name": "Plumbing",
+    "slug": "plumbing",
+    "file": "plumbing.svg"
+  },
+  {
+    "name": "Electrical",
+    "slug": "electrical",
+    "file": "electrical.svg"
+  },
+  {
+    "name": "Roofing",
+    "slug": "roofing",
+    "file": "roofing.svg"
+  },
+  {
+    "name": "Carpentry",
+    "slug": "carpentry",
+    "file": "carpentry.svg"
+  },
+  {
+    "name": "Painting",
+    "slug": "painting",
+    "file": "painting.svg"
+  },
+  {
+    "name": "Tiling",
+    "slug": "tiling",
+    "file": "tiling.svg"
+  },
+  {
+    "name": "Flooring",
+    "slug": "flooring",
+    "file": "flooring.svg"
+  },
+  {
+    "name": "Concreting",
+    "slug": "concreting",
+    "file": "concreting.svg"
+  },
+  {
+    "name": "Bricklaying",
+    "slug": "bricklaying",
+    "file": "bricklaying.svg"
+  },
+  {
+    "name": "Waterproofing",
+    "slug": "waterproofing",
+    "file": "waterproofing.svg"
+  },
+  {
+    "name": "Fencing",
+    "slug": "fencing",
+    "file": "fencing.svg"
+  },
+  {
+    "name": "Decking",
+    "slug": "decking",
+    "file": "decking.svg"
+  },
+  {
+    "name": "Car Care",
+    "slug": "car-care",
+    "file": "car-care.svg"
+  },
+  {
+    "name": "Home Maintenance",
+    "slug": "home-maintenance",
+    "file": "home-maintenance.svg"
+  },
+  {
+    "name": "Landscaping & Gardening",
+    "slug": "landscaping-gardening",
+    "file": "landscaping-gardening.svg"
+  },
+  {
+    "name": "Cleaning",
+    "slug": "cleaning",
+    "file": "cleaning.svg"
+  },
+  {
+    "name": "Pest Control",
+    "slug": "pest-control",
+    "file": "pest-control.svg"
+  },
+  {
+    "name": "Security & Automation",
+    "slug": "security-automation",
+    "file": "security-automation.svg"
+  },
+  {
+    "name": "Appliance Services",
+    "slug": "appliance-services",
+    "file": "appliance-services.svg"
+  },
+  {
+    "name": "Health & Wellness",
+    "slug": "health-wellness",
+    "file": "health-wellness.svg"
+  },
+  {
+    "name": "Professional Services",
+    "slug": "professional-services",
+    "file": "professional-services.svg"
+  },
+  {
+    "name": "Events & Lifestyle",
+    "slug": "events-lifestyle",
+    "file": "events-lifestyle.svg"
+  },
+  {
+    "name": "Pet Services",
+    "slug": "pet-services",
+    "file": "pet-services.svg"
+  },
+  {
+    "name": "Trades & Construction",
+    "slug": "trades-construction",
+    "file": "trades-construction.svg"
+  },
+  {
+    "name": "Legal Services",
+    "slug": "legal-services",
+    "file": "legal-services.svg"
+  },
+  {
+    "name": "Financial Services",
+    "slug": "financial-services",
+    "file": "financial-services.svg"
+  },
+  {
+    "name": "IT & Tech Support",
+    "slug": "it-tech-support",
+    "file": "it-tech-support.svg"
+  },
+  {
+    "name": "Marketing & Advertising",
+    "slug": "marketing-advertising",
+    "file": "marketing-advertising.svg"
+  },
+  {
+    "name": "Education & Tutoring",
+    "slug": "education-tutoring",
+    "file": "education-tutoring.svg"
+  },
+  {
+    "name": "Travel & Tourism",
+    "slug": "travel-tourism",
+    "file": "travel-tourism.svg"
+  },
+  {
+    "name": "Food & Catering",
+    "slug": "food-catering",
+    "file": "food-catering.svg"
+  },
+  {
+    "name": "Retail & Shopping",
+    "slug": "retail-shopping",
+    "file": "retail-shopping.svg"
+  },
+  {
+    "name": "Fitness & Sports",
+    "slug": "fitness-sports",
+    "file": "fitness-sports.svg"
+  },
+  {
+    "name": "Arts & Entertainment",
+    "slug": "arts-entertainment",
+    "file": "arts-entertainment.svg"
+  },
+  {
+    "name": "Wellness & Spa",
+    "slug": "wellness-spa",
+    "file": "wellness-spa.svg"
+  },
+  {
+    "name": "Photography & Videography",
+    "slug": "photography-videography",
+    "file": "photography-videography.svg"
+  },
+  {
+    "name": "Writing & Editing",
+    "slug": "writing-editing",
+    "file": "writing-editing.svg"
+  },
+  {
+    "name": "Translation Services",
+    "slug": "translation-services",
+    "file": "translation-services.svg"
+  },
+  {
+    "name": "Consulting Services",
+    "slug": "consulting-services",
+    "file": "consulting-services.svg"
+  },
+  {
+    "name": "Real Estate Services",
+    "slug": "real-estate-services",
+    "file": "real-estate-services.svg"
+  },
+  {
+    "name": "Moving & Removals",
+    "slug": "moving-removals",
+    "file": "moving-removals.svg"
+  },
+  {
+    "name": "Solar & Batteries",
+    "slug": "solar-batteries",
+    "file": "solar-batteries.svg"
+  },
+  {
+    "name": "Heating & Air Conditioning",
+    "slug": "heating-air-conditioning",
+    "file": "heating-air-conditioning.svg"
+  },
+  {
+    "name": "Locksmiths",
+    "slug": "locksmiths",
+    "file": "locksmiths.svg"
+  },
+  {
+    "name": "Rubbish Removal",
+    "slug": "rubbish-removal",
+    "file": "rubbish-removal.svg"
+  },
+  {
+    "name": "Tree Services",
+    "slug": "tree-services",
+    "file": "tree-services.svg"
+  },
+  {
+    "name": "Pools & Spas",
+    "slug": "pools-spas",
+    "file": "pools-spas.svg"
+  },
+  {
+    "name": "Windows & Glass",
+    "slug": "windows-glass",
+    "file": "windows-glass.svg"
+  },
+  {
+    "name": "Handyman",
+    "slug": "handyman",
+    "file": "handyman.svg"
+  }
+]
