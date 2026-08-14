@@ -88,7 +88,8 @@ export async function getQuoteById(quote_id: string): Promise<{ data: Quote }> {
       `
         *,
         category:category_id (category_id, name, slug),
-        suburb:suburb_id (suburb_id, locality, postcode, state)
+        suburb:suburb_id (suburb_id, locality, postcode, state),
+        profile:profile_id (username)
       `,
     )
     .eq("quote_id", quote_id)
@@ -98,5 +99,14 @@ export async function getQuoteById(quote_id: string): Promise<{ data: Quote }> {
     throw new Error(error.message);
   }
 
-  return { data: data as Quote };
+  const quote = data as Quote & {
+    profile?: { username: string | null } | null;
+  };
+
+  return {
+    data: {
+      ...quote,
+      username: quote.profile?.username ?? null,
+    },
+  };
 }

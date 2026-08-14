@@ -2,9 +2,8 @@ import { Metadata } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 
-import { Quote } from "@/service/quote";
 import { QuoteDetailPage } from "@/modules/quote/QuoteDetailPage";
-import { getQuoteById } from "@/service/admin-quote";
+import { getQuoteById, type Quote } from "@/service/admin-quote";
 
 interface QuotePageProps {
   params: Promise<{ id: string }>;
@@ -48,7 +47,7 @@ export default async function QuotePage({ params }: QuotePageProps) {
   try {
     const p = await params;
     const response = await getQuoteById(p.id);
-    quote = response.data as unknown as Quote;
+    quote = response.data;
   } catch {
     notFound();
   }
