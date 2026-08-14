@@ -76,7 +76,7 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
 
   return (
     <>
-      <Title size="md">Create an account</Title>
+      <Title size="md">Join How Much Mate</Title>
       <Text c="dimmed">Join the community and start sharing quotes</Text>
       <HookFormProvider form={form}>
         <form onSubmit={form.handleSubmit(handleSignUp)}>
@@ -89,7 +89,7 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
           />
           <Group justify="space-between" mt="lg">
             <FormSubmitButton disabled={!isVerified} mt={0} fullWidth>
-              Sign up
+              Create account
             </FormSubmitButton>
           </Group>
 

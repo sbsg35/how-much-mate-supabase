@@ -2,6 +2,7 @@
 import { Text, Title } from "@mantine/core";
 
 import { useSearchParams } from "next/navigation";
+import { AuthModeSwitcher } from "../components/AuthModeSwitcher";
 import { AuthNotification } from "../components/AuthNotification";
 import { LoginTab } from "../components/LoginTab";
 
@@ -12,6 +13,7 @@ export const LoginPage = () => {
   return (
     <>
       <AuthNotification type={alert} cleanupPath="/auth/login" />
+      <AuthModeSwitcher current="sign-in" />
       <Title fz="h4" order={1}>
         Welcome back
       </Title>

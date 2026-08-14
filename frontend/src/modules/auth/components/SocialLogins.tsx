@@ -36,7 +36,7 @@ export const SocialLogins: FC<{ isSignUp?: boolean }> = ({
   return (
     <Stack mb="md" mt="md">
       <GoogleButton onClick={handleGoogleLogin}>
-        Continue with Google
+        {isSignUp ? "Sign up with Google" : "Sign in with Google"}
       </GoogleButton>
       {!isSignUp && (
         // <NextLink href="/auth/passwordless-login">
