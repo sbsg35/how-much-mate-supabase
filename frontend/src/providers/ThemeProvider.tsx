@@ -19,16 +19,16 @@ const CONTAINER_SIZES: Record<string, number> = {
 };
 
 const hmw: MantineColorsTuple = [
-  "#f7fefb",
-  "#d9f7e8",
-  "#a8ebc4",
-  "#63dc96",
-  "#3ecf82",
-  "#2bb96f",
-  "#1fa763",
-  "#1a8a5a",
-  "#176d4a",
-  "#134f3d",
+  "#f4fdf8",
+  "#d4f4e3",
+  "#9ae4b8",
+  "#4ecf88",
+  "#35c277",
+  "#2ca96b",
+  "#1e8f5a",
+  "#17734b",
+  "#135a3d",
+  "#0d472d",
 ];
 
 export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {

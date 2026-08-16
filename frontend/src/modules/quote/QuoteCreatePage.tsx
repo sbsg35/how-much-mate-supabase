@@ -23,7 +23,7 @@ export const QuoteCreatePage = ({
 }: QuoteCreatePageProps) => {
   return (
     <Box bg="#f8faf9" py={{ base: 0, sm: 32, lg: 48 }}>
-      <Container size="xl">
+      <Container size="lg">
         <Paper
           withBorder
           shadow="xs"
