@@ -17,6 +17,9 @@ export async function generateMetadata({
     const response = await getQuoteById(p.id);
 
     const quote = response.data;
+    if (!quote) {
+      throw new Error("Quote not found");
+    }
     const description = `Check out this quote from ${quote.business_name} on How Much Mate. ${quote.description.substring(0, 140)}`;
 
     return {

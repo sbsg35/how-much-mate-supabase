@@ -81,7 +81,9 @@ export async function getPublicQuotes({
   };
 }
 
-export async function getQuoteById(quote_id: string): Promise<{ data: Quote }> {
+export async function getQuoteById(
+  quote_id: string,
+): Promise<{ data: Quote | null }> {
   const { data, error } = await supabaseAdminServerClient()
     .from("quote")
     .select(
@@ -93,10 +95,18 @@ export async function getQuoteById(quote_id: string): Promise<{ data: Quote }> {
       `,
     )
     .eq("quote_id", quote_id)
-    .single();
+    // This is a public, unauthenticated lookup: only ever expose quotes that
+    // have cleared moderation. Pending/flagged quotes are for the owner
+    // (via /user/quote/[quote_id]) or moderators only.
+    .eq("status", "published")
+    .maybeSingle();
 
   if (error) {
     throw new Error(error.message);
+  }
+
+  if (!data) {
+    return { data: null };
   }
 
   const quote = data as Quote & {
