@@ -19,16 +19,16 @@ const CONTAINER_SIZES: Record<string, number> = {
 };
 
 const hmw: MantineColorsTuple = [
-  "#f5fdf9",
-  "#c6f5e0",
-  "#83e9bb",
-  "#28d889",
-  "#23bd78",
-  "#1ea367",
-  "#198755",
-  "#136942",
-  "#105636",
-  "#0d472d",
+  "#f7fefb",
+  "#d9f7e8",
+  "#a8ebc4",
+  "#63dc96",
+  "#3ecf82",
+  "#2bb96f",
+  "#1fa763",
+  "#1a8a5a",
+  "#176d4a",
+  "#134f3d",
 ];
 
 export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
@@ -52,10 +52,7 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
         },
         components: {
           Button: Button.extend({
-            defaultProps: {
-              variant: "gradient",
-              gradient: { from: "hmw.4", to: "hmw.6", deg: 135 },
-            },
+            defaultProps: {},
           }),
           Container: Container.extend({
             vars: (_, { size, fluid }) => ({

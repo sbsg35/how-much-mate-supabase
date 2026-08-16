@@ -1,12 +1,13 @@
 "use client";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { FormTextInput } from "@/components/FormTextInput";
+import { Heading } from "@/components/Heading";
 import { HookFormProvider } from "@/components/HookFormProvider";
 import { UserUpdateDto, userUpdateSchema } from "@/schema/profile.schema";
 import { Profile } from "@/service/profile";
 import { supabaseBrowserClient } from "@/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, LoadingOverlay, Title } from "@mantine/core";
+import { Box, LoadingOverlay } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { FC } from "react";
 import { useForm } from "react-hook-form";
@@ -68,9 +69,9 @@ export const ProfileForm: FC<{ user: Profile }> = ({ user }) => {
         zIndex={1000}
         overlayProps={{ radius: "sm", blur: 2 }}
       />
-      <Title my={0} order={2}>
+      <Heading my={0}>
         My details
-      </Title>
+      </Heading>
       {user?.email && (
         <Box mt={8} mb={8}>
           <strong>Email:</strong> {user.email}

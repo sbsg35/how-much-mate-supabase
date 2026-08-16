@@ -1,11 +1,13 @@
-import { Paper, Stack, Text, Title } from "@mantine/core";
+import { BodyText } from "@/components/BodyText";
+import { Heading } from "@/components/Heading";
+import { Paper, Stack } from "@mantine/core";
 
 export function AdminPage() {
   return (
     <Paper withBorder shadow="sm" p="xl" radius="md" mt="xl">
       <Stack gap="xs">
-        <Title order={1}>Admin</Title>
-        <Text c="dimmed">This page is only available to administrators.</Text>
+        <Heading level={1}>Admin</Heading>
+        <BodyText muted>This page is only available to administrators.</BodyText>
       </Stack>
     </Paper>
   );

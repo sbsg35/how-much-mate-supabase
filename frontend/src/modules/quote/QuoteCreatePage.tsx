@@ -1,4 +1,13 @@
-import { Container, Title, Paper, Text } from "@mantine/core";
+import {
+  Box,
+  Container,
+  Group,
+  Paper,
+  Text,
+  ThemeIcon,
+  Title,
+} from "@mantine/core";
+import { IconShieldCheck } from "@tabler/icons-react";
 import { CreateQuoteDto } from "@/schema";
 import type { CreateQuoteActionResult } from "./actions";
 import { CreateQuoteForm } from "./components/CreateQuoteForm";
@@ -9,18 +18,36 @@ type QuoteCreatePageProps = {
   ) => Promise<CreateQuoteActionResult | never>;
 };
 
-export const QuoteCreatePage = ({ createQuoteAction }: QuoteCreatePageProps) => {
+export const QuoteCreatePage = ({
+  createQuoteAction,
+}: QuoteCreatePageProps) => {
   return (
-    <Container size="sm">
-      {/* for SEO */}
+    <Box bg="#f8faf9" py={{ base: 0, sm: 32, lg: 48 }}>
+      <Container size="xl">
+        <Paper
+          withBorder
+          shadow="xs"
+          p={{ base: 20, sm: 36, lg: 44 }}
+          radius="lg"
+        >
+          <Group align="flex-start" gap="md" wrap="nowrap">
+            <ThemeIcon radius="xl" size={50} visibleFrom="sm" color="hmw.6">
+              <IconShieldCheck size={28} stroke={1.8} />
+            </ThemeIcon>
+            <Box>
+              <Title fz={{ base: 24, sm: 28 }} order={1} lh={1.2}>
+                Create a Quote
+              </Title>
+              <Text c="dimmed" mt={6} fz={{ base: "sm", sm: "md" }}>
+                Share what you&apos;ve been quoted and help the community make
+                more informed decisions.
+              </Text>
+            </Box>
+          </Group>
 
-      <Paper withBorder shadow="md" p={30} radius="md" mt="sm" pos="relative">
-        <Title fz="h4" order={1}>
-          Create Quote
-        </Title>
-        <Text c="dimmed">Share quotes and help the community</Text>
-        <CreateQuoteForm createQuoteAction={createQuoteAction} />
-      </Paper>
-    </Container>
+          <CreateQuoteForm createQuoteAction={createQuoteAction} />
+        </Paper>
+      </Container>
+    </Box>
   );
 };

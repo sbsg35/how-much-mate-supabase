@@ -1,6 +1,8 @@
 "use client";
+import { BodyText } from "@/components/BodyText";
+import { Heading } from "@/components/Heading";
 import { NextLink } from "@/components/NextLink";
-import { Title, Center, Flex, Button, Text } from "@mantine/core";
+import { Center, Flex, Button } from "@mantine/core";
 import { IconCircleCheck } from "@tabler/icons-react";
 import { useSearchParams } from "next/navigation";
 
@@ -11,19 +13,19 @@ export const LoggedOutPage = () => {
 
   return (
     <>
-      <Title ta="center">
+      <Heading level={1} size="md" ta="center">
         {all ? "Logged out of all devices" : "Logged out"}
-      </Title>
+      </Heading>
 
       {all ? (
-        <Text fz="sm" ta="center">
+        <BodyText size="sm" ta="center">
           We&apos;ve logged you out of all devices. Just a heads-up—it might
           take a couple of minutes to fully kick in.
-        </Text>
+        </BodyText>
       ) : (
-        <Text fz="sm" ta="center">
+        <BodyText size="sm" ta="center">
           You are now signed out!
-        </Text>
+        </BodyText>
       )}
       <Center my="24">
         <IconCircleCheck

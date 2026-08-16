@@ -1,15 +1,16 @@
-import { Text, Title } from "@mantine/core";
+import { BodyText } from "@/components/BodyText";
+import { Heading } from "@/components/Heading";
 import { ResetPasswordForm } from "../components/ResetPasswordForm";
 
 export const ResetPasswordPage = () => {
   return (
     <>
-      <Title fz="h4" order={1}>
+      <Heading level={1} size="md">
         Choose a new password
-      </Title>
-      <Text c="dimmed" fz="sm">
+      </Heading>
+      <BodyText muted size="sm">
         Enter a new password for your How Much Mate account.
-      </Text>
+      </BodyText>
       <ResetPasswordForm />
     </>
   );

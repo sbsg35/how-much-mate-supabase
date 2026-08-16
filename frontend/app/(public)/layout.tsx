@@ -8,6 +8,7 @@ import { UserMenuDropdown } from "@/components/UserMenuDropdown";
 import { useAuth } from "@/providers/AuthProvider";
 import { AppShell, Button, Group, Skeleton } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FC, ReactNode } from "react";
 
@@ -38,9 +39,11 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
               <NextLink href="/search" underline="never">
                 Browse quotes
               </NextLink>
-              <NextLink href="/quote/create" underline="never">
-                Add a quote
-              </NextLink>
+              {!isLoading && !isLoggedIn ? (
+                <NextLink href="/quote/create" underline="never">
+                  Add a quote
+                </NextLink>
+              ) : null}
             </Group>
 
             {isLoading ? (
@@ -49,11 +52,12 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
               <Group>
                 <Button
                   display={{ base: "none", md: "inline-flex" }}
-                  component={NextLink}
+                  component={Link}
                   href="/quote/create"
-                  leftSection={<IconPlus />}
+                  leftSection={<IconPlus size={18} />}
+                  px="lg"
                 >
-                  Post quote
+                  Add a quote
                 </Button>
                 <UserMenuDropdown
                   email={user?.email}

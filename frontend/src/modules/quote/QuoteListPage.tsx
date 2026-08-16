@@ -1,13 +1,13 @@
 "use client";
 
 import { DefaultContainer } from "@/components/DefaultContainer";
+import { BodyText } from "@/components/BodyText";
+import { Heading } from "@/components/Heading";
 
 import {
   Box,
   Grid,
   SimpleGrid,
-  Text,
-  Title,
   VisuallyHidden,
 } from "@mantine/core";
 import { QuoteSearchForm } from "./components/QuoteSearchForm";
@@ -44,7 +44,7 @@ export const QuoteListPage = ({
   return (
     <DefaultContainer>
       <VisuallyHidden>
-        <Title order={1}>Latest Quotes</Title>
+        <Heading level={1}>Latest Quotes</Heading>
       </VisuallyHidden>
       <Grid columns={24} mt="xl">
         <Grid.Col span={{ base: 24, md: 7 }}>
@@ -70,12 +70,12 @@ export const QuoteListPage = ({
         <Grid.Col span={{ base: 24, md: 16 }} offset={{ base: 0, md: 1 }}>
           {quotes.length === 0 ? (
             <Box ta="center" my={12}>
-              <Title order={2}>No quotes found</Title>
-              <Text size="sm" c="dimmed">
+              <Heading>No quotes found</Heading>
+              <BodyText size="sm" muted>
                 {keyword
                   ? "Try a different search term or browse all quotes"
                   : "Check back soon for new quotes"}
-              </Text>
+              </BodyText>
             </Box>
           ) : (
             <SimpleGrid cols={{ base: 1, lg: 2 }}>

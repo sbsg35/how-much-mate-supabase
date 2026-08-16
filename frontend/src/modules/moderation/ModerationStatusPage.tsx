@@ -1,6 +1,8 @@
-import { Stack, Text, Title } from "@mantine/core";
+import { Stack } from "@mantine/core";
 
+import { BodyText } from "@/components/BodyText";
 import { CentredContainer } from "@/components/CentredContainer";
+import { Heading } from "@/components/Heading";
 
 interface ModerationStatusPageProps {
   title: string;
@@ -14,11 +16,11 @@ export const ModerationStatusPage = ({
   return (
     <CentredContainer size="sm">
       <Stack gap="md">
-        <Text size="xs" tt="uppercase" fw={700} c="dimmed" lts={1}>
+        <BodyText size="xs" muted tt="uppercase" fw={700} lts={1}>
           How Much Mate moderation
-        </Text>
-        <Title order={2}>{title}</Title>
-        <Text>{message}</Text>
+        </BodyText>
+        <Heading>{title}</Heading>
+        <BodyText>{message}</BodyText>
       </Stack>
     </CentredContainer>
   );

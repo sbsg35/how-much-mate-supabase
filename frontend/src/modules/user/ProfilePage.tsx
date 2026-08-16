@@ -1,5 +1,6 @@
 "use client";
-import { Container, Paper, Title, VisuallyHidden } from "@mantine/core";
+import { Heading } from "@/components/Heading";
+import { Container, Paper, VisuallyHidden } from "@mantine/core";
 import { ProfileForm } from "./components/ProfileForm";
 import { SecuritySettingsForm } from "./components/SecuritySettingsForm";
 import { ProfilePageSkeleton } from "../quote/components/ProfilePageSkeleton";
@@ -21,7 +22,7 @@ export const ProfilePage = () => {
       <AuthNotification type={alert} cleanupPath="/user/profile" />
       {/* for SEO */}
       <VisuallyHidden>
-        <Title order={1}>Profile page</Title>
+        <Heading level={1}>Profile page</Heading>
       </VisuallyHidden>
       <Paper withBorder shadow="md" p={30} radius="md" mt="sm" pos="relative">
         {user && <ProfileForm user={user} />}

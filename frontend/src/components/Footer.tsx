@@ -1,5 +1,6 @@
-import { Group, Stack, Text } from "@mantine/core";
+import { Group, Stack } from "@mantine/core";
 import { FC } from "react";
+import { BodyText } from "./BodyText";
 import { DefaultContainer } from "./DefaultContainer";
 import { NextLink } from "./NextLink";
 
@@ -9,9 +10,9 @@ export const Footer: FC = () => {
   return (
     <DefaultContainer h="100%">
       <Stack align="center" justify="center" gap={2} h="100%">
-        <Text size="sm" c="dimmed">
+        <BodyText size="sm" muted>
           © {currentYear} How Much Mate. All rights reserved.
-        </Text>
+        </BodyText>
         <Group gap="md">
           <NextLink href="/about" size="sm" c="dimmed">
             About

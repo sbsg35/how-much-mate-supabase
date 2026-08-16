@@ -1,5 +1,6 @@
 "use client";
-import { Text, Title } from "@mantine/core";
+import { BodyText } from "@/components/BodyText";
+import { Heading } from "@/components/Heading";
 
 import { useSearchParams } from "next/navigation";
 import { AuthModeSwitcher } from "../components/AuthModeSwitcher";
@@ -14,10 +15,10 @@ export const LoginPage = () => {
     <>
       <AuthNotification type={alert} cleanupPath="/auth/login" />
       <AuthModeSwitcher current="sign-in" />
-      <Title fz="h4" order={1}>
+      <Heading level={1} size="md">
         Welcome back
-      </Title>
-      <Text c="dimmed"> Sign in to share quotes and help the community</Text>
+      </Heading>
+      <BodyText muted>Sign in to share quotes and help the community</BodyText>
       <LoginTab />
     </>
   );

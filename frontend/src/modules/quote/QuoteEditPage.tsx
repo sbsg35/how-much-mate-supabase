@@ -1,5 +1,7 @@
 "use client";
-import { Container, Title, Paper, Text, Loader, Center } from "@mantine/core";
+import { BodyText } from "@/components/BodyText";
+import { Heading } from "@/components/Heading";
+import { Container, Paper, Loader, Center } from "@mantine/core";
 import { useUserQuote } from "@/service/quote";
 import { QuoteEditForm } from "../user/components/QuoteEditForm";
 
@@ -24,10 +26,10 @@ export const QuoteEditPage = ({ quoteId }: QuoteEditPageProps) => {
     return (
       <Container size="sm">
         <Paper withBorder shadow="md" p={30} radius="md" mt="sm">
-          <Title fz="h4" order={1} c="red">
+          <Heading level={1} size="md" c="red">
             Error
-          </Title>
-          <Text c="dimmed">Failed to load quote. Please try again later.</Text>
+          </Heading>
+          <BodyText muted>Failed to load quote. Please try again later.</BodyText>
         </Paper>
       </Container>
     );
@@ -36,10 +38,10 @@ export const QuoteEditPage = ({ quoteId }: QuoteEditPageProps) => {
   return (
     <Container size="sm">
       <Paper withBorder shadow="md" p={30} radius="md" mt="sm" pos="relative">
-        <Title fz="h4" order={1}>
+        <Heading level={1} size="md">
           Edit quote
-        </Title>
-        <Text c="dimmed">Update your quote details</Text>
+        </Heading>
+        <BodyText muted>Update your quote details</BodyText>
         <QuoteEditForm quote={quote} />
       </Paper>
     </Container>

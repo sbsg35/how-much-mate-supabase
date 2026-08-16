@@ -1,12 +1,14 @@
 "use client";
 
+import { BodyText } from "@/components/BodyText";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { FormTextInput } from "@/components/FormTextInput";
+import { Heading } from "@/components/Heading";
 import { HookFormProvider } from "@/components/HookFormProvider";
 
 import { supabaseBrowserClient } from "@/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Center, Text, Title } from "@mantine/core";
+import { Center } from "@mantine/core";
 import { IconMailCheck } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -51,11 +53,13 @@ export const VerifyForm = ({ email }: VerifyFormProps) => {
 
   return (
     <>
-      <Title size="lg">Check your email</Title>
-      <Text fz="sm" ta="center">
+      <Heading level={1} size="md">
+        Check your email
+      </Heading>
+      <BodyText size="sm" ta="center">
         We sent a 6-digit code to <strong>{email}</strong>. Enter it below to
         complete your sign up.
-      </Text>
+      </BodyText>
       <Center my="24">
         <IconMailCheck size={40} color="var(--mantine-color-anchor)" />
       </Center>

@@ -1,9 +1,9 @@
+import { Heading } from "@/components/Heading";
 import {
   Container,
   Paper,
   Skeleton,
   Stack,
-  Title,
   VisuallyHidden,
 } from "@mantine/core";
 
@@ -11,7 +11,7 @@ export const ProfilePageSkeleton = () => {
   return (
     <Container size="sm">
       <VisuallyHidden>
-        <Title order={1}>Profile page</Title>
+        <Heading level={1}>Profile page</Heading>
       </VisuallyHidden>
 
       <Paper withBorder shadow="md" p={30} radius="md" mt="sm" pos="relative">

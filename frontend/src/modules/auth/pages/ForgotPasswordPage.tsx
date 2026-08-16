@@ -1,17 +1,19 @@
 import { BackLink } from "@/components/BackLink";
-import { Stack, Text, Title } from "@mantine/core";
+import { BodyText } from "@/components/BodyText";
+import { Heading } from "@/components/Heading";
+import { Stack } from "@mantine/core";
 import { ForgotPasswordForm } from "../components/ForgotPasswordForm";
 
 export const ForgotPasswordPage = () => {
   return (
     <>
-      <Title fz="h4" order={1}>
+      <Heading level={1} size="md">
         Reset your password
-      </Title>
-      <Text c="dimmed" fz="sm">
+      </Heading>
+      <BodyText muted size="sm">
         Enter your email and we&apos;ll send you a secure link to choose a new
         password.
-      </Text>
+      </BodyText>
       <ForgotPasswordForm />
       <Stack align="center" mt="lg">
         <BackLink href="/auth/login">Back to sign in</BackLink>

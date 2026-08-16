@@ -1,8 +1,17 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Checkbox, Group, Stack } from "@mantine/core";
+import {
+  Alert,
+  Checkbox,
+  Group,
+  Paper,
+  SimpleGrid,
+  Stack,
+  Text,
+} from "@mantine/core";
 import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
+import { IconArrowRight } from "@tabler/icons-react";
 
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { FormTextInput } from "@/components/FormTextInput";
@@ -94,55 +103,110 @@ export const CreateQuoteForm = ({
   return (
     <HookFormProvider form={form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <Stack gap="md">
-          <FormTextInput
-            name="title"
-            label="Title"
-            placeholder="e.g., No call-out fee for emergency plumber"
-          />
+        <Stack gap="lg" mt="lg">
+          <Stack gap="md">
+            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
+              <Stack gap={5}>
+                <FormTextInput
+                  name="title"
+                  label="Title"
+                  withAsterisk
+                  radius="md"
+                />
+                <Text c="dimmed" fz="xs">
+                  A short, clear title helps others find your quote
+                </Text>
+              </Stack>
 
-          <FormTextarea
-            name="description"
-            label="Description"
-            placeholder="Tell us about your experience..."
-            minRows={4}
-          />
+              <CategorySelect
+                name="category_id"
+                label="Category"
+                placeholder="Select a category"
+                withAsterisk
+                radius="md"
+              />
+            </SimpleGrid>
 
-          <FormTextInput
-            name="business_name"
-            label="Business Name"
-            placeholder="e.g., FlowMaster Plumbing"
-          />
+            <Stack gap={5}>
+              <FormTextarea
+                name="description"
+                label="Description"
+                minRows={4}
+                autosize
+                withAsterisk
+                radius="md"
+              />
+              <Text c="dimmed" fz="xs">
+                More detail helps others compare similar jobs
+              </Text>
+            </Stack>
+          </Stack>
 
-          <FormNumberInput
-            name="price"
-            label="Price"
-            min={0}
-            leftSection="$"
-            rightSection={<></>}
-          />
+          <Stack gap="md">
+            <FormTextInput
+              name="business_name"
+              label="Business Name"
+              withAsterisk
+              radius="md"
+            />
+          </Stack>
 
-          <CategorySelect name="category_id" label="Category" />
+          <Stack gap="md">
+            <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
+              <FormNumberInput
+                name="price"
+                label="Price"
+                placeholder="0.00"
+                min={0}
+                leftSection="$"
+                rightSection={<></>}
+                withAsterisk
+              />
 
-          <SuburbSelect name="suburb_id" label="Suburb" />
+              <FormTextInput
+                name="quote_date"
+                label="Quote Date"
+                type="date"
+                withAsterisk
+              />
+            </SimpleGrid>
+          </Stack>
 
-          <FormTextInput name="quote_date" label="Quote Date" type="date" />
-
-          <Checkbox
-            label="Did you go ahead with this quote?"
-            checked={Boolean(completedField.value)}
-            onChange={(event) =>
-              completedField.onChange(event.currentTarget.checked)
-            }
-          />
-
-          <Group justify="flex-end" mt="md">
-            <FormSubmitButton>Submit Quote</FormSubmitButton>
-          </Group>
+          <Stack gap="md">
+            <Stack gap={5}>
+              <SuburbSelect
+                name="suburb_id"
+                label="Suburb or Postcode"
+                withAsterisk
+              />
+              <Text c="dimmed" fz="xs">
+                This helps others find quotes in their area and compare prices.
+              </Text>
+            </Stack>
+          </Stack>
+          <Stack gap="md">
+            <Checkbox
+              label="Did you go ahead with this quote?"
+              checked={Boolean(completedField.value)}
+              onChange={(event) =>
+                completedField.onChange(event.currentTarget.checked)
+              }
+              color="hmw.6"
+            />
+          </Stack>
 
           {form.formState.errors.root?.server?.message ? (
-            <p>{form.formState.errors.root.server.message}</p>
+            <Alert color="red" radius="md">
+              {form.formState.errors.root.server.message}
+            </Alert>
           ) : null}
+
+          <FormSubmitButton
+            rightSection={<IconArrowRight size={18} />}
+            w={{ base: "100%", sm: 210 }}
+          >
+            Submit Quote
+          </FormSubmitButton>
         </Stack>
       </form>
     </HookFormProvider>

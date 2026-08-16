@@ -21,6 +21,7 @@ type SuburbSelectProps = {
 export const SuburbSelect = ({
   name,
   label = "Suburb",
+  placeholder = "Start typing to search suburbs",
   hideLabel,
   helperText,
   thinking,
@@ -94,7 +95,7 @@ export const SuburbSelect = ({
         <TextInput
           {...labelProps}
           {...props}
-          placeholder="Start typing to search suburbs"
+          placeholder={placeholder}
           value={displayValue}
           onChange={(event) => {
             const newValue = event.currentTarget.value;

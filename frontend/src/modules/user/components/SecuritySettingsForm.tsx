@@ -1,4 +1,6 @@
-import { Button, Flex, Stack, Text, Title } from "@mantine/core";
+import { BodyText } from "@/components/BodyText";
+import { Heading } from "@/components/Heading";
+import { Button, Flex, Stack } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { notifications } from "@mantine/notifications";
 import { supabaseBrowserClient } from "@/supabase/client";
@@ -36,11 +38,11 @@ export const SecuritySettingsForm = () => {
 
   return (
     <>
-      <Title order={2}>Security</Title>
+      <Heading>Security</Heading>
       <Flex align="flex-end" justify="space-between" gap="md" mt="md">
         <Stack gap="0">
-          <Text>Logout</Text>
-          <Text c="dimmed">Sign out from this device. Simple and secure.</Text>
+          <BodyText>Logout</BodyText>
+          <BodyText muted>Sign out from this device. Simple and secure.</BodyText>
         </Stack>
         <Button variant="outline" color="red" size="xs" onClick={handleLogout}>
           Logout
@@ -48,10 +50,10 @@ export const SecuritySettingsForm = () => {
       </Flex>
       <Flex align="flex-end" mt="lg" justify="space-between">
         <Stack gap="0">
-          <Text>Logout all</Text>
-          <Text c="dimmed">
+          <BodyText>Logout all</BodyText>
+          <BodyText muted>
             Sign out from all devices you&apos;re logged into.
-          </Text>
+          </BodyText>
         </Stack>
         <Button
           variant="outline"

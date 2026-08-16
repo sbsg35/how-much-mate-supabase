@@ -31,7 +31,7 @@ export const Logo = () => (
       </Text>
       <Text
         c="dimmed"
-        fz={10}
+        fz={12}
         lh={1}
         mt={2}
         display={{ base: "none", md: "block" }}

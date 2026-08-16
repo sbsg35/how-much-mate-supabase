@@ -1,11 +1,13 @@
 "use client";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { FormTextInput } from "@/components/FormTextInput";
+import { BodyText } from "@/components/BodyText";
+import { Heading } from "@/components/Heading";
 import { HookFormProvider } from "@/components/HookFormProvider";
 import { NextLink } from "@/components/NextLink";
 import { supabaseBrowserClient } from "@/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Center, Flex, Text, Title } from "@mantine/core";
+import { Center, Flex, Text } from "@mantine/core";
 import { IconArrowLeft, IconMailCheck } from "@tabler/icons-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -39,11 +41,13 @@ export const CheckEmailPage = () => {
 
   return (
     <>
-      <Title size="lg">Check your email</Title>
-      <Text fz="sm" ta="center">
+      <Heading level={1} size="md">
+        Check your email
+      </Heading>
+      <BodyText size="sm" ta="center">
         We sent a 6-digit code to <strong>{email || "your email"}</strong>.
         Enter it below to sign in.
-      </Text>
+      </BodyText>
       <Center my="24">
         <IconMailCheck size={40} color="var(--mantine-color-anchor)" />
       </Center>

@@ -1,6 +1,8 @@
-import { Button, Stack, Text, Title } from "@mantine/core";
+import { Button, Stack, Text } from "@mantine/core";
 
+import { BodyText } from "@/components/BodyText";
 import { CentredContainer } from "@/components/CentredContainer";
+import { Heading } from "@/components/Heading";
 
 import { ModerationAction, submitModerationAction } from "./actions";
 
@@ -20,20 +22,20 @@ export const ModerationConfirmPage = ({
   return (
     <CentredContainer size="sm">
       <Stack gap="md">
-        <Text size="xs" tt="uppercase" fw={700} c="dimmed" lts={1}>
+        <BodyText size="xs" muted tt="uppercase" fw={700} lts={1}>
           How Much Mate moderation
-        </Text>
-        <Title order={2}>Confirm moderation action</Title>
-        <Text c="dimmed">
+        </BodyText>
+        <Heading>Confirm moderation action</Heading>
+        <BodyText muted>
           You are about to{" "}
           <Text span fw={700} c={isPublish ? "green" : "red"}>
             {isPublish ? "Publish" : "Flag"}
           </Text>{" "}
           the following quote:
-        </Text>
-        <Text fw={600} fz="lg">
+        </BodyText>
+        <BodyText fw={600} size="lg">
           {quoteTitle}
-        </Text>
+        </BodyText>
         <form action={submitModerationAction}>
           <input type="hidden" name="tokenId" value={tokenId} />
           <Button

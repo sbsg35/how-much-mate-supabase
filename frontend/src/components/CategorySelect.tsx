@@ -14,6 +14,7 @@ type CategorySelectProps = {
 export const CategorySelect = ({
   name,
   label = "Category",
+  placeholder = "All categories",
   hideLabel,
   helperText,
   thinking,
@@ -33,7 +34,7 @@ export const CategorySelect = ({
     <Select
       {...props}
       id={name}
-      placeholder="All categories"
+      placeholder={placeholder}
       disabled={isSubmitting || thinking}
       error={error}
       description={helperText}

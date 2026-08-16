@@ -1,7 +1,9 @@
 "use client";
 
+import { BodyText } from "@/components/BodyText";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { FormTextInput } from "@/components/FormTextInput";
+import { Heading } from "@/components/Heading";
 import { HookFormProvider } from "@/components/HookFormProvider";
 import { Turnstile } from "@/components/Turnstile";
 import { useTurnstile } from "@/hooks/useTurnstile";
@@ -13,8 +15,6 @@ import {
   Box,
   Divider,
   Stack,
-  Title,
-  Text,
 } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import { SignupDto, signupSchema } from "@/schema";
@@ -76,8 +76,10 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
 
   return (
     <>
-      <Title size="md">Join How Much Mate</Title>
-      <Text c="dimmed">Join the community and start sharing quotes</Text>
+      <Heading level={1} size="md">
+        Join How Much Mate
+      </Heading>
+      <BodyText muted>Join the community and start sharing quotes</BodyText>
       <HookFormProvider form={form}>
         <form onSubmit={form.handleSubmit(handleSignUp)}>
           <FormTextInput name="email" label="Email" mt="md" required />
@@ -109,9 +111,9 @@ export const SignupForm = ({ onSuccess }: SignupFormProps) => {
       <Divider label="OR CONTINUE WITH" labelPosition="center" my="lg" />
       <SocialLogins isSignUp />
       <Stack align="center">
-        <Text c="dimmed" fz="xs">
+        <BodyText muted size="xs">
           By signing up, you agree to our Terms of Service and Privacy Policy
-        </Text>
+        </BodyText>
         <NextLink href="/auth/login" fz="sm">
           Already have an account? Sign in
         </NextLink>

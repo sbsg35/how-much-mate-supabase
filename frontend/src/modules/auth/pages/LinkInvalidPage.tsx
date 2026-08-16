@@ -1,15 +1,19 @@
+import { BodyText } from "@/components/BodyText";
+import { Heading } from "@/components/Heading";
 import { NextLink } from "@/components/NextLink";
-import { Title, Center, Flex, Text } from "@mantine/core";
+import { Center, Flex, Text } from "@mantine/core";
 import { IconMailCheck, IconArrowRight } from "@tabler/icons-react";
 
 export const LinkInvalidPage = () => {
   return (
     <>
-      <Title ta="center">Oops! That login link has expired.</Title>
-      <Text fz="sm" ta="center">
+      <Heading level={1} size="md" ta="center">
+        Oops! That login link has expired.
+      </Heading>
+      <BodyText size="sm" ta="center">
         Magic links are valid for a limited time for your security. But don’t
         worry — you can get a new one in seconds.
-      </Text>
+      </BodyText>
       <Center my="24">
         <IconMailCheck size={40} color="var(--mantine-color-anchor)" />
       </Center>
