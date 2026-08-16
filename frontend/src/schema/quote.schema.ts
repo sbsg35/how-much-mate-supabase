@@ -50,6 +50,10 @@ const suburb_idSchema = stringTrimmed({ error: "Suburb is required" }).min(1, {
   message: "Suburb is required",
 });
 
+const MIN_QUOTE_DATE = "2000-01-01";
+
+const todayDateString = () => new Date().toISOString().slice(0, 10);
+
 // Base quote fields shared between create and edit
 const quoteFieldsSchema = {
   title: titleSchema,
@@ -63,8 +67,19 @@ const quoteFieldsSchema = {
   quote_date: postgresDateSchema("Quote date is required"),
 };
 
+const createQuoteDateSchema = postgresDateSchema("Quote date is required")
+  .refine((value) => value >= MIN_QUOTE_DATE, {
+    message: "Quote date cannot be before the year 2000",
+  })
+  .refine((value) => value <= todayDateString(), {
+    message: "Quote date cannot be in the future",
+  });
+
 // Schema for creating a quote
-export const createQuoteSchema = object(quoteFieldsSchema);
+export const createQuoteSchema = object({
+  ...quoteFieldsSchema,
+  quote_date: createQuoteDateSchema,
+});
 
 // Schema for editing a quote
 export const editQuoteSchema = object(quoteFieldsSchema);
