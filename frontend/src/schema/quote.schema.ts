@@ -64,10 +64,11 @@ const quoteFieldsSchema = {
 
   suburb_id: suburb_idSchema,
   completed: coerce.boolean(),
-  quote_date: postgresDateSchema("Quote date is required"),
 };
 
-const createQuoteDateSchema = postgresDateSchema("Quote date is required")
+// Quote date must not be before 2000 or in the future, for both creating and
+// editing a quote.
+const quoteDateSchema = postgresDateSchema("Quote date is required")
   .refine((value) => value >= MIN_QUOTE_DATE, {
     message: "Quote date cannot be before the year 2000",
   })
@@ -78,11 +79,14 @@ const createQuoteDateSchema = postgresDateSchema("Quote date is required")
 // Schema for creating a quote
 export const createQuoteSchema = object({
   ...quoteFieldsSchema,
-  quote_date: createQuoteDateSchema,
+  quote_date: quoteDateSchema,
 });
 
 // Schema for editing a quote
-export const editQuoteSchema = object(quoteFieldsSchema);
+export const editQuoteSchema = object({
+  ...quoteFieldsSchema,
+  quote_date: quoteDateSchema,
+});
 
 // Schema for pagination query parameters
 export const paginationSchema = object({
