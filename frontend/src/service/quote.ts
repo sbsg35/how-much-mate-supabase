@@ -35,9 +35,11 @@ export async function createQuote(data: CreateQuoteDto): Promise<Quote> {
     throw new Error("User not authenticated");
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { botToken: _botToken, ...quoteData } = data;
   const { data: quote, error } = await supabaseBrowserClient()
     .from("quote")
-    .insert({ ...data, profile_id: user.data.user.id })
+    .insert({ ...quoteData, profile_id: user.data.user.id })
     .select()
     .single();
 

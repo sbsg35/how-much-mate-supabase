@@ -5,8 +5,8 @@ Ordered highest to lowest priority. Filenames are numbered to preserve that orde
 | # | Priority | Severity | File |
 |---|---|---|---|
 | 1 | P0 | High | [01-p0-quote-page-status-bypass.md](01-p0-quote-page-status-bypass.md) — ✅ fixed |
-| 2 | P1 | Medium | [02-p1-quote-spam-and-moderation-bypass.md](02-p1-quote-spam-and-moderation-bypass.md) |
-| 3 | P1 | Low-Medium | [03-p1-edit-quote-date-bypass.md](03-p1-edit-quote-date-bypass.md) |
+| 2 | P1 | Medium | [02-p1-quote-spam-and-moderation-bypass.md](02-p1-quote-spam-and-moderation-bypass.md) — ✅ fixed |
+| 3 | P1 | Low-Medium | [03-p1-edit-quote-date-bypass.md](03-p1-edit-quote-date-bypass.md) — ✅ fixed |
 | 4 | P2 | Low / Info | [04-p2-missing-quote-rls-insert-update.md](04-p2-missing-quote-rls-insert-update.md) |
 | 5 | P2 | Low / Info | [05-p2-remove-unused-browser-quote-writes.md](05-p2-remove-unused-browser-quote-writes.md) |
 | 6 | P2 | Low | [06-p2-pin-search-path-auth-hook.md](06-p2-pin-search-path-auth-hook.md) |

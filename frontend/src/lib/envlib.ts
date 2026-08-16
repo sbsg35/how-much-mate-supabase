@@ -8,6 +8,7 @@ const publicEnvSchema = z.object({
 const serverEnvSchema = publicEnvSchema.extend({
   SMTP_PASS: z.string().min(1),
   OPENAI_API_KEY: z.string().min(1),
+  TURNSTILE_SECRET_KEY: z.string().min(1),
 });
 
 const publicEnv = {
@@ -22,6 +23,7 @@ export const env = (
       ...publicEnv,
       SMTP_PASS: process.env.SMTP_PASS,
       OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
     })
     : publicEnvSchema.parse(publicEnv)
 ) as z.infer<typeof serverEnvSchema>;

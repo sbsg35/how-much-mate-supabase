@@ -2,7 +2,7 @@
 priority: P1
 severity: MEDIUM
 complexity: Small-Medium
-status: open
+status: fixed
 ---
 
 # Quote content moderation and submission volume can be trivially bypassed at scale
@@ -45,3 +45,16 @@ Re-enable the rate limit (or replace with a stronger one), add Turnstile to the 
 
 ## Confidence
 High
+
+## Resolution
+All three sub-fixes implemented in `frontend/src/modules/quote/actions.ts`:
+
+1. **Rate limiting re-enabled.** `isRateLimited` uncommented and wired into `createQuoteAction` (100 quotes/day/user).
+2. **Turnstile added to quote creation.** `createQuoteSchema` now requires a `botToken` field (`frontend/src/schema/quote.schema.ts`); `CreateQuoteForm.tsx` renders the widget the same way `SignupForm.tsx` does and disables submit until verified; `createQuoteAction` verifies the token server-side via a new `verifyTurnstileToken()` helper (`frontend/src/lib/turnstile.ts`) that calls Cloudflare's `siteverify` endpoint, gated behind a new required `TURNSTILE_SECRET_KEY` server env var.
+3. **Moderation gap closed.** `checkContent` now always runs the free OpenAI moderation endpoint; only the more expensive GPT review is capped, and only for a user's first 5 quotes (`GPT_REVIEW_QUOTE_LIMIT`, renamed from `AI_CHECKED_QUOTE_LIMIT` for clarity). Previously, *both* checks were skipped entirely past the cap.
+
+Note: `botToken` had to be excluded from the object spread before insert/update in both `actions.ts` and the (currently unused, see item 05) browser-side `service/quote.ts`, since it's not a `quote` table column.
+
+**New required env var:** `TURNSTILE_SECRET_KEY` (server-only). Added to `.env.example` with instructions; local `.env` set to Cloudflare's published always-pass test secret (`1x0000000000000000000000000000000AA`, the same one already used in `supabase/config.toml` for auth). **A real secret must be set in dev/prod deployments** — get one from the Cloudflare Turnstile dashboard for the same site already used for `CLOUDFLARE_TURNSTILE_KEY`.
+
+Verified end-to-end locally: created a test user via the Auth admin API, logged in through the browser, submitted a quote through the actual UI (Turnstile widget auto-verified via the test site key, submit button correctly gated on `isVerified`). Confirmed via network/DB inspection that the GPT review ran (this was the test user's first quote, within the cap), correctly flagged the placeholder test content as "not describing a real service," set `status = pending`, and sent the review email (visible in Mailpit). Also confirmed the new pending quote was still blocked by the P0 fix on the public route. Test quote and test user deleted afterward.

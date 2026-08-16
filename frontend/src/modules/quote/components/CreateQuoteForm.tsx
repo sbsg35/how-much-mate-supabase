@@ -1,6 +1,6 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Checkbox, Group, Stack } from "@mantine/core";
+import { Box, Checkbox, Group, Stack, VisuallyHidden } from "@mantine/core";
 import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -9,6 +9,9 @@ import { FormTextInput } from "@/components/FormTextInput";
 import { FormTextarea } from "@/components/FormTextarea";
 import { HookFormProvider } from "@/components/HookFormProvider";
 import { CategorySelect } from "@/components/CategorySelect";
+import { Turnstile } from "@/components/Turnstile";
+import { useTurnstile } from "@/hooks/useTurnstile";
+import { CLOUDFLARE_TURNSTILE_KEY } from "@/lib/env";
 
 import { CreateQuoteDto, createQuoteSchema, MIN_QUOTE_DATE } from "@/schema";
 import { FormNumberInput } from "@/components/FormNumberInput";
@@ -43,9 +46,20 @@ export const CreateQuoteForm = ({
       suburb_id: "",
       completed: false,
       category_id: NaN,
+      botToken: "",
     },
     resolver: zodResolver(createQuoteSchema),
     mode: "onSubmit",
+  });
+
+  const {
+    containerRef: turnstileContainerRef,
+    isVerified: isTurnstileVerified,
+    reset: resetTurnstile,
+  } = useTurnstile({
+    siteKey: CLOUDFLARE_TURNSTILE_KEY,
+    formSetValue: form.setValue,
+    formFieldName: "botToken",
   });
 
   const handleSubmit = async (data: CreateQuoteDto) => {
@@ -66,6 +80,7 @@ export const CreateQuoteForm = ({
       }
 
       if (result?.error) {
+        resetTurnstile();
         form.setError("root.server", {
           type: "server",
           message: result.error,
@@ -79,6 +94,7 @@ export const CreateQuoteForm = ({
       router.push("/user/my-quotes");
     } catch (error) {
       console.error("Error creating quote:", error);
+      resetTurnstile();
       form.setError("root.server", {
         type: "server",
         message: "Unable to submit quote right now",
@@ -143,8 +159,22 @@ export const CreateQuoteForm = ({
           />
 
           <Group justify="flex-end" mt="md">
-            <FormSubmitButton>Submit Quote</FormSubmitButton>
+            <FormSubmitButton disabled={!isTurnstileVerified}>
+              Submit Quote
+            </FormSubmitButton>
           </Group>
+
+          {/* Turnstile component */}
+          <VisuallyHidden>
+            <Box mt="md" style={{ display: "flex", justifyContent: "center" }}>
+              <Box ref={turnstileContainerRef}>
+                <Turnstile />
+              </Box>
+            </Box>
+          </VisuallyHidden>
+
+          {/* Hidden input for the token */}
+          <input type="hidden" {...form.register("botToken")} />
 
           {form.formState.errors.root?.server?.message ? (
             <p>{form.formState.errors.root.server.message}</p>

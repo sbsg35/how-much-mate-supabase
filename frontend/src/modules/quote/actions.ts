@@ -9,10 +9,11 @@ import {
 import { createSsrClientFromNextCookies } from "@/supabase/server";
 import { supabaseAdminServerClient } from "@/supabase/admin";
 import { moderateContent, reviewQuoteContent } from "@/lib/moderation";
+import { verifyTurnstileToken } from "@/lib/turnstile";
 import { sendReviewEmail } from "@/modules/moderation/sendReviewEmail";
 
-// const DAILY_QUOTE_LIMIT = 100;
-const AI_CHECKED_QUOTE_LIMIT = 5;
+const DAILY_QUOTE_LIMIT = 100;
+const GPT_REVIEW_QUOTE_LIMIT = 5;
 
 export type CreateQuoteActionResult = {
   error?: string;
@@ -44,15 +45,15 @@ function buildReviewFields(params: {
   };
 }
 
-// async function isRateLimited(userId: string): Promise<boolean> {
-//   const oneDayAgo = new Date(Date.now() - 86_400_000).toISOString();
-//   const { count } = await supabaseAdminServerClient()
-//     .from("quote")
-//     .select("*", { count: "exact", head: true })
-//     .eq("profile_id", userId)
-//     .gte("created_at", oneDayAgo);
-//   return (count ?? 0) >= DAILY_QUOTE_LIMIT;
-// }
+async function isRateLimited(userId: string): Promise<boolean> {
+  const oneDayAgo = new Date(Date.now() - 86_400_000).toISOString();
+  const { count } = await supabaseAdminServerClient()
+    .from("quote")
+    .select("*", { count: "exact", head: true })
+    .eq("profile_id", userId)
+    .gte("created_at", oneDayAgo);
+  return (count ?? 0) >= DAILY_QUOTE_LIMIT;
+}
 
 async function getCategoryName(categoryId: number): Promise<string> {
   const { data } = await supabaseAdminServerClient()
@@ -63,18 +64,20 @@ async function getCategoryName(categoryId: number): Promise<string> {
   return data?.name ?? "Unknown";
 }
 
-async function shouldRunAiChecks(userId: string): Promise<boolean> {
+// The free OpenAI moderation endpoint always runs (see checkContent). The
+// more expensive GPT review is reserved for a user's first few quotes.
+async function shouldRunGptReview(userId: string): Promise<boolean> {
   const { data, error } = await supabaseAdminServerClient()
     .from("quote")
     .select("quote_id")
     .eq("profile_id", userId)
-    .limit(AI_CHECKED_QUOTE_LIMIT);
+    .limit(GPT_REVIEW_QUOTE_LIMIT);
 
   if (error) {
     throw new Error(`Failed to count submitted quotes: ${error.message}`);
   }
 
-  return (data?.length ?? 0) < AI_CHECKED_QUOTE_LIMIT;
+  return (data?.length ?? 0) < GPT_REVIEW_QUOTE_LIMIT;
 }
 
 async function notifyReviewTeam(quoteId: string): Promise<void> {
@@ -94,10 +97,12 @@ async function checkContent(params: {
   description: string;
   price: number;
   categoryId: number;
+  runGptReview: boolean;
 }): Promise<
   { flagged: boolean; reason?: string; source?: "moderation" | "gpt" }
 > {
-  const { title, business_name, description, price, categoryId } = params;
+  const { title, business_name, description, price, categoryId, runGptReview } =
+    params;
 
   let categoryName = "Unknown";
   let moderationFlagged = false;
@@ -121,6 +126,10 @@ async function checkContent(params: {
       source: "moderation",
       reason: "OpenAI moderation endpoint flagged the content",
     };
+  }
+
+  if (!runGptReview) {
+    return { flagged: false };
   }
 
   let reviewFlagged = false;
@@ -181,35 +190,43 @@ export async function createQuoteAction(
     return { error: "User not authenticated" };
   }
 
-  // if (await isRateLimited(user.id)) {
-  //   return {
-  //     error:
-  //       "You have reached the daily limit of 100 quotes. Please try again tomorrow.",
-  //   };
-  // }
+  const isHuman = await verifyTurnstileToken(parsedData.data.botToken);
+  if (!isHuman) {
+    console.error("[quote.createQuoteAction] Turnstile verification failed", {
+      userId: user.id,
+    });
+    return { error: "Verification failed. Please try again." };
+  }
 
-  const { title, business_name, description, price, category_id } =
-    parsedData.data;
+  if (await isRateLimited(user.id)) {
+    return {
+      error:
+        "You have reached the daily limit of 100 quotes. Please try again tomorrow.",
+    };
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { botToken: _botToken, ...quoteData } = parsedData.data;
+  const { title, business_name, description, price, category_id } = quoteData;
   let flagged = false;
   let moderationReason: string | undefined;
   let moderationSource: "moderation" | "gpt" | undefined;
-  let runAiChecks: boolean;
+  let runGptReview: boolean;
   try {
-    runAiChecks = await shouldRunAiChecks(user.id);
+    runGptReview = await shouldRunGptReview(user.id);
 
-    if (runAiChecks) {
-      ({
-        flagged,
-        reason: moderationReason,
-        source: moderationSource,
-      } = await checkContent({
-        title,
-        business_name,
-        description,
-        price,
-        categoryId: category_id,
-      }));
-    }
+    ({
+      flagged,
+      reason: moderationReason,
+      source: moderationSource,
+    } = await checkContent({
+      title,
+      business_name,
+      description,
+      price,
+      categoryId: category_id,
+      runGptReview,
+    }));
   } catch (error) {
     console.error("[quote.createQuoteAction] Pre-insert checks failed", {
       userId: user.id,
@@ -226,7 +243,7 @@ export async function createQuoteAction(
     categoryId: category_id,
     flagged,
     status,
-    aiChecksRun: runAiChecks,
+    gptReviewRun: runGptReview,
     source: moderationSource,
     reason: moderationReason,
   });
@@ -240,7 +257,7 @@ export async function createQuoteAction(
   const { data: createdQuote, error } = await supabaseAdminServerClient()
     .from("quote")
     .insert({
-      ...parsedData.data,
+      ...quoteData,
       ...reviewFields,
       profile_id: user.id,
       status,
@@ -314,6 +331,7 @@ export async function updateQuoteAction(
       description,
       price,
       categoryId: category_id,
+      runGptReview: true,
     }));
   } catch (error) {
     console.error("[quote.updateQuoteAction] checkContent failed", {

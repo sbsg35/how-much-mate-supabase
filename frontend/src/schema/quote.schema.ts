@@ -1,5 +1,6 @@
 import z, { number, coerce, object } from "zod";
 import { stringTrimmed, postgresDateSchema, InferType } from "./schema";
+import { botTokenSchema } from "./auth.schema";
 import {
   RegExpMatcher,
   englishDataset,
@@ -80,6 +81,7 @@ const quoteDateSchema = postgresDateSchema("Quote date is required")
 export const createQuoteSchema = object({
   ...quoteFieldsSchema,
   quote_date: quoteDateSchema,
+  botToken: botTokenSchema,
 });
 
 // Schema for editing a quote

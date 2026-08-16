@@ -2,7 +2,7 @@
 priority: P1
 severity: LOW-MEDIUM
 complexity: Small
-status: open
+status: fixed
 ---
 
 # Edit flow allows quote dates outside the range enforced at creation
@@ -37,3 +37,6 @@ Reuse `createQuoteDateSchema` (or an equivalently bounded schema) for `editQuote
 
 ## Confidence
 High
+
+## Resolution
+`frontend/src/schema/quote.schema.ts` — renamed `createQuoteDateSchema` to `quoteDateSchema` and applied it to both `createQuoteSchema` and `editQuoteSchema` (previously only `createQuoteSchema` had the bound; `editQuoteSchema` used the unbounded base). Removed the now-redundant `quote_date` entry from the shared `quoteFieldsSchema` object since both schemas override it identically. Verified with `tsc --noEmit` and `eslint` — no errors.
