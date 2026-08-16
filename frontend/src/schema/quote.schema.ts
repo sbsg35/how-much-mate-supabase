@@ -46,7 +46,9 @@ const category_idSchema = coerce
   .int()
   .positive({ message: "Category is required" });
 
-const suburb_idSchema = stringTrimmed({ error: "Suburb is required" });
+const suburb_idSchema = stringTrimmed({ error: "Suburb is required" }).min(1, {
+  message: "Suburb is required",
+});
 
 // Base quote fields shared between create and edit
 const quoteFieldsSchema = {

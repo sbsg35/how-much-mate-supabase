@@ -12,6 +12,7 @@ import { moderateContent, reviewQuoteContent } from "@/lib/moderation";
 import { sendReviewEmail } from "@/modules/moderation/sendReviewEmail";
 
 // const DAILY_QUOTE_LIMIT = 100;
+const AI_CHECKED_QUOTE_LIMIT = 5;
 
 export type CreateQuoteActionResult = {
   error?: string;
@@ -60,6 +61,20 @@ async function getCategoryName(categoryId: number): Promise<string> {
     .eq("category_id", categoryId)
     .single();
   return data?.name ?? "Unknown";
+}
+
+async function shouldRunAiChecks(userId: string): Promise<boolean> {
+  const { data, error } = await supabaseAdminServerClient()
+    .from("quote")
+    .select("quote_id")
+    .eq("profile_id", userId)
+    .limit(AI_CHECKED_QUOTE_LIMIT);
+
+  if (error) {
+    throw new Error(`Failed to count submitted quotes: ${error.message}`);
+  }
+
+  return (data?.length ?? 0) < AI_CHECKED_QUOTE_LIMIT;
 }
 
 async function notifyReviewTeam(quoteId: string): Promise<void> {
@@ -178,20 +193,25 @@ export async function createQuoteAction(
   let flagged = false;
   let moderationReason: string | undefined;
   let moderationSource: "moderation" | "gpt" | undefined;
+  let runAiChecks: boolean;
   try {
-    ({
-      flagged,
-      reason: moderationReason,
-      source: moderationSource,
-    } = await checkContent({
-      title,
-      business_name,
-      description,
-      price,
-      categoryId: category_id,
-    }));
+    runAiChecks = await shouldRunAiChecks(user.id);
+
+    if (runAiChecks) {
+      ({
+        flagged,
+        reason: moderationReason,
+        source: moderationSource,
+      } = await checkContent({
+        title,
+        business_name,
+        description,
+        price,
+        categoryId: category_id,
+      }));
+    }
   } catch (error) {
-    console.error("[quote.createQuoteAction] checkContent failed", {
+    console.error("[quote.createQuoteAction] Pre-insert checks failed", {
       userId: user.id,
       categoryId: category_id,
       error: error instanceof Error ? error.message : String(error),
@@ -206,6 +226,7 @@ export async function createQuoteAction(
     categoryId: category_id,
     flagged,
     status,
+    aiChecksRun: runAiChecks,
     source: moderationSource,
     reason: moderationReason,
   });
