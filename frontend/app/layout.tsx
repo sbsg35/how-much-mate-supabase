@@ -6,8 +6,6 @@ import "@mantine/dropzone/styles.css";
 
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import type { Metadata } from "next";
-import { ThemeProvider } from "@/providers/ThemeProvider";
-import AuthProvider from "@/providers/AuthProvider";
 import Providers from "@/providers/Providers";
 
 export const metadata: Metadata = {

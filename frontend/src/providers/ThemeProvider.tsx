@@ -15,7 +15,7 @@ const CONTAINER_SIZES: Record<string, number> = {
   md: 720, // Default readable content width
   lg: 960, // Balanced for medium-to-large screens
   xl: 1140, // Desktop widescreen layout
-  xxl: 1320, // Max container for ultra-wide or fluid layouts
+  xxl: 1440, // Max container for ultra-wide or fluid layouts
 };
 
 const hmw: MantineColorsTuple = [
