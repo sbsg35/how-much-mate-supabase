@@ -10,7 +10,7 @@ import { FormTextarea } from "@/components/FormTextarea";
 import { HookFormProvider } from "@/components/HookFormProvider";
 import { CategorySelect } from "@/components/CategorySelect";
 
-import { CreateQuoteDto, createQuoteSchema } from "@/schema";
+import { CreateQuoteDto, createQuoteSchema, MIN_QUOTE_DATE } from "@/schema";
 import { FormNumberInput } from "@/components/FormNumberInput";
 import { SuburbSelect } from "@/components/SuburbSelect";
 import type { CreateQuoteActionResult } from "../actions";
@@ -126,7 +126,13 @@ export const CreateQuoteForm = ({
 
           <SuburbSelect name="suburb_id" label="Suburb" />
 
-          <FormTextInput name="quote_date" label="Quote Date" type="date" />
+          <FormTextInput
+            name="quote_date"
+            label="Quote Date"
+            type="date"
+            min={MIN_QUOTE_DATE}
+            max={new Date().toISOString().slice(0, 10)}
+          />
 
           <Checkbox
             label="Did you go ahead with this quote?"

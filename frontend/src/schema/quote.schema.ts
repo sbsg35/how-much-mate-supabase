@@ -50,7 +50,7 @@ const suburb_idSchema = stringTrimmed({ error: "Suburb is required" }).min(1, {
   message: "Suburb is required",
 });
 
-const MIN_QUOTE_DATE = "2000-01-01";
+export const MIN_QUOTE_DATE = "2000-01-01";
 
 const todayDateString = () => new Date().toISOString().slice(0, 10);
 
