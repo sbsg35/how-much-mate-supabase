@@ -80,7 +80,6 @@ export const LandingPage = ({
     <>
       <Box
         component="section"
-        mih={{ base: "calc(100vh - 65px)", md: "calc(100vh - 125px)" }}
         style={{
           overflow: "hidden",
           background:
