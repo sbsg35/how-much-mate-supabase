@@ -1,10 +1,18 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, Checkbox, Group, Stack, VisuallyHidden } from "@mantine/core";
+import {
+  Box,
+  Checkbox,
+  Group,
+  Stack,
+  Text,
+  VisuallyHidden,
+} from "@mantine/core";
 import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { FormSubmitButton } from "@/components/FormSubmitButton";
+import { NextLink } from "@/components/NextLink";
 import { FormTextInput } from "@/components/FormTextInput";
 import { FormTextarea } from "@/components/FormTextarea";
 import { HookFormProvider } from "@/components/HookFormProvider";
@@ -45,6 +53,7 @@ export const CreateQuoteForm = ({
       price: 0,
       suburb_id: "",
       completed: false,
+      confirmed: false,
       category_id: NaN,
       botToken: "",
     },
@@ -107,6 +116,12 @@ export const CreateQuoteForm = ({
     control: form.control,
   });
 
+  const { field: confirmedField, fieldState: confirmedFieldState } =
+    useController({
+      name: "confirmed",
+      control: form.control,
+    });
+
   return (
     <HookFormProvider form={form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
@@ -120,7 +135,8 @@ export const CreateQuoteForm = ({
           <FormTextarea
             name="description"
             label="Description"
-            placeholder="Tell us about your experience..."
+            placeholder="Describe the job, e.g., Replaced a leaking hot water valve and tested for further leaks"
+            helperText="Describe the job itself, no personal details."
             minRows={4}
           />
 
@@ -157,6 +173,22 @@ export const CreateQuoteForm = ({
               completedField.onChange(event.currentTarget.checked)
             }
           />
+
+          <Stack gap={4}>
+            <Checkbox
+              label="I confirm this quote information is accurate and doesn't include private personal information."
+              checked={Boolean(confirmedField.value)}
+              onChange={(event) =>
+                confirmedField.onChange(event.currentTarget.checked)
+              }
+              error={confirmedFieldState.error?.message}
+            />
+            <Text size="xs" c="dimmed" ml={26}>
+              By submitting, you agree to our{" "}
+              <NextLink href="/terms">Terms</NextLink> and confirm you have the
+              right to share this information.
+            </Text>
+          </Stack>
 
           <Group justify="flex-end" mt="md">
             <FormSubmitButton disabled={!isTurnstileVerified}>

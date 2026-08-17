@@ -206,7 +206,8 @@ export async function createQuoteAction(
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { botToken: _botToken, ...quoteData } = parsedData.data;
+  const { botToken: _botToken, confirmed: _confirmed, ...quoteData } =
+    parsedData.data;
   const { title, business_name, description, price, category_id } = quoteData;
   let flagged = false;
   let moderationReason: string | undefined;
@@ -261,6 +262,7 @@ export async function createQuoteAction(
       ...reviewFields,
       profile_id: user.id,
       status,
+      confirmed_at: new Date().toISOString(),
     })
     .select("quote_id")
     .single();
@@ -315,8 +317,10 @@ export async function updateQuoteAction(
     return { error: "User not authenticated" };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { confirmed: _confirmed, ...quoteData } = parsedData.data;
   const { title, business_name, description, price, category_id } =
-    parsedData.data;
+    quoteData;
   let flagged = false;
   let moderationReason: string | undefined;
   let moderationSource: "moderation" | "gpt" | undefined;
@@ -381,9 +385,10 @@ export async function updateQuoteAction(
   const { data: updatedQuote, error } = await admin
     .from("quote")
     .update({
-      ...parsedData.data,
+      ...quoteData,
       ...reviewFields,
       status,
+      confirmed_at: new Date().toISOString(),
     })
     .eq("quote_id", quoteId)
     .eq("profile_id", user.id)

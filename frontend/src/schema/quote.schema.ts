@@ -51,6 +51,12 @@ const suburb_idSchema = stringTrimmed({ error: "Suburb is required" }).min(1, {
   message: "Suburb is required",
 });
 
+const confirmedSchema = coerce
+  .boolean()
+  .refine((value) => value === true, {
+    message: "You must confirm this quote information before submitting",
+  });
+
 export const MIN_QUOTE_DATE = "2000-01-01";
 
 const todayDateString = () => new Date().toISOString().slice(0, 10);
@@ -65,6 +71,7 @@ const quoteFieldsSchema = {
 
   suburb_id: suburb_idSchema,
   completed: coerce.boolean(),
+  confirmed: confirmedSchema,
 };
 
 // Quote date must not be before 2000 or in the future, for both creating and

@@ -62,6 +62,7 @@ export type Database = {
           business_name: string
           category_id: number | null
           completed: boolean
+          confirmed_at: string
           created_at: string
           description: string
           metadata: Json | null
@@ -81,6 +82,7 @@ export type Database = {
           business_name: string
           category_id?: number | null
           completed?: boolean
+          confirmed_at?: string
           created_at?: string
           description: string
           metadata?: Json | null
@@ -100,6 +102,7 @@ export type Database = {
           business_name?: string
           category_id?: number | null
           completed?: boolean
+          confirmed_at?: string
           created_at?: string
           description?: string
           metadata?: Json | null

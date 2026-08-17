@@ -1,8 +1,9 @@
 "use client";
 import { useController, useForm } from "react-hook-form";
 import { HookFormProvider } from "@/components/HookFormProvider";
-import { Checkbox, Group, Stack } from "@mantine/core";
+import { Checkbox, Group, Stack, Text } from "@mantine/core";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
+import { NextLink } from "@/components/NextLink";
 import { FormTextInput } from "@/components/FormTextInput";
 import { FormTextarea } from "@/components/FormTextarea";
 import { CategorySelect } from "@/components/CategorySelect";
@@ -36,6 +37,7 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
       suburb_id: quote.suburb?.suburb_id ?? "",
       completed: quote.completed,
       quote_date: quote.quote_date,
+      confirmed: false,
     },
     resolver: zodResolver(editQuoteSchema),
     mode: "onSubmit",
@@ -45,6 +47,12 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
     name: "completed",
     control: form.control,
   });
+
+  const { field: confirmedField, fieldState: confirmedFieldState } =
+    useController({
+      name: "confirmed",
+      control: form.control,
+    });
 
   const handleSubmit = async (data: EditQuoteDto) => {
     const result = await updateQuoteAction(quote.quote_id, data);
@@ -103,7 +111,8 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
           <FormTextarea
             name="description"
             label="Description"
-            placeholder="Tell us about your experience..."
+            placeholder="Describe the job, e.g., Replaced a leaking hot water valve and tested for further leaks"
+            helperText="Describe the job itself, no personal details."
             minRows={4}
           />
 
@@ -128,6 +137,22 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
               completedField.onChange(event.currentTarget.checked)
             }
           />
+
+          <Stack gap={4}>
+            <Checkbox
+              label="I confirm this quote information is accurate and doesn't include private personal information."
+              checked={Boolean(confirmedField.value)}
+              onChange={(event) =>
+                confirmedField.onChange(event.currentTarget.checked)
+              }
+              error={confirmedFieldState.error?.message}
+            />
+            <Text size="xs" c="dimmed" ml={26}>
+              By submitting, you agree to our{" "}
+              <NextLink href="/terms">Terms</NextLink> and confirm you have the
+              right to share this information.
+            </Text>
+          </Stack>
 
           <Group justify="flex-end" mt="md">
             <FormSubmitButton>Update Quote</FormSubmitButton>
