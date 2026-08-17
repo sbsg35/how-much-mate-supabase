@@ -1,5 +1,4 @@
 import { useAuth } from "@/providers/AuthProvider";
-import { CreateQuoteDto, EditQuoteDto } from "@/schema";
 import { supabaseBrowserClient } from "@/supabase/client";
 import { Database } from "@/supabase/database.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -23,32 +22,6 @@ export type Quote = QuoteRow & {
   dislike_count?: number | null;
   username?: string | null;
 };
-
-/**
- * Create a new quote
- * @param data The quote data to create
- * @returns Promise with the created quote data
- */
-export async function createQuote(data: CreateQuoteDto): Promise<Quote> {
-  const user = await supabaseBrowserClient().auth.getUser();
-  if (!user.data.user) {
-    throw new Error("User not authenticated");
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { botToken: _botToken, ...quoteData } = data;
-  const { data: quote, error } = await supabaseBrowserClient()
-    .from("quote")
-    .insert({ ...quoteData, profile_id: user.data.user.id })
-    .select()
-    .single();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return quote;
-}
 
 /**
  * Delete one of the authenticated user's quotes
@@ -80,22 +53,6 @@ export async function deleteQuote(quoteId: string): Promise<string> {
 
   return deletedQuote.quote_id;
 }
-
-/**
- * Hook to create a quote using react-query mutation
- */
-export const useCreateQuoteMutation = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: createQuote,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: quoteQueryKeys.allMyQuotes(),
-      });
-    },
-  });
-};
 
 export const useDeleteQuoteMutation = () => {
   const queryClient = useQueryClient();
@@ -142,36 +99,6 @@ const userQuoteQuery = async (quoteId: string, userId: string) => {
 
   return data as Quote;
 };
-
-export async function updateQuote(
-  quoteId: string,
-  data: EditQuoteDto,
-): Promise<Quote> {
-  const user = await supabaseBrowserClient().auth.getUser();
-  if (!user.data.user) {
-    throw new Error("User not authenticated");
-  }
-
-  const { data: updatedQuote, error } = await supabaseBrowserClient()
-    .from("quote")
-    .update(data)
-    .eq("quote_id", quoteId)
-    .eq("profile_id", user.data.user.id)
-    .select(
-      `
-      *,
-      category:category_id (category_id, name, slug),
-      suburb:suburb_id (suburb_id, locality, postcode, state)
-    `,
-    )
-    .single();
-
-  if (error) {
-    throw new Error(error.message);
-  }
-
-  return updatedQuote as Quote;
-}
 
 const myQuotesQuery = async (page: number, limit: number, userId: string) => {
   const { data, error } = await supabaseBrowserClient()
@@ -223,21 +150,5 @@ export const useUserQuote = (quoteId: string) => {
       return userQuoteQuery(quoteId, user.id);
     },
     enabled: Boolean(user && quoteId),
-  });
-};
-
-export const useUpdateQuoteMutation = (quoteId: string) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (data: EditQuoteDto) => updateQuote(quoteId, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: quoteQueryKeys.allMyQuotes(),
-      });
-      queryClient.invalidateQueries({
-        queryKey: quoteQueryKeys.userQuote(quoteId),
-      });
-    },
   });
 };
