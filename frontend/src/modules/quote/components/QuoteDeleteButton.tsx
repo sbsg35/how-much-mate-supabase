@@ -2,7 +2,7 @@
 
 import { useDeleteQuoteMutation } from "@/service/quote";
 import { Button, Group, Modal, Text } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
+import { toast } from "@/components/Toast";
 import { useState } from "react";
 
 type QuoteDeleteButtonProps = {
@@ -20,18 +20,16 @@ export const QuoteDeleteButton = ({
   const handleDelete = async () => {
     try {
       await deleteQuoteMutation.mutateAsync(quoteId);
-      notifications.show({
+      toast.success({
         title: "Quote deleted",
         message: `"${quoteTitle}" has been deleted`,
-        color: "green",
       });
       setOpened(false);
     } catch (error) {
-      notifications.show({
+      toast.error({
         title: "Delete failed",
         message:
           error instanceof Error ? error.message : "An unknown error occurred",
-        color: "red",
       });
     }
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import { notifications } from "@mantine/notifications";
+import { toast } from "@/components/Toast";
 import { IconAlertCircle, IconCheck } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { FC, useEffect } from "react";
@@ -32,12 +32,11 @@ export const AuthNotification: FC<{
     const { color, message, icon } =
       notificationMap[type as NotificationType];
 
-    notifications.show({
+    toast.show({
       id: `auth-${type}`,
       color,
       icon,
       message,
-      autoClose: 10_000,
       withCloseButton: true,
     });
 

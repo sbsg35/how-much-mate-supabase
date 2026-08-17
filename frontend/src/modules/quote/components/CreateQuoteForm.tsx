@@ -26,7 +26,7 @@ import { CreateQuoteDto, createQuoteSchema, MIN_QUOTE_DATE } from "@/schema";
 import { FormNumberInput } from "@/components/FormNumberInput";
 import { SuburbSelect } from "@/components/SuburbSelect";
 import type { CreateQuoteActionResult } from "../actions";
-import { notifications } from "@mantine/notifications";
+import { toast } from "@/components/Toast";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { quoteQueryKeys } from "@/service/quote";
@@ -83,10 +83,9 @@ export const CreateQuoteForm = ({
         await queryClient.invalidateQueries({
           queryKey: quoteQueryKeys.allMyQuotes(),
         });
-        notifications.show({
+        toast.warning({
           title: "Quote under review",
           message: "Your quote is under review.",
-          color: "yellow",
         });
         router.push("/user/my-quotes");
         return;
@@ -111,14 +110,12 @@ export const CreateQuoteForm = ({
       const suburb = await getSuburbById(data.suburb_id);
       const location = suburb?.locality;
 
-      notifications.show({
+      toast.success({
         title: "Thanks for contributing!",
         message:
           categoryName && location
             ? `Your quote is now helping people comparing ${categoryName} prices in ${location}.`
             : "Your quote is now helping people compare prices near you.",
-        color: "green",
-        autoClose: 8000,
       });
 
       router.push("/user/my-quotes");

@@ -2,7 +2,7 @@ import { BodyText } from "@/components/BodyText";
 import { Heading } from "@/components/Heading";
 import { Button, Flex, Stack } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { notifications } from "@mantine/notifications";
+import { toast } from "@/components/Toast";
 import { supabaseBrowserClient } from "@/supabase/client";
 
 export const SecuritySettingsForm = () => {
@@ -14,10 +14,9 @@ export const SecuritySettingsForm = () => {
       router.push("/auth/logged-out");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      notifications.show({
+      toast.error({
         title: "Logout failed",
         message: "Logout failed",
-        color: "red",
       });
     }
   };
@@ -28,10 +27,9 @@ export const SecuritySettingsForm = () => {
       router.push("/auth/logged-out");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      notifications.show({
+      toast.error({
         title: "Logout failed",
         message: "Logout failed",
-        color: "red",
       });
     }
   };

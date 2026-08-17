@@ -1,5 +1,5 @@
-import { notifications } from "@mantine/notifications";
 import { isAuthApiError, isAuthError } from "@supabase/supabase-js";
+import { toast } from "@/components/Toast";
 import { FieldValues, UseFormSetError } from "react-hook-form";
 
 export type ErrorHandlerOptions<T extends FieldValues> = {
@@ -42,10 +42,9 @@ export function handleSupabaseAuthError<T extends FieldValues>(
     message = fallbackMessage || message;
   }
 
-  notifications.show({
+  toast.error({
     title: "Error",
     message,
-    color: "red",
   });
 
   return false;

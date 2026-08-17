@@ -13,7 +13,7 @@ import { IconMailCheck } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { OtpDto, otpSchema } from "../schema";
-import { notifications } from "@mantine/notifications";
+import { toast } from "@/components/Toast";
 
 interface VerifyFormProps {
   email: string;
@@ -44,7 +44,7 @@ export const VerifyForm = ({ email }: VerifyFormProps) => {
       router.push("/user/profile");
     } catch (error) {
       console.error("Error verifying OTP:", error);
-      notifications.show({
+      toast.error({
         title: "Error",
         message: "Verification failed. Please try again.",
       });

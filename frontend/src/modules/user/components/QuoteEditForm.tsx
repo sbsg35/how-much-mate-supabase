@@ -13,7 +13,7 @@ import { FormMonthYearSelect } from "@/components/FormMonthYearSelect";
 import { EditQuoteDto, editQuoteSchema, MIN_QUOTE_DATE } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormNumberInput } from "@/components/FormNumberInput";
-import { notifications } from "@mantine/notifications";
+import { toast } from "@/components/Toast";
 import { useRouter } from "next/navigation";
 import { quoteQueryKeys, type Quote } from "@/service/quote";
 import { updateQuoteAction } from "@/modules/quote/actions";
@@ -65,20 +65,18 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
       await queryClient.invalidateQueries({
         queryKey: quoteQueryKeys.userQuote(quote.quote_id),
       });
-      notifications.show({
+      toast.warning({
         title: "Quote under review",
         message: "Your quote is under review.",
-        color: "yellow",
       });
       router.push("/user/my-quotes");
       return;
     }
 
     if (result.error) {
-      notifications.show({
+      toast.error({
         title: "Update failed",
         message: result.error,
-        color: "red",
       });
       form.setError("root.server", { type: "server", message: result.error });
       return;
@@ -91,10 +89,9 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
       queryKey: quoteQueryKeys.userQuote(quote.quote_id),
     });
 
-    notifications.show({
+    toast.success({
       title: "Quote updated successfully",
       message: "Your quote has been updated.",
-      color: "green",
     });
     router.push("/user/my-quotes");
   };

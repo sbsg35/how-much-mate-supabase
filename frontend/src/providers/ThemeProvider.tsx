@@ -79,7 +79,7 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
         },
       }}
     >
-      <Notifications position="top-right" />
+      <Notifications position="bottom-center" />
 
       {children}
     </MantineProvider>

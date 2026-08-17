@@ -8,7 +8,7 @@ import { Profile } from "@/service/profile";
 import { supabaseBrowserClient } from "@/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Checkbox, LoadingOverlay } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
+import { toast } from "@/components/Toast";
 import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -65,16 +65,14 @@ export const ProfileForm: FC<{ user: Profile }> = ({ user }) => {
       form.reset({ username: payload.username ?? "" });
       setSavedAnonymous(anonymous);
 
-      notifications.show({
+      toast.success({
         title: "Profile updated",
         message: "Your profile has been updated successfully",
-        color: "green",
       });
     } catch (error) {
-      notifications.show({
+      toast.error({
         title: "Update failed",
         message: `${error instanceof Error ? error.message : "An unknown error occurred"}`,
-        color: "red",
       });
     }
   };

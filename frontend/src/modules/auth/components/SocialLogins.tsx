@@ -1,8 +1,8 @@
 import { GoogleButton } from "@/components/GoogleButton";
 import { apiUrl } from "@/lib/env";
 import { supabaseBrowserClient } from "@/supabase/client";
+import { toast } from "@/components/Toast";
 import { Stack } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 
@@ -24,7 +24,7 @@ export const SocialLogins: FC<{ isSignUp?: boolean }> = ({
       }
     } catch (error) {
       console.error("Unexpected error during Google login:", error);
-      notifications.show({
+      toast.error({
         title: "Login Failed",
         message: "An error occurred during Google login. Please try again.",
       });
