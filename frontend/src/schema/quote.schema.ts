@@ -38,9 +38,9 @@ const descriptionSchema = stringTrimmed({
     message: "Description cannot contain inappropriate language",
   });
 
-const priceSchema = number().positive({
-  message: "Price must be greater than zero",
-});
+const priceSchema = number()
+  .positive({ message: "Price must be greater than zero" })
+  .max(10_000_000, { message: "Price must be at most $10,000,000" });
 
 const category_idSchema = coerce
   .number()

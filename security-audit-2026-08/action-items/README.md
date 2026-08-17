@@ -8,8 +8,8 @@ Ordered highest to lowest priority. Filenames are numbered to preserve that orde
 | 2 | P1 | Medium | [02-p1-quote-spam-and-moderation-bypass.md](02-p1-quote-spam-and-moderation-bypass.md) — ✅ fixed |
 | 3 | P1 | Low-Medium | [03-p1-edit-quote-date-bypass.md](03-p1-edit-quote-date-bypass.md) — ✅ fixed |
 | 4 | P2 | Low / Info | [04-p2-missing-quote-rls-insert-update.md](04-p2-missing-quote-rls-insert-update.md) — ✅ fixed |
-| 5 | P2 | Low / Info | [05-p2-remove-unused-browser-quote-writes.md](05-p2-remove-unused-browser-quote-writes.md) |
-| 6 | P2 | Low | [06-p2-pin-search-path-auth-hook.md](06-p2-pin-search-path-auth-hook.md) |
-| 7 | P2 | Low | [07-p2-unbounded-price.md](07-p2-unbounded-price.md) |
+| 5 | P2 | Low / Info | [05-p2-remove-unused-browser-quote-writes.md](05-p2-remove-unused-browser-quote-writes.md) — ✅ fixed |
+| 6 | P2 | Low | [06-p2-pin-search-path-auth-hook.md](06-p2-pin-search-path-auth-hook.md) — ✅ fixed |
+| 7 | P2 | Low | [07-p2-unbounded-price.md](07-p2-unbounded-price.md) — ✅ fixed |
 
 Each file is self-contained: location, description, attack scenario, impact, evidence, remediation, and a suggested fix. Source: full audit conducted against `develop` branch.

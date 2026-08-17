@@ -2,7 +2,7 @@
 priority: P2
 severity: LOW / INFO
 complexity: Small
-status: open
+status: fixed
 ---
 
 # Remove (or deliberately wire up) unused browser-side quote write functions
@@ -26,3 +26,10 @@ Either delete `createQuote`, `updateQuote`, `useCreateQuoteMutation`, and `useUp
 
 ## Confidence
 Medium (usage confirmed via grep; intent behind keeping this code is unverified — flagging for a decision, not asserting it must be deleted)
+
+## Resolution
+Re-confirmed both `createQuote`/`updateQuote` and their hooks (`useCreateQuoteMutation`/`useUpdateQuoteMutation`) had no importers anywhere outside `service/quote.ts` itself, then removed all four from `frontend/src/service/quote.ts`, along with the now-unused `CreateQuoteDto`/`EditQuoteDto` schema imports. `deleteQuote`, `useDeleteQuoteMutation`, `useMyQuotes`, `useUserQuote`, and `quoteQueryKeys` (all still in active use) were left untouched.
+
+This closes the exact risk described above: with items 04's RLS status guard now in place, these functions would have failed (403) rather than silently bypassing moderation if ever wired up — but removing genuinely dead code is still the right call rather than relying on that guard as the only safety net.
+
+Verified: `tsc --noEmit` and `eslint` clean (no new errors, same pre-existing unrelated warnings as before). Logged into the running app as a fresh test user and loaded `/user/my-quotes` (which uses `useMyQuotes` from the same file) — rendered correctly with no console errors, confirming the file still works end-to-end after the removal.

@@ -18,7 +18,7 @@ create table
       time zone not null default now (),
       "suburb_id" character varying not null,
       "profile_id" uuid not null,
-      "price" numeric not null,
+      "price" numeric not null check ("price" > 0 and "price" <= 10000000),
       "business_name" text not null,
       "completed" boolean default false not null,
       "quote_date" date not null,

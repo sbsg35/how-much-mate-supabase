@@ -145947,8 +145947,6 @@ VALUES
     );
 
 -- INSERT CATEGORIES
-how-much-mate-categories.sql
-
 
 -- How Much Mate categories
 INSERT INTO category (name, slug)

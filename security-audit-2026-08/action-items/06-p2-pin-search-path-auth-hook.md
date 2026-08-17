@@ -2,7 +2,7 @@
 priority: P2
 severity: LOW
 complexity: Small
-status: open
+status: fixed
 ---
 
 # Pin `search_path` on `custom_access_token_hook`
@@ -42,3 +42,10 @@ begin
 
 ## Confidence
 Medium
+
+## Resolution
+Edited `supabase/migrations/20260813000100_custom_access_token_hook.sql` in place to add `set search_path = ''` (per the user: this migration isn't in prod yet, so editing in place + local `db reset` was preferred over a new migration).
+
+While fixing this, `db reset` surfaced an unrelated pre-existing bug: a stray, uncommented line `how-much-mate-categories.sql` at `supabase/seed.sql:145950` (looked like a leftover filename reference missing its `--` comment prefix) was breaking the seed step with a syntax error. Removed the stray line so seeding works again — unrelated to this audit but was blocking the requested `db reset` workflow.
+
+Verified: `select proname, proconfig from pg_proc where proname = 'custom_access_token_hook'` confirms `search_path=""` is set post-reset. Functionally re-tested the hook end-to-end — created a test user, signed in, decoded the returned JWT, and confirmed the `user_role` claim is still present (null, since the test user has no assigned role) — the fix didn't break the hook's actual behavior. Test user deleted afterward.
