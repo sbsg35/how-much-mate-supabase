@@ -13,12 +13,10 @@ import {
   Stack,
   Text,
   TextInput,
-  ThemeIcon,
   Title,
 } from "@mantine/core";
 import {
   IconArrowRight,
-  IconCheck,
   IconMapPin,
   IconSearch,
   IconUsers,
@@ -41,12 +39,6 @@ const states = [
   { value: "TAS", label: "Tasmania" },
   { value: "ACT", label: "Australian Capital Territory" },
   { value: "NT", label: "Northern Territory" },
-];
-
-const proofPoints = [
-  "Real quotes from real people",
-  "Local prices",
-  "Free to use",
 ];
 
 export const LandingPage = ({
@@ -174,7 +166,7 @@ export const LandingPage = ({
 
               <Group mt={26} gap={30} align="center">
                 <Text fw={700} c="#273143">
-                  Got a quote recently?
+                  Got a recent quote?
                 </Text>
                 <Anchor
                   href="/quote/create"
@@ -183,28 +175,10 @@ export const LandingPage = ({
                   style={{ textUnderlineOffset: 4 }}
                 >
                   <Group gap={8} wrap="nowrap">
-                    Share it and help the next mate.
+                    Add it to the database
                     <IconArrowRight size={17} />
                   </Group>
                 </Anchor>
-              </Group>
-
-              <Group mt={{ base: 28, sm: 40 }} gap={34}>
-                {proofPoints.map((item) => (
-                  <Group key={item} gap={8} wrap="nowrap">
-                    <ThemeIcon
-                      variant="outline"
-                      color="hmw"
-                      radius="xl"
-                      size={18}
-                    >
-                      <IconCheck size={12} />
-                    </ThemeIcon>
-                    <Text fz={14} c="#4d586a">
-                      {item}
-                    </Text>
-                  </Group>
-                ))}
               </Group>
             </Stack>
           </Grid.Col>
