@@ -17,6 +17,7 @@ import { FormTextInput } from "@/components/FormTextInput";
 import { FormTextarea } from "@/components/FormTextarea";
 import { HookFormProvider } from "@/components/HookFormProvider";
 import { CategorySelect } from "@/components/CategorySelect";
+import { FormMonthYearSelect } from "@/components/FormMonthYearSelect";
 import { Turnstile } from "@/components/Turnstile";
 import { useTurnstile } from "@/hooks/useTurnstile";
 import { CLOUDFLARE_TURNSTILE_KEY } from "@/lib/env";
@@ -29,6 +30,8 @@ import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { quoteQueryKeys } from "@/service/quote";
+import { useCategories } from "@/service/category";
+import { getSuburbById } from "@/service/suburb";
 
 type CreateQuoteFormValues = z.input<typeof createQuoteSchema>;
 
@@ -43,6 +46,7 @@ export const CreateQuoteForm = ({
 }: CreateQuoteFormProps) => {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { data: categories } = useCategories();
 
   const form = useForm<CreateQuoteFormValues, unknown, CreateQuoteDto>({
     defaultValues: {
@@ -100,6 +104,23 @@ export const CreateQuoteForm = ({
       await queryClient.invalidateQueries({
         queryKey: quoteQueryKeys.allMyQuotes(),
       });
+
+      const categoryName = categories?.find(
+        (category) => category.category_id === data.category_id,
+      )?.name;
+      const suburb = await getSuburbById(data.suburb_id);
+      const location = suburb?.locality;
+
+      notifications.show({
+        title: "Thanks for contributing!",
+        message:
+          categoryName && location
+            ? `Your quote is now helping people comparing ${categoryName} prices in ${location}.`
+            : "Your quote is now helping people compare prices near you.",
+        color: "green",
+        autoClose: 8000,
+      });
+
       router.push("/user/my-quotes");
     } catch (error) {
       console.error("Error creating quote:", error);
@@ -126,25 +147,16 @@ export const CreateQuoteForm = ({
     <HookFormProvider form={form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <Stack gap="md">
-          <FormTextInput
-            name="title"
-            label="Title"
-            placeholder="e.g., No call-out fee for emergency plumber"
-          />
+          <FormTextInput name="title" label="Title" />
 
           <FormTextarea
             name="description"
             label="Description"
-            placeholder="Describe the job, e.g., Replaced a leaking hot water valve and tested for further leaks"
             helperText="Describe the job itself, no personal details."
             minRows={4}
           />
 
-          <FormTextInput
-            name="business_name"
-            label="Business Name"
-            placeholder="e.g., FlowMaster Plumbing"
-          />
+          <FormTextInput name="business_name" label="Business Name" />
 
           <FormNumberInput
             name="price"
@@ -158,12 +170,12 @@ export const CreateQuoteForm = ({
 
           <SuburbSelect name="suburb_id" label="Suburb" />
 
-          <FormTextInput
+          <FormMonthYearSelect
             name="quote_date"
             label="Quote Date"
-            type="date"
-            min={MIN_QUOTE_DATE}
-            max={new Date().toISOString().slice(0, 10)}
+            helperText="We just need an approximate date, so a month and year is fine."
+            minDate={MIN_QUOTE_DATE}
+            maxDate={new Date().toISOString().slice(0, 10)}
           />
 
           <Checkbox

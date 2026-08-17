@@ -8,8 +8,9 @@ import { FormTextInput } from "@/components/FormTextInput";
 import { FormTextarea } from "@/components/FormTextarea";
 import { CategorySelect } from "@/components/CategorySelect";
 import { SuburbSelect } from "@/components/SuburbSelect";
+import { FormMonthYearSelect } from "@/components/FormMonthYearSelect";
 
-import { EditQuoteDto, editQuoteSchema } from "@/schema";
+import { EditQuoteDto, editQuoteSchema, MIN_QUOTE_DATE } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormNumberInput } from "@/components/FormNumberInput";
 import { notifications } from "@mantine/notifications";
@@ -128,7 +129,12 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
 
           <SuburbSelect name="suburb_id" label="Suburb" />
 
-          <FormTextInput name="quote_date" label="Quote Date" type="date" />
+          <FormMonthYearSelect
+            name="quote_date"
+            label="Quote Date"
+            minDate={MIN_QUOTE_DATE}
+            maxDate={new Date().toISOString().slice(0, 10)}
+          />
 
           <Checkbox
             label="Did you go ahead with this quote?"

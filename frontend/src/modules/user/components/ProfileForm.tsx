@@ -7,15 +7,18 @@ import { UserUpdateDto, userUpdateSchema } from "@/schema/profile.schema";
 import { Profile } from "@/service/profile";
 import { supabaseBrowserClient } from "@/supabase/client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Box, LoadingOverlay } from "@mantine/core";
+import { Box, Checkbox, LoadingOverlay } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 type UserUpdateFormValues = z.input<typeof userUpdateSchema>;
 
 export const ProfileForm: FC<{ user: Profile }> = ({ user }) => {
+  const [savedAnonymous, setSavedAnonymous] = useState(!user?.username);
+  const [anonymous, setAnonymous] = useState(savedAnonymous);
+
   const form = useForm<UserUpdateFormValues, unknown, UserUpdateDto>({
     defaultValues: {
       username: user?.username || "",
@@ -25,11 +28,22 @@ export const ProfileForm: FC<{ user: Profile }> = ({ user }) => {
   });
 
   const isLoading = form.formState.isLoading || form.formState.isSubmitting;
+  const isDirty = form.formState.isDirty || anonymous !== savedAnonymous;
+
+  const handleAnonymousChange = (checked: boolean) => {
+    setAnonymous(checked);
+    if (checked) {
+      form.setValue("username", "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    }
+  };
 
   const handleUpdate = async (data: UserUpdateDto) => {
     const payload = {
       ...data,
-      username: data.username ?? null,
+      username: anonymous ? null : (data.username ?? null),
     };
 
     try {
@@ -47,6 +61,9 @@ export const ProfileForm: FC<{ user: Profile }> = ({ user }) => {
       if (!response) {
         throw new Error("Profile update was not applied");
       }
+
+      form.reset({ username: payload.username ?? "" });
+      setSavedAnonymous(anonymous);
 
       notifications.show({
         title: "Profile updated",
@@ -80,8 +97,21 @@ export const ProfileForm: FC<{ user: Profile }> = ({ user }) => {
       <Box mt={16}>
         <HookFormProvider form={form}>
           <form onSubmit={form.handleSubmit(handleUpdate)}>
-            <FormTextInput name="username" label="Username" />
-            <FormSubmitButton variant="outline" mt="md">
+            <FormTextInput
+              name="username"
+              label="Username"
+              helperText="Shown next to your quotes. You can stay anonymous instead."
+              thinking={anonymous}
+            />
+            <Checkbox
+              mt={8}
+              label="Post anonymously (hides your username on quotes)"
+              checked={anonymous}
+              onChange={(event) =>
+                handleAnonymousChange(event.currentTarget.checked)
+              }
+            />
+            <FormSubmitButton variant="outline" mt="md" disabled={!isDirty}>
               Save
             </FormSubmitButton>
           </form>

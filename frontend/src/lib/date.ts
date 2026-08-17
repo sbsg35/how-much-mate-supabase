@@ -63,6 +63,14 @@ export const formatDate = (date: Date | string): string => {
   });
 };
 
+export const formatMonthYear = (date: Date | string): string => {
+  const dateObj = typeof date === "string" ? new Date(date) : date;
+  return dateObj.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "long",
+  });
+};
+
 export const formatDateTime = (date: Date | string): string => {
   const dateObj = typeof date === "string" ? new Date(date) : date;
   return dateObj.toLocaleString(undefined, {

@@ -60,7 +60,7 @@ export const useSuburbSearch = (query: string) =>
     enabled: query.trim().length >= 2, // Only search if query is at least 2 characters
   });
 
-const getSuburbById = async (suburb_id: string): Promise<Suburb | null> => {
+export const getSuburbById = async (suburb_id: string): Promise<Suburb | null> => {
   if (!suburb_id) {
     return null;
   }

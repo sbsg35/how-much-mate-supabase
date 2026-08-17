@@ -9,8 +9,6 @@ import { FC } from "react";
 export const SocialLogins: FC<{ isSignUp?: boolean }> = ({
   isSignUp = false,
 }) => {
-  const navigate = useRouter();
-
   const handleGoogleLogin = async () => {
     try {
       const browserClient = supabaseBrowserClient();
