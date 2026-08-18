@@ -5,7 +5,8 @@ import { getPublicQuotes } from "@/service/admin-quote";
 
 export const metadata: Metadata = {
   title: "How Much Mate? | Know what a job should cost",
-  description: "Compare community-submitted quotes for everyday services in Australia.",
+  description:
+    "Compare community-submitted quotes for everyday services in Australia.",
 };
 
 export default async function Home() {

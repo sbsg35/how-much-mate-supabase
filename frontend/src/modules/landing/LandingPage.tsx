@@ -21,14 +21,13 @@ import {
   IconSearch,
   IconUsers,
 } from "@tabler/icons-react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { CategoriesSection } from "./CategoriesSection";
 import type { Category } from "@/service/category.server";
 import type { Quote } from "@/service/admin-quote";
 import { RecentlySharedQuotes } from "./RecentlySharedQuotes";
-import { launchRegion } from "@/lib/env";
+import { launchRegion, showBrowseCategories } from "@/lib/env";
 
 const states = [
   { value: "", label: "Suburb or state" },
@@ -80,126 +79,124 @@ export const LandingPage = ({
         }}
       >
         <Container size="xxl" py={{ base: 36, sm: 52, lg: 72 }}>
-        <Grid align="center" gap={{ base: 0, lg: 36 }}>
-          <Grid.Col span={{ base: 12, lg: 7 }}>
-            <Stack gap={0} pos="relative" style={{ zIndex: 3 }}>
-              <Badge
-                size="lg"
-                variant="light"
-                color="hmw"
-                radius="xl"
-                leftSection={<IconUsers size={17} stroke={1.8} />}
-                tt="none"
-                w="fit-content"
-              >
-                Community powered. 100% free to use.
-              </Badge>
+          <Grid align="center" gap={{ base: 0, lg: 36 }}>
+            <Grid.Col span={12}>
+              <Stack gap={0} maw={720} pos="relative" style={{ zIndex: 3 }}>
+                <Badge
+                  size="lg"
+                  variant="light"
+                  color="hmw"
+                  radius="xl"
+                  leftSection={<IconUsers size={17} stroke={1.8} />}
+                  tt="none"
+                  w="fit-content"
+                >
+                  Community powered. 100% free to use.
+                </Badge>
 
-              <Title
-                order={1}
-                mt={{ base: 22, sm: 28 }}
-                fz={{ base: 47, sm: 60, lg: 72 }}
-                lh={1.12}
-                fw={800}
-                c="#111827"
-                style={{ letterSpacing: "-0.05em" }}
-              >
-                Know what a job
-                <br />
-                should{" "}
-                <Text component="span" inherit c="hmw.6">
-                  cost.
+                <Title
+                  order={1}
+                  mt={{ base: 22, sm: 28 }}
+                  fz={{ base: 47, sm: 60, lg: 72 }}
+                  lh={1.12}
+                  fw={800}
+                  c="#111827"
+                  style={{ letterSpacing: "-0.05em" }}
+                >
+                  Know what a job
+                  <br />
+                  should{" "}
+                  <Text component="span" inherit c="hmw.6">
+                    cost
+                  </Text>
+                  <Text
+                    fz="h4"
+                    ml={6}
+                    style={{ letterSpacing: "0em" }}
+                    component="span"
+                    color="dimmed"
+                  >
+                    ...roughly 🙂
+                  </Text>
+                </Title>
+
+                <Text
+                  mt={18}
+                  mb={34}
+                  maw={620}
+                  c="#536075"
+                  fz={{ base: 17, sm: 19 }}
+                  lh={1.55}
+                >
+                  Compare quotes for trades and services accross Canberra region
                 </Text>
-              </Title>
 
-              <Text
-                mt={18}
-                mb={34}
-                maw={620}
-                c="#536075"
-                fz={{ base: 17, sm: 19 }}
-                lh={1.55}
-              >
-                Compare community-submitted quotes for tradies and services in
-              </Text>
-
-              <Paper
-                component="form"
-                onSubmit={handleSearch}
-                withBorder
-                shadow="md"
-                radius="md"
-                p={{ base: 16, sm: 22 }}
-              >
-                <Grid align="flex-end" gap="md">
-                  <Grid.Col span={{ base: 12, sm: launchRegion ? 8 : 5 }}>
-                    <TextInput
-                      name="keyword"
-                      label="What service do you need?"
-                      placeholder="e.g. Electrician, fencing, cleaning"
-                      leftSection={<IconSearch size={20} stroke={1.7} />}
-                      size="md"
-                    />
-                  </Grid.Col>
-                  {!launchRegion && (
-                    <Grid.Col span={{ base: 12, sm: 4 }}>
-                      <NativeSelect
-                        name="state"
-                        label="Where?"
-                        data={states}
-                        leftSection={<IconMapPin size={20} stroke={1.7} />}
+                <Paper
+                  component="form"
+                  onSubmit={handleSearch}
+                  withBorder
+                  shadow="md"
+                  radius="md"
+                  p={{ base: 16, sm: 22 }}
+                >
+                  <Grid align="flex-end" gap="md">
+                    <Grid.Col span={{ base: 12, sm: launchRegion ? 8 : 5 }}>
+                      <TextInput
+                        name="keyword"
+                        label="What service do you need?"
+                        placeholder="e.g. Electrician, fencing, cleaning"
+                        leftSection={<IconSearch size={20} stroke={1.7} />}
                         size="md"
                       />
                     </Grid.Col>
-                  )}
-                  <Grid.Col span={{ base: 12, sm: launchRegion ? 4 : 3 }}>
-                    <Button
-                      type="submit"
-                      size="md"
-                      fullWidth
-                      style={{
-                        boxShadow: "0 8px 18px rgba(0, 142, 84, .2)",
-                      }}
-                    >
-                      Search quotes
-                    </Button>
-                  </Grid.Col>
-                </Grid>
-              </Paper>
+                    {!launchRegion && (
+                      <Grid.Col span={{ base: 12, sm: 4 }}>
+                        <NativeSelect
+                          name="state"
+                          label="Where?"
+                          data={states}
+                          leftSection={<IconMapPin size={20} stroke={1.7} />}
+                          size="md"
+                        />
+                      </Grid.Col>
+                    )}
+                    <Grid.Col span={{ base: 12, sm: launchRegion ? 4 : 3 }}>
+                      <Button
+                        type="submit"
+                        size="md"
+                        fullWidth
+                        style={{
+                          boxShadow: "0 8px 18px rgba(0, 142, 84, .2)",
+                        }}
+                      >
+                        Search quotes
+                      </Button>
+                    </Grid.Col>
+                  </Grid>
+                </Paper>
 
-              <Group mt={26} gap={30} align="center">
-                <Text fw={700} c="#273143">
-                  Got a recent quote?
-                </Text>
-                <Anchor
-                  href="/quote/create"
-                  c="hmw.6"
-                  underline="always"
-                  style={{ textUnderlineOffset: 4 }}
-                >
-                  <Group gap={8} wrap="nowrap">
-                    Add it to the database
-                    <IconArrowRight size={17} />
-                  </Group>
-                </Anchor>
-              </Group>
-            </Stack>
-          </Grid.Col>
-
-          <Grid.Col span={{ base: 12, lg: 5 }} visibleFrom="lg">
-            <Box pos="relative" h={560}>
-              <Image
-                src="/hmm-map.svg"
-                alt="Example quote prices around Australia"
-                fill
-                style={{ objectFit: "contain" }}
-              />
-            </Box>
-          </Grid.Col>
-        </Grid>
+                <Group mt={26} gap={30} align="center">
+                  <Text fw={700} c="#273143">
+                    Got a recent quote?
+                  </Text>
+                  <Anchor
+                    href="/quote/create"
+                    c="hmw.6"
+                    underline="always"
+                    style={{ textUnderlineOffset: 4 }}
+                  >
+                    <Group gap={8} wrap="nowrap">
+                      Add it to the database
+                      <IconArrowRight size={17} />
+                    </Group>
+                  </Anchor>
+                </Group>
+              </Stack>
+            </Grid.Col>
+          </Grid>
         </Container>
       </Box>
-      <CategoriesSection categories={categories} />
+      {showBrowseCategories && <CategoriesSection categories={categories} />}
       <RecentlySharedQuotes quotes={recentQuotes} renderedAt={renderedAt} />
     </>
   );

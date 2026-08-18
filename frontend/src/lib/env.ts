@@ -23,3 +23,7 @@ export const CLOUDFLARE_TURNSTILE_KEY = env === "prod"
 // launch region (matches the suburb.launch_region column). Empty/unset means
 // no restriction (all of Australia).
 export const launchRegion = process.env.NEXT_PUBLIC_LAUNCH_REGION || null;
+
+// Shows the "browse categories" section on the landing page. Off by default.
+export const showBrowseCategories =
+  process.env.NEXT_PUBLIC_SHOW_BROWSE_CATEGORIES === "true";

@@ -18,14 +18,7 @@ export const RecentlySharedQuotes = ({
   quotes: Quote[];
   renderedAt: string;
 }) => (
-  <Box
-    component="section"
-    py={{ base: 46, md: 62 }}
-    style={{
-      background:
-        "linear-gradient(115deg, #f8fcfa 0%, #f2faf7 55%, #f9fcfb 100%)",
-    }}
-  >
+  <Box component="section" py={{ base: 46, md: 62 }} bg="#ffffff">
     <Container size="xxl">
       <Group justify="space-between" align="center" mb={{ base: 24, md: 30 }}>
         <Title order={2} fz={{ base: 26, sm: 30 }} c="#111827">
