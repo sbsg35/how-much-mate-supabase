@@ -3,6 +3,7 @@ import "server-only";
 import { PublicQuotesSearchDto } from "@/schema";
 import { Database } from "@/supabase/database.types";
 import { supabaseAdminServerClient } from "@/supabase/admin";
+import { launchRegion } from "@/lib/env";
 
 type QuoteRow = Database["public"]["Tables"]["quote"]["Row"];
 
@@ -58,6 +59,7 @@ export async function getPublicQuotes({
       p_category_id: category_id ?? undefined,
       p_suburb_id: suburb_id ?? undefined,
       p_radius_km: radius_km ? Number(radius_km) : undefined,
+      p_launch_region: launchRegion ?? undefined,
     },
   );
 

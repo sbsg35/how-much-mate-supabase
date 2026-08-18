@@ -12,6 +12,9 @@ CREATE TABLE
     state varchar NOT NULL,
     position extensions.geometry (Point, 4326) NOT NULL,
     display_name varchar(255) NOT NULL,
+    -- Restricts search/suburb-selection to a launch area (e.g. 'canberra')
+    -- via the NEXT_PUBLIC_LAUNCH_REGION feature flag. Null = no restriction.
+    launch_region varchar,
     created_at timestamptz NOT NULL DEFAULT NOW (),
     updated_at timestamptz NOT NULL DEFAULT NOW ()
   );
@@ -23,3 +26,5 @@ CREATE INDEX IF NOT EXISTS idx_suburb_postcode ON suburb (postcode);
 CREATE INDEX IF NOT EXISTS idx_suburb_state ON suburb (state);
 
 CREATE INDEX IF NOT EXISTS idx_suburb_position ON suburb USING GIST (position);
+
+CREATE INDEX IF NOT EXISTS idx_suburb_launch_region ON suburb (launch_region);

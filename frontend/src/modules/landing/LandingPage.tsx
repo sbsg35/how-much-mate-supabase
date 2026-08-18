@@ -28,6 +28,7 @@ import { CategoriesSection } from "./CategoriesSection";
 import type { Category } from "@/service/category.server";
 import type { Quote } from "@/service/admin-quote";
 import { RecentlySharedQuotes } from "./RecentlySharedQuotes";
+import { launchRegion } from "@/lib/env";
 
 const states = [
   { value: "", label: "Suburb or state" },
@@ -131,7 +132,7 @@ export const LandingPage = ({
                 p={{ base: 16, sm: 22 }}
               >
                 <Grid align="flex-end" gap="md">
-                  <Grid.Col span={{ base: 12, sm: 5 }}>
+                  <Grid.Col span={{ base: 12, sm: launchRegion ? 8 : 5 }}>
                     <TextInput
                       name="keyword"
                       label="What service do you need?"
@@ -140,16 +141,18 @@ export const LandingPage = ({
                       size="md"
                     />
                   </Grid.Col>
-                  <Grid.Col span={{ base: 12, sm: 4 }}>
-                    <NativeSelect
-                      name="state"
-                      label="Where?"
-                      data={states}
-                      leftSection={<IconMapPin size={20} stroke={1.7} />}
-                      size="md"
-                    />
-                  </Grid.Col>
-                  <Grid.Col span={{ base: 12, sm: 3 }}>
+                  {!launchRegion && (
+                    <Grid.Col span={{ base: 12, sm: 4 }}>
+                      <NativeSelect
+                        name="state"
+                        label="Where?"
+                        data={states}
+                        leftSection={<IconMapPin size={20} stroke={1.7} />}
+                        size="md"
+                      />
+                    </Grid.Col>
+                  )}
+                  <Grid.Col span={{ base: 12, sm: launchRegion ? 4 : 3 }}>
                     <Button
                       type="submit"
                       size="md"

@@ -18,6 +18,7 @@ import { FormRadioGroup } from "@/components/FormRadioGroup";
 import { useMediaQuery, useMounted } from "@mantine/hooks";
 import { SuburbSelect } from "@/components/SuburbSelect";
 import { CategorySelect } from "@/components/CategorySelect";
+import { launchRegion } from "@/lib/env";
 
 const AUSTRALIAN_STATES = [
   { value: "ACT", label: "Australian Capital Territory" },
@@ -41,7 +42,7 @@ const CLEAR_SEARCH_VALUES: PublicQuotesSearchDto = {
   limit: 10,
   keyword: undefined,
   sort_by: "newest",
-  search_type: "state",
+  search_type: launchRegion ? "suburb" : "state",
   state: null,
   category_id: undefined,
   suburb_id: null,
@@ -100,12 +101,15 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
     const {
       keyword,
       sort_by,
-      search_type,
       state,
       category_id,
       suburb_id,
       radius_km,
     } = data;
+
+    // When a launch region is active there's no state search option, so
+    // always search by suburb regardless of the form's stored search_type.
+    const search_type = launchRegion ? "suburb" : data.search_type;
 
     // Build the search URL by cloning existing search params
     const params = new URLSearchParams(searchParams);
@@ -226,19 +230,21 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
             name="sort_by"
             mt="md"
           />
-          <FormRadioGroup
-            label="Search by"
-            name="search_type"
-            mt="md"
-            onChange={handleSearchTypeChange}
-          >
-            <Stack mt="xs">
-              <Radio value="state" label="State" />
-              <Radio value="suburb" label="Suburb (with optional radius)" />
-            </Stack>
-          </FormRadioGroup>
+          {!launchRegion && (
+            <FormRadioGroup
+              label="Search by"
+              name="search_type"
+              mt="md"
+              onChange={handleSearchTypeChange}
+            >
+              <Stack mt="xs">
+                <Radio value="state" label="State" />
+                <Radio value="suburb" label="Suburb (with optional radius)" />
+              </Stack>
+            </FormRadioGroup>
+          )}
 
-          {searchType === "state" && (
+          {!launchRegion && searchType === "state" && (
             <FormSelect
               label="Filter by State"
               placeholder="All states"
@@ -249,7 +255,7 @@ export const QuoteSearchForm: FC<{ defaultValues: PublicQuotesSearchDto }> = ({
             />
           )}
 
-          {searchType === "suburb" && (
+          {(launchRegion || searchType === "suburb") && (
             <>
               <SuburbSelect name="suburb_id" label="Filter by suburb" mt="md" />
               <FormSelect

@@ -199,6 +199,7 @@ export type Database = {
         Row: {
           created_at: string
           display_name: string
+          launch_region: string | null
           locality: string
           position: unknown
           postcode: string
@@ -209,6 +210,7 @@ export type Database = {
         Insert: {
           created_at?: string
           display_name: string
+          launch_region?: string | null
           locality: string
           position: unknown
           postcode: string
@@ -219,6 +221,7 @@ export type Database = {
         Update: {
           created_at?: string
           display_name?: string
+          launch_region?: string | null
           locality?: string
           position?: unknown
           postcode?: string
@@ -262,6 +265,7 @@ export type Database = {
         Args: {
           p_category_id?: number
           p_keyword?: string
+          p_launch_region?: string
           p_limit?: number
           p_page?: number
           p_radius_km?: number

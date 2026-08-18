@@ -17,7 +17,8 @@ create or replace function public.find_published_quotes(
   p_category_id bigint default null,
   p_suburb_id varchar default null,
   p_radius_km integer default null,
-  p_sort_by text default 'newest'
+  p_sort_by text default 'newest',
+  p_launch_region varchar default null
 )
 returns table (
   quote jsonb,
@@ -58,6 +59,7 @@ begin
   inner join public.category c on c.category_id = q.category_id
   inner join public.suburb s on s.suburb_id = q.suburb_id
   where q.status = 'published'
+    and (p_launch_region is null or s.launch_region = p_launch_region)
     and (p_keyword is null or q.search_tsv @@ websearch_to_tsquery('english', p_keyword))
     and (p_category_id is null or q.category_id = p_category_id)
     and (

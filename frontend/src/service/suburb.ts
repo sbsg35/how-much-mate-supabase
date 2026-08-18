@@ -1,6 +1,7 @@
 import { supabaseBrowserClient } from "@/supabase/client";
 import { Database } from "@/supabase/database.types";
 import { useQuery } from "@tanstack/react-query";
+import { launchRegion } from "@/lib/env";
 
 export type Suburb = Database["public"]["Tables"]["suburb"]["Row"];
 
@@ -13,10 +14,16 @@ const searchSuburbs = async (query: string, limit: number = 5): Promise<Suburb[]
   const isNumeric = /^\d+$/.test(trimmedQuery);
 
   const searchColumn = isNumeric ? "postcode" : "locality";
-  const { data, error } = await supabaseBrowserClient()
+  let queryBuilder = supabaseBrowserClient()
     .from("suburb")
     .select("*")
-    .ilike(searchColumn, `${trimmedQuery}%`)
+    .ilike(searchColumn, `${trimmedQuery}%`);
+
+  if (launchRegion) {
+    queryBuilder = queryBuilder.eq("launch_region", launchRegion);
+  }
+
+  const { data, error } = await queryBuilder
     .order("locality", { ascending: true })
     .limit(limit);
 

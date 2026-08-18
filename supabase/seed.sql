@@ -146017,6 +146017,18 @@ VALUES (
 
 
 
+-- Backfill launch_region now that suburb rows exist (mirrors the backfill in
+-- migration 20260818000000_add_suburb_launch_region.sql, which runs before
+-- this seed file on a local `supabase db reset` and so has no rows to update).
+UPDATE suburb
+SET launch_region = 'canberra'
+WHERE extensions.ST_DWithin(
+  position::extensions.geography,
+  extensions.ST_SetSRID(extensions.ST_MakePoint(149.1300, -35.2809), 4326)::extensions.geography,
+  50000
+);
+
+
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
 	('00000000-0000-0000-0000-000000000000', '6ca0b796-ea2c-4c7f-aac1-2a1cca6a0f66', 'authenticated', 'authenticated', 'hisemozif@gmail.com', '$2a$10$iIr0/1/dQqv8vKSilqnweu6Xo542xIpwxh.UuBSSiCKE8cia3.S6K', '2026-05-29 18:01:56.650715+00', NULL, '', '2026-05-29 18:01:50.665965+00', '', NULL, '', '', NULL, '2026-05-29 18:01:56.653303+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "6ca0b796-ea2c-4c7f-aac1-2a1cca6a0f66", "email": "hisemozif@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-05-29 18:01:50.656024+00', '2026-05-29 18:01:56.655754+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
 	('00000000-0000-0000-0000-000000000000', '77a13489-2096-408d-8cdb-7b90b5ac1cf8', 'authenticated', 'authenticated', 'dywyhixy@gmail.com', '$2a$10$rz2y9Rt/vy/7XLDzCBhlyeabjyAZ5FRStUxkEcoZI/Z.mnJ92bMam', '2026-05-29 18:02:08.793025+00', NULL, '', '2026-05-29 18:02:02.298747+00', '', NULL, '', '', NULL, '2026-05-29 18:02:08.796491+00', '{"provider": "email", "providers": ["email"]}', '{"sub": "77a13489-2096-408d-8cdb-7b90b5ac1cf8", "email": "dywyhixy@gmail.com", "email_verified": true, "phone_verified": false}', NULL, '2026-05-29 18:02:02.292143+00', '2026-05-29 18:02:08.79826+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
