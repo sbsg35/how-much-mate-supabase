@@ -85,8 +85,9 @@ Use migrations for every schema change:
 
 ```bash
 npx supabase migration new <migration_name> # Create an empty migration
-npx supabase db diff -f <migration_name>     # Generate one from local changes
-npm run supabase:reset                       # Rebuild locally and regenerate types
+npx supabase db diff -f <migration_name>    # Generate one from local changes
+npm run supabase:reset                      # Rebuild locally and regenerate types
+npx supabase db reset --linked                       # Rebuild the linked remote database
 ```
 
 A typical workflow is:
@@ -179,9 +180,19 @@ Start with `frontend/.env.example`. The main settings are:
 | `OPENAI_API_KEY` | Server-only OpenAI API key |
 | `SMTP_HOST` | SMTP server; optional when using local Mailpit |
 | `SMTP_USER` / `SMTP_PASS` | SMTP credentials; provide both when authentication is required |
+| `NEXT_PUBLIC_LAUNCH_REGION` | Restricts search and suburb selection to a launch region (e.g. `canberra`); empty allows all of Australia |
 
 Never commit secret or service-role keys. The Supabase URL is selected by
 `NEXT_PUBLIC_APP_ENV` in `frontend/src/lib/config.ts`.
+
+### Launch region flag
+
+`NEXT_PUBLIC_LAUNCH_REGION` gates quote search, the suburb autocomplete, and
+quote creation/edit to suburbs whose `suburb.launch_region` column matches.
+Enforced both server-side (`find_published_quotes`) and in the suburb query,
+so it can't be bypassed via a crafted request. To add a new region, backfill
+`launch_region` for its suburbs (see the `canberra` example in
+`supabase/seed.sql`) and set the env var to match.
 
 ## Troubleshooting
 
