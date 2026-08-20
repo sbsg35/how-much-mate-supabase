@@ -10,8 +10,8 @@ import { createSsrClientFromNextCookies } from "@/supabase/server";
 import { supabaseAdminServerClient } from "@/supabase/admin";
 import { moderateContent, reviewQuoteContent } from "@/lib/moderation";
 import { verifyTurnstileToken } from "@/lib/turnstile";
-import { sendReviewEmail } from "@/modules/moderation/sendReviewEmail";
 
+import { send } from "@vercel/queue";
 const DAILY_QUOTE_LIMIT = 100;
 const GPT_REVIEW_QUOTE_LIMIT = 5;
 
@@ -24,6 +24,8 @@ export type UpdateQuoteActionResult = {
   error?: string;
   underReview?: boolean;
 };
+
+const QUOTE_REVIEW_QUEUE_TOPIC = "quote-review";
 
 function buildReviewFields(params: {
   flagged: boolean;
@@ -78,17 +80,6 @@ async function shouldRunGptReview(userId: string): Promise<boolean> {
   }
 
   return (data?.length ?? 0) < GPT_REVIEW_QUOTE_LIMIT;
-}
-
-async function notifyReviewTeam(quoteId: string): Promise<void> {
-  try {
-    await sendReviewEmail(quoteId);
-  } catch (error) {
-    console.error("[quote.notifyReviewTeam] Review email failed", {
-      quoteId,
-      error: error instanceof Error ? error.message : String(error),
-    });
-  }
 }
 
 async function checkContent(params: {
@@ -278,7 +269,9 @@ export async function createQuoteAction(
   }
 
   if (flagged) {
-    await notifyReviewTeam(createdQuote.quote_id);
+    await send(QUOTE_REVIEW_QUEUE_TOPIC, { quoteId: createdQuote.quote_id }, {
+      region: "syd1",
+    });
     return {
       underReview: true,
     };
@@ -319,8 +312,7 @@ export async function updateQuoteAction(
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { confirmed: _confirmed, ...quoteData } = parsedData.data;
-  const { title, business_name, description, price, category_id } =
-    quoteData;
+  const { title, business_name, description, price, category_id } = quoteData;
   let flagged = false;
   let moderationReason: string | undefined;
   let moderationSource: "moderation" | "gpt" | undefined;
@@ -408,7 +400,7 @@ export async function updateQuoteAction(
 
   if (flagged) {
     if (existingQuote.status !== "pending") {
-      await notifyReviewTeam(updatedQuote.quote_id);
+      await send(QUOTE_REVIEW_QUEUE_TOPIC, { quoteId: updatedQuote.quote_id });
     }
     return {
       underReview: true,
