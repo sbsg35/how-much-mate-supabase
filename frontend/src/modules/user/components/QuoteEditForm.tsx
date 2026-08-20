@@ -32,7 +32,7 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
     defaultValues: {
       title: quote.title,
       business_name: quote.business_name,
-      description: quote.description,
+      description: quote.description ?? "",
       price: Number(quote.price),
       category_id: quote.category?.category_id ?? NaN,
       suburb_id: quote.suburb?.suburb_id ?? "",
@@ -104,6 +104,7 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
             name="title"
             label="Title"
             placeholder="e.g., No call-out fee for emergency plumber"
+            withAsterisk
           />
 
           <FormTextarea
@@ -118,19 +119,27 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
             name="business_name"
             label="Business Name"
             placeholder="e.g., FlowMaster Plumbing"
+            withAsterisk
           />
 
-          <FormNumberInput name="price" label="Price" min={0} leftSection="$" />
+          <FormNumberInput
+            name="price"
+            label="Price"
+            min={0}
+            leftSection="$"
+            withAsterisk
+          />
 
-          <CategorySelect name="category_id" label="Category" />
+          <CategorySelect name="category_id" label="Category" withAsterisk />
 
-          <SuburbSelect name="suburb_id" label="Suburb" />
+          <SuburbSelect name="suburb_id" label="Suburb" withAsterisk />
 
           <FormMonthYearSelect
             name="quote_date"
             label="Quote Date"
             minDate={MIN_QUOTE_DATE}
             maxDate={new Date().toISOString().slice(0, 10)}
+            withAsterisk
           />
 
           <Checkbox

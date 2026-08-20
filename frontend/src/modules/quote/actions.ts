@@ -94,7 +94,7 @@ async function notifyReviewTeam(quoteId: string): Promise<void> {
 async function checkContent(params: {
   title: string;
   business_name: string;
-  description: string;
+  description?: string;
   price: number;
   categoryId: number;
   runGptReview: boolean;
@@ -110,7 +110,7 @@ async function checkContent(params: {
   try {
     [categoryName, { flagged: moderationFlagged }] = await Promise.all([
       getCategoryName(categoryId),
-      moderateContent([title, business_name, description].join(" ")),
+      moderateContent([title, business_name, description ?? ""].join(" ")),
     ]);
   } catch (error) {
     console.error("[quote.checkContent] Initial moderation lookup failed", {
@@ -139,7 +139,7 @@ async function checkContent(params: {
       await reviewQuoteContent({
         title,
         business_name,
-        description,
+        description: description ?? "",
         price,
         categoryName,
       }));

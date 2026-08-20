@@ -64,7 +64,7 @@ export type Database = {
           completed: boolean
           confirmed_at: string
           created_at: string
-          description: string
+          description: string | null
           metadata: Json | null
           price: number
           profile_id: string
@@ -84,7 +84,7 @@ export type Database = {
           completed?: boolean
           confirmed_at?: string
           created_at?: string
-          description: string
+          description?: string | null
           metadata?: Json | null
           price: number
           profile_id: string
@@ -104,7 +104,7 @@ export type Database = {
           completed?: boolean
           confirmed_at?: string
           created_at?: string
-          description?: string
+          description?: string | null
           metadata?: Json | null
           price?: number
           profile_id?: string

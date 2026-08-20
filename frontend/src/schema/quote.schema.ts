@@ -29,14 +29,15 @@ const business_nameSchema = stringTrimmed({
     message: "Business name cannot contain inappropriate language",
   });
 
-const descriptionSchema = stringTrimmed({
-  error: "Description is required",
-})
-  .min(10, { message: "Description must be at least 10 characters long" })
+const descriptionSchema = stringTrimmed()
   .max(1000, { message: "Description must be at most 1000 characters long" })
+  .refine((value) => value.length === 0 || value.length >= 10, {
+    message: "Description must be at least 10 characters long",
+  })
   .refine((value) => !profanityMatcher.hasMatch(value), {
     message: "Description cannot contain inappropriate language",
-  });
+  })
+  .optional();
 
 const priceSchema = number()
   .positive({ message: "Price must be greater than zero" })

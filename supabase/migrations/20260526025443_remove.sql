@@ -2,7 +2,7 @@ alter table "public"."quote"
 add column "category_id" bigint;
 
 alter table "public"."quote"
-add column "description" text not null;
+add column "description" text;
 
 alter table "public"."quote"
 add column "title" text not null;

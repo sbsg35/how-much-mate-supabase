@@ -144,7 +144,7 @@ export const CreateQuoteForm = ({
     <HookFormProvider form={form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <Stack gap="md">
-          <FormTextInput name="title" label="Title" />
+          <FormTextInput name="title" label="Title" withAsterisk />
 
           <FormTextarea
             name="description"
@@ -153,7 +153,11 @@ export const CreateQuoteForm = ({
             minRows={4}
           />
 
-          <FormTextInput name="business_name" label="Business Name" />
+          <FormTextInput
+            name="business_name"
+            label="Business Name"
+            withAsterisk
+          />
 
           <FormNumberInput
             name="price"
@@ -161,11 +165,12 @@ export const CreateQuoteForm = ({
             min={0}
             leftSection="$"
             rightSection={<></>}
+            withAsterisk
           />
 
-          <CategorySelect name="category_id" label="Category" />
+          <CategorySelect name="category_id" label="Category" withAsterisk />
 
-          <SuburbSelect name="suburb_id" label="Suburb" />
+          <SuburbSelect name="suburb_id" label="Suburb" withAsterisk />
 
           <FormMonthYearSelect
             name="quote_date"
@@ -173,6 +178,7 @@ export const CreateQuoteForm = ({
             helperText="We just need an approximate date, so a month and year is fine."
             minDate={MIN_QUOTE_DATE}
             maxDate={new Date().toISOString().slice(0, 10)}
+            withAsterisk
           />
 
           <Checkbox

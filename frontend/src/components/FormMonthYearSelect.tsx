@@ -24,6 +24,7 @@ type FormMonthYearSelectProps = {
   hideLabel?: boolean;
   helperText?: string;
   thinking?: boolean;
+  withAsterisk?: boolean;
   // Bounds as 'YYYY-MM-DD' strings
   minDate?: string;
   maxDate?: string;
@@ -40,6 +41,7 @@ export const FormMonthYearSelect = ({
   hideLabel,
   helperText,
   thinking,
+  withAsterisk,
   minDate,
   maxDate,
 }: FormMonthYearSelectProps) => {
@@ -100,7 +102,12 @@ export const FormMonthYearSelect = ({
     : { label };
 
   return (
-    <Input.Wrapper {...labelProps} description={helperText} error={error}>
+    <Input.Wrapper
+      {...labelProps}
+      withAsterisk={withAsterisk}
+      description={helperText}
+      error={error}
+    >
       <Group gap="sm" grow wrap="nowrap">
         <Select
           aria-label="Month"

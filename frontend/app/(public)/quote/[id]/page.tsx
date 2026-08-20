@@ -20,7 +20,7 @@ export async function generateMetadata({
     if (!quote) {
       throw new Error("Quote not found");
     }
-    const description = `Check out this quote from ${quote.business_name} on How Much Mate. ${quote.description.substring(0, 140)}`;
+    const description = `Check out this quote from ${quote.business_name} on How Much Mate. ${(quote.description ?? "").substring(0, 140)}`;
 
     return {
       title: `Check out this quote: ${quote.title}`,

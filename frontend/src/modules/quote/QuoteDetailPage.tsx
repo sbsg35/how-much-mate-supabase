@@ -113,14 +113,16 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
           >
             {quote.title}
           </Heading>
-          <BodyText
-            mt={12}
-            c="#394559"
-            maw={900}
-            style={{ whiteSpace: "pre-wrap" }}
-          >
-            {quote.description}
-          </BodyText>
+          {quote.description ? (
+            <BodyText
+              mt={12}
+              c="#394559"
+              maw={900}
+              style={{ whiteSpace: "pre-wrap" }}
+            >
+              {quote.description}
+            </BodyText>
+          ) : null}
 
           <Divider my={{ base: 28, sm: 36 }} color="#d8e0e5" />
 
@@ -188,9 +190,6 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
                   >
                     {formatPrice(quote.price)}
                   </Text>
-                  <BodyText mt={14} size="sm" muted fw={600}>
-                    Total submitted price
-                  </BodyText>
                 </Box>
 
                 <Divider color="#e2e9e6" />

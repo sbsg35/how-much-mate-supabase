@@ -61,7 +61,7 @@ function buildEmailText(params: {
     `Quote date: ${quote.quote_date}`,
     "",
     "Description:",
-    quote.description,
+    quote.description ?? "No description provided.",
     "",
     `Publish: ${publishUrl}`,
     `Flagged: ${flaggedUrl}`,
@@ -167,7 +167,7 @@ export async function sendReviewEmail(quoteId: string): Promise<void> {
       userEmail: quote.profile?.email ?? "Unknown",
       quoteDate: quote.quote_date,
       reviewSource: quote.review_source ?? "unknown",
-      description: quote.description,
+      description: quote.description ?? "No description provided.",
       publishUrl,
       flaggedUrl,
     };

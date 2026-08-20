@@ -8,7 +8,7 @@ export type QuoteCardQuote = {
   quote_id: string;
   title: string;
   price: number;
-  description: string;
+  description: string | null;
   created_at: string;
   category?: {
     name: string;
