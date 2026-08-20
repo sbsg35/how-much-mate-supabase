@@ -39,8 +39,8 @@ export const QuoteCreatePage = ({
                 Create a Quote
               </Title>
               <Text c="dimmed" mt={6} fz={{ base: "sm", sm: "md" }}>
-                Share what you&apos;ve been quoted and help the community make
-                more informed decisions.
+                Share what you were quoted and help others nearby know
+                roughly what to expect.
               </Text>
             </Box>
           </Group>

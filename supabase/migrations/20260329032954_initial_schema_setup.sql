@@ -21,7 +21,7 @@ create table
       "price" numeric not null check ("price" > 0 and "price" <= 10000000),
       "business_name" text not null,
       "completed" boolean default false not null,
-      "quote_date" date not null,
+      "quote_year" smallint not null check ("quote_year" >= 2000),
       "metadata" jsonb
   );
 

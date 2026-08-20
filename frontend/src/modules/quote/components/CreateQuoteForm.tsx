@@ -17,12 +17,12 @@ import { FormTextInput } from "@/components/FormTextInput";
 import { FormTextarea } from "@/components/FormTextarea";
 import { HookFormProvider } from "@/components/HookFormProvider";
 import { CategorySelect } from "@/components/CategorySelect";
-import { FormMonthYearSelect } from "@/components/FormMonthYearSelect";
+import { FormYearSelect } from "@/components/FormYearSelect";
 import { Turnstile } from "@/components/Turnstile";
 import { useTurnstile } from "@/hooks/useTurnstile";
 import { CLOUDFLARE_TURNSTILE_KEY } from "@/lib/env";
 
-import { CreateQuoteDto, createQuoteSchema, MIN_QUOTE_DATE } from "@/schema";
+import { CreateQuoteDto, createQuoteSchema, MIN_QUOTE_YEAR } from "@/schema";
 import { FormNumberInput } from "@/components/FormNumberInput";
 import { SuburbSelect } from "@/components/SuburbSelect";
 import type { CreateQuoteActionResult } from "../actions";
@@ -52,7 +52,7 @@ export const CreateQuoteForm = ({
     defaultValues: {
       title: "",
       business_name: "",
-      quote_date: "",
+      quote_year: "",
       description: "",
       price: 0,
       suburb_id: "",
@@ -114,8 +114,8 @@ export const CreateQuoteForm = ({
         title: "Thanks for contributing!",
         message:
           categoryName && location
-            ? `Your quote is now helping people comparing ${categoryName} prices in ${location}.`
-            : "Your quote is now helping people compare prices near you.",
+            ? `Your quote is now helping people know what to expect for ${categoryName} jobs in ${location}.`
+            : "Your quote is now helping people know what to expect near you.",
       });
 
       router.push("/user/my-quotes");
@@ -172,12 +172,11 @@ export const CreateQuoteForm = ({
 
           <SuburbSelect name="suburb_id" label="Suburb" withAsterisk />
 
-          <FormMonthYearSelect
-            name="quote_date"
-            label="Quote Date"
-            helperText="We just need an approximate date, so a month and year is fine."
-            minDate={MIN_QUOTE_DATE}
-            maxDate={new Date().toISOString().slice(0, 10)}
+          <FormYearSelect
+            name="quote_year"
+            label="Quote Year"
+            helperText="We just need an approximate year."
+            minYear={MIN_QUOTE_YEAR}
             withAsterisk
           />
 

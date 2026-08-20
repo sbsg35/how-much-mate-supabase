@@ -8,9 +8,9 @@ import Providers from "@/providers/Providers";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
-  title: "How Much Mate - Find Quotes from Service Providers",
+  title: "How Much Mate | See what local jobs really cost",
   description:
-    "Connect with trusted service providers in Australia. Browse quotes, compare prices, and find the right professional for your project.",
+    "A community record of real quotes for everyday services across Australia — so you know roughly what to expect before you ask around.",
   icons: {
     icon: [
       { url: "/favicon/favicon.svg", type: "image/svg+xml" },

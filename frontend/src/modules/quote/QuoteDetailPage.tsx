@@ -24,7 +24,6 @@ import { ShareButtons } from "@/components/ShareButtons";
 import { BodyText } from "@/components/BodyText";
 import { Heading } from "@/components/Heading";
 import type { Quote } from "@/service/admin-quote";
-import { formatMonthYear } from "@/lib/date";
 
 interface QuoteDetailPageProps {
   quote: Quote;
@@ -146,8 +145,8 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
                 />
                 <DetailItem
                   icon={<IconCalendar size={23} stroke={1.8} />}
-                  label="Quote date"
-                  value={formatMonthYear(`${quote.quote_date}T00:00:00`)}
+                  label="Quote year"
+                  value={String(quote.quote_year)}
                 />
                 <DetailItem
                   icon={<IconBriefcase size={23} stroke={1.8} />}
@@ -175,7 +174,7 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
                   }}
                 >
                   <BodyText size="sm" c="#4f5b6f" fw={700}>
-                    Quoted price
+                    What was quoted
                   </BodyText>
                   <Text
                     mt={10}
@@ -190,6 +189,10 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
                   >
                     {formatPrice(quote.price)}
                   </Text>
+                  <BodyText mt={10} size="xs" c="#697386">
+                    One quote, for reference — prices vary with scope,
+                    materials, access and timing.
+                  </BodyText>
                 </Box>
 
                 <Divider color="#e2e9e6" />

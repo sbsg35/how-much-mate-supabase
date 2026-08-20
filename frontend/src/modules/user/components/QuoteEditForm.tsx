@@ -8,9 +8,9 @@ import { FormTextInput } from "@/components/FormTextInput";
 import { FormTextarea } from "@/components/FormTextarea";
 import { CategorySelect } from "@/components/CategorySelect";
 import { SuburbSelect } from "@/components/SuburbSelect";
-import { FormMonthYearSelect } from "@/components/FormMonthYearSelect";
+import { FormYearSelect } from "@/components/FormYearSelect";
 
-import { EditQuoteDto, editQuoteSchema, MIN_QUOTE_DATE } from "@/schema";
+import { EditQuoteDto, editQuoteSchema, MIN_QUOTE_YEAR } from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormNumberInput } from "@/components/FormNumberInput";
 import { toast } from "@/components/Toast";
@@ -37,7 +37,7 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
       category_id: quote.category?.category_id ?? NaN,
       suburb_id: quote.suburb?.suburb_id ?? "",
       completed: quote.completed,
-      quote_date: quote.quote_date,
+      quote_year: quote.quote_year,
       confirmed: false,
     },
     resolver: zodResolver(editQuoteSchema),
@@ -134,11 +134,10 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
 
           <SuburbSelect name="suburb_id" label="Suburb" withAsterisk />
 
-          <FormMonthYearSelect
-            name="quote_date"
-            label="Quote Date"
-            minDate={MIN_QUOTE_DATE}
-            maxDate={new Date().toISOString().slice(0, 10)}
+          <FormYearSelect
+            name="quote_year"
+            label="Quote Year"
+            minYear={MIN_QUOTE_YEAR}
             withAsterisk
           />
 

@@ -15,7 +15,7 @@ type ShareButtonsProps = {
 
 export const ShareButtons = ({ title, shareUrl }: ShareButtonsProps) => {
   const [copied, setCopied] = useState(false);
-  const shareMessage = `Check out this quote: ${title}`;
+  const shareMessage = `What this cost: ${title} — via How Much Mate`;
 
   const showCopiedState = () => {
     setCopied(true);

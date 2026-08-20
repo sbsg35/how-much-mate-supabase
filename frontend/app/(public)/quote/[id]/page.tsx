@@ -20,19 +20,26 @@ export async function generateMetadata({
     if (!quote) {
       throw new Error("Quote not found");
     }
-    const description = `Check out this quote from ${quote.business_name} on How Much Mate. ${(quote.description ?? "").substring(0, 140)}`;
+    const categoryName = quote.category?.name ?? "job";
+    const locality = quote.suburb?.locality;
+    const title = locality
+      ? `${categoryName} in ${locality} — How Much Mate`
+      : `${categoryName} — How Much Mate`;
+    const description = `See what a ${categoryName} job cost${
+      locality ? ` in ${locality}` : ""
+    }. One of many real quotes shared on How Much Mate.`;
 
     return {
-      title: `Check out this quote: ${quote.title}`,
+      title,
       description,
       openGraph: {
-        title: `Check out this quote: ${quote.title}`,
+        title,
         description,
         type: "article",
       },
       twitter: {
         card: "summary_large_image",
-        title: `Check out this quote: ${quote.title}`,
+        title,
         description,
       },
     };

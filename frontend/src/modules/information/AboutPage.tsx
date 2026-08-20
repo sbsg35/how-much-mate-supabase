@@ -10,8 +10,7 @@ export const AboutPage = () => {
         <Stack gap="md">
           <Heading level={1}>About How Much Mate</Heading>
           <BodyText size="lg">
-            Getting a quote shouldn&apos;t leave you wondering whether you&apos;re
-            paying a fair price.
+            Getting a quote shouldn&apos;t feel like a total guess.
           </BodyText>
           <BodyText>
             For many everyday services, that&apos;s exactly what happens. You
@@ -41,7 +40,7 @@ export const AboutPage = () => {
           <List spacing="xs">
             <ListItem>comparing quotes</ListItem>
             <ListItem>budgeting for an upcoming job</ListItem>
-            <ListItem>deciding whether a price looks reasonable</ListItem>
+            <ListItem>getting a feel for what&apos;s typical</ListItem>
             <ListItem>
               working out what to ask before accepting a quote
             </ListItem>

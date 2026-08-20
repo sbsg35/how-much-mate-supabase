@@ -1,5 +1,5 @@
 import z, { number, coerce, object } from "zod";
-import { stringTrimmed, postgresDateSchema, InferType } from "./schema";
+import { stringTrimmed, InferType } from "./schema";
 import { botTokenSchema } from "./auth.schema";
 import {
   RegExpMatcher,
@@ -58,9 +58,7 @@ const confirmedSchema = coerce
     message: "You must confirm this quote information before submitting",
   });
 
-export const MIN_QUOTE_DATE = "2000-01-01";
-
-const todayDateString = () => new Date().toISOString().slice(0, 10);
+export const MIN_QUOTE_YEAR = 2000;
 
 // Base quote fields shared between create and edit
 const quoteFieldsSchema = {
@@ -75,27 +73,29 @@ const quoteFieldsSchema = {
   confirmed: confirmedSchema,
 };
 
-// Quote date must not be before 2000 or in the future, for both creating and
+// Quote year must not be before 2000 or in the future, for both creating and
 // editing a quote.
-const quoteDateSchema = postgresDateSchema("Quote date is required")
-  .refine((value) => value >= MIN_QUOTE_DATE, {
-    message: "Quote date cannot be before the year 2000",
+const quoteYearSchema = coerce
+  .number({ error: "Quote year is required" })
+  .int()
+  .min(MIN_QUOTE_YEAR, {
+    message: "Quote year cannot be before 2000",
   })
-  .refine((value) => value <= todayDateString(), {
-    message: "Quote date cannot be in the future",
+  .max(new Date().getFullYear(), {
+    message: "Quote year cannot be in the future",
   });
 
 // Schema for creating a quote
 export const createQuoteSchema = object({
   ...quoteFieldsSchema,
-  quote_date: quoteDateSchema,
+  quote_year: quoteYearSchema,
   botToken: botTokenSchema,
 });
 
 // Schema for editing a quote
 export const editQuoteSchema = object({
   ...quoteFieldsSchema,
-  quote_date: quoteDateSchema,
+  quote_year: quoteYearSchema,
 });
 
 // Schema for pagination query parameters

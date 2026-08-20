@@ -4,9 +4,9 @@ import { getRandomCategories } from "@/service/category.server";
 import { getPublicQuotes } from "@/service/admin-quote";
 
 export const metadata: Metadata = {
-  title: "How Much Mate? | Know what a job should cost",
+  title: "How Much Mate | See what similar jobs have cost nearby",
   description:
-    "Compare community-submitted quotes for everyday services in Australia.",
+    "Real, community-submitted quotes for everyday services in Australia — a reference for what to expect, not a price guide.",
 };
 
 export default async function Home() {

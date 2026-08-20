@@ -10,12 +10,12 @@ export const PriceBadge: FC<{ completed: boolean; price: string }> = ({
   return (
     <Flex align="end" justify="space-between">
       <Flex gap={4} align="center" mt="xs">
-        <Text c={completed ? "green.9" : "orange.9"} fz="xl">
+        <Text c="gray.9" fz="xl">
           {formatCurrency(price)}
         </Text>
         <Badge
           variant="light"
-          color={completed ? "green" : "orange"}
+          color="gray"
           leftSection={
             completed ? (
               <IconCheck size="12" />
@@ -24,7 +24,7 @@ export const PriceBadge: FC<{ completed: boolean; price: string }> = ({
             )
           }
         >
-          Job {completed ? "completed" : "quoted"}
+          {completed ? "Job completed" : "Quoted, not yet done"}
         </Badge>
       </Flex>
     </Flex>

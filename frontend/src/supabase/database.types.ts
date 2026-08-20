@@ -68,8 +68,8 @@ export type Database = {
           metadata: Json | null
           price: number
           profile_id: string
-          quote_date: string
           quote_id: string
+          quote_year: number
           review_reason: string | null
           review_source: string | null
           search_tsv: unknown
@@ -88,8 +88,8 @@ export type Database = {
           metadata?: Json | null
           price: number
           profile_id: string
-          quote_date: string
           quote_id?: string
+          quote_year: number
           review_reason?: string | null
           review_source?: string | null
           search_tsv?: unknown
@@ -108,8 +108,8 @@ export type Database = {
           metadata?: Json | null
           price?: number
           profile_id?: string
-          quote_date?: string
           quote_id?: string
+          quote_year?: number
           review_reason?: string | null
           review_source?: string | null
           search_tsv?: unknown

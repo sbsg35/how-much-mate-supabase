@@ -103,9 +103,9 @@ export const LandingPage = ({
                   c="#111827"
                   style={{ letterSpacing: "-0.05em" }}
                 >
-                  Know what a job
+                  See what jobs
                   <br />
-                  should{" "}
+                  like yours have{" "}
                   <Text component="span" inherit c="hmw.6">
                     cost
                   </Text>
@@ -128,7 +128,8 @@ export const LandingPage = ({
                   fz={{ base: 17, sm: 19 }}
                   lh={1.55}
                 >
-                  Compare quotes for trades and services accross Canberra region
+                  Real quotes shared by the community, so you know what to
+                  expect before you ask around the Canberra region
                 </Text>
 
                 <Paper

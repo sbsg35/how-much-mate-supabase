@@ -21,7 +21,7 @@ export type ReviewPendingEmailProps = {
   price: string;
   location: string;
   userEmail: string;
-  quoteDate: string;
+  quoteYear: string;
   reviewSource: string;
   description: string;
   publishUrl: string;
@@ -36,7 +36,7 @@ export function ReviewPendingEmail(props: ReviewPendingEmailProps) {
     ["Price", props.price],
     ["Location", props.location],
     ["Submitted by", props.userEmail],
-    ["Quote date", props.quoteDate],
+    ["Quote year", props.quoteYear],
     ["Review source", props.reviewSource],
   ];
 
