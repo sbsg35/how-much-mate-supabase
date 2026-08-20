@@ -92,6 +92,21 @@ async function loadPendingQuote(quoteId: string) {
   return data as ReviewQuote;
 }
 
+async function hasActiveActionTokens(quoteId: string): Promise<boolean> {
+  const { data, error } = await supabaseAdminServerClient()
+    .from("quote_review_action_token")
+    .select("token_id")
+    .eq("quote_id", quoteId)
+    .gt("expires_at", new Date().toISOString())
+    .limit(1);
+
+  if (error) {
+    throw new Error(`Failed to check existing review tokens: ${error.message}`);
+  }
+
+  return (data?.length ?? 0) > 0;
+}
+
 async function createActionTokens(quoteId: string) {
   const admin = supabaseAdminServerClient();
   const expiresAt = new Date(Date.now() + ONE_WEEK_IN_MILLISECONDS).toISOString();
@@ -149,6 +164,14 @@ function createSmtpTransport() {
 export async function sendReviewEmail(quoteId: string): Promise<void> {
   const config = getAppConfig();
   const quote = await loadPendingQuote(quoteId);
+
+  if (await hasActiveActionTokens(quoteId)) {
+    console.info("[moderation.sendReviewEmail] Skipping duplicate review email", {
+      quoteId,
+    });
+    return;
+  }
+
   const { publishTokenId, flaggedTokenId } = await createActionTokens(quoteId);
   const tokenIds = [publishTokenId, flaggedTokenId];
   const moderationUrl = `${config.frontendUrl.replace(/\/$/, "")}/moderation`;

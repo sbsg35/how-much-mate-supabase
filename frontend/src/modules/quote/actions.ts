@@ -274,6 +274,10 @@ export async function createQuoteAction(
   if (flagged) {
     await send(QUOTE_REVIEW_QUEUE_TOPIC, { quoteId: createdQuote.quote_id }, {
       region: QUOTE_REVIEW_QUEUE_REGION,
+      // Scoped to this one send() attempt only — guards against the SDK's
+      // transport retrying the same call, not against separate flagging
+      // events for the same quote (those must each get their own key).
+      idempotencyKey: crypto.randomUUID(),
     });
     return {
       underReview: true,
@@ -405,6 +409,7 @@ export async function updateQuoteAction(
     if (existingQuote.status !== "pending") {
       await send(QUOTE_REVIEW_QUEUE_TOPIC, { quoteId: updatedQuote.quote_id }, {
         region: QUOTE_REVIEW_QUEUE_REGION,
+        idempotencyKey: crypto.randomUUID(),
       });
     }
     return {
