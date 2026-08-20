@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const nextConfig: NextConfig = {
   /* config options here */
   turbopack: {
-    root: "/Users/ghuman/Sites/how-much-mate-supabase/frontend",
+    root: path.dirname(fileURLToPath(import.meta.url)),
   },
 };
 

@@ -26,6 +26,9 @@ export type UpdateQuoteActionResult = {
 };
 
 const QUOTE_REVIEW_QUEUE_TOPIC = "quote-review";
+// Must match the "regions" pin in vercel.json — messages can only be
+// received from the region they were sent to.
+const QUOTE_REVIEW_QUEUE_REGION = "syd1";
 
 function buildReviewFields(params: {
   flagged: boolean;
@@ -270,7 +273,7 @@ export async function createQuoteAction(
 
   if (flagged) {
     await send(QUOTE_REVIEW_QUEUE_TOPIC, { quoteId: createdQuote.quote_id }, {
-      region: "syd1",
+      region: QUOTE_REVIEW_QUEUE_REGION,
     });
     return {
       underReview: true,
@@ -400,7 +403,9 @@ export async function updateQuoteAction(
 
   if (flagged) {
     if (existingQuote.status !== "pending") {
-      await send(QUOTE_REVIEW_QUEUE_TOPIC, { quoteId: updatedQuote.quote_id });
+      await send(QUOTE_REVIEW_QUEUE_TOPIC, { quoteId: updatedQuote.quote_id }, {
+        region: QUOTE_REVIEW_QUEUE_REGION,
+      });
     }
     return {
       underReview: true,
