@@ -6,7 +6,7 @@ import {
   IconX,
 } from "@tabler/icons-react";
 
-const POSITION = "bottom-center" as const;
+const POSITION = "top-right" as const;
 const AUTO_CLOSE = 10_000;
 
 type ToastOptions = Omit<NotificationData, "position" | "autoClose">;
