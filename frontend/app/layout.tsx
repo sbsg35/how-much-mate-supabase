@@ -7,6 +7,7 @@ import "@mantine/dropzone/styles.css";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import type { Metadata } from "next";
 import Providers from "@/providers/Providers";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "How Much Mate - Find Quotes from Service Providers",
@@ -48,6 +49,7 @@ export default function RootLayout({
         }}
       >
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
