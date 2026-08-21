@@ -27,22 +27,31 @@ export const UserMenuDropdown: FC<{
           </Group>
         </UnstyledButton>
       </Menu.Target>
-      <Menu.Dropdown>
+      <Menu.Dropdown miw={200}>
         <Menu.Item
           component={Link}
           href="/user/profile"
-          leftSection={<IconSettings size={14} />}
+          leftSection={<IconSettings size={18} />}
+          py={10}
+          fz="md"
         >
           Profile
         </Menu.Item>
         <Menu.Item
           component={Link}
           href="/user/my-quotes"
-          leftSection={<IconPencilDollar size={14} />}
+          leftSection={<IconPencilDollar size={18} />}
+          py={10}
+          fz="md"
         >
           My quotes
         </Menu.Item>
-        <Menu.Item onClick={logout} leftSection={<IconLogout size={14} />}>
+        <Menu.Item
+          onClick={logout}
+          leftSection={<IconLogout size={18} />}
+          py={10}
+          fz="md"
+        >
           Logout
         </Menu.Item>
       </Menu.Dropdown>

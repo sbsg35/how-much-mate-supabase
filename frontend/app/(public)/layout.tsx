@@ -4,18 +4,20 @@ import { DefaultContainer } from "@/components/DefaultContainer";
 import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/icons/Logo";
 import { NextLink } from "@/components/NextLink";
+import { UserLogoutAvatar } from "@/components/UserLogoutAvatar";
 import { UserMenuDropdown } from "@/components/UserMenuDropdown";
 import { useAuth } from "@/providers/AuthProvider";
-import { AppShell, Button, Group, Skeleton } from "@mantine/core";
+import { AppShell, Box, Button, Group, Skeleton } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FC, ReactNode } from "react";
 
 const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const { user, isLoading, logout } = useAuth();
   const isLoggedIn = !!user;
   const router = useRouter();
+  const pathname = usePathname();
   const handleLogout = async () => {
     await logout();
     router.push("/");
@@ -39,6 +41,34 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
               <NextLink href="/search" underline="never">
                 Browse quotes
               </NextLink>
+              {!isLoading && isLoggedIn ? (
+                <>
+                  <NextLink
+                    href="/user/my-quotes"
+                    underline="never"
+                    fw={pathname.startsWith("/user/my-quotes") ? 500 : 400}
+                    c={
+                      pathname.startsWith("/user/my-quotes")
+                        ? "var(--mantine-color-text)"
+                        : undefined
+                    }
+                  >
+                    My quotes
+                  </NextLink>
+                  <NextLink
+                    href="/user/profile"
+                    underline="never"
+                    fw={pathname.startsWith("/user/profile") ? 500 : 400}
+                    c={
+                      pathname.startsWith("/user/profile")
+                        ? "var(--mantine-color-text)"
+                        : undefined
+                    }
+                  >
+                    Profile
+                  </NextLink>
+                </>
+              ) : null}
               {!isLoading && !isLoggedIn ? (
                 <NextLink href="/quote/create" underline="never">
                   Add a quote
@@ -59,13 +89,26 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
                 >
                   Add a quote
                 </Button>
-                <UserMenuDropdown
-                  email={user?.email}
-                  name={
-                    user?.user_metadata?.full_name ?? user?.user_metadata?.name
-                  }
-                  logout={handleLogout}
-                />
+                <Box display={{ base: "none", md: "inline-flex" }}>
+                  <UserLogoutAvatar
+                    email={user?.email}
+                    name={
+                      user?.user_metadata?.full_name ??
+                      user?.user_metadata?.name
+                    }
+                    logout={handleLogout}
+                  />
+                </Box>
+                <Box display={{ base: "inline-flex", md: "none" }}>
+                  <UserMenuDropdown
+                    email={user?.email}
+                    name={
+                      user?.user_metadata?.full_name ??
+                      user?.user_metadata?.name
+                    }
+                    logout={handleLogout}
+                  />
+                </Box>
               </Group>
             ) : (
               <AuthHeaderLinks />
