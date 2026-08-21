@@ -48,6 +48,8 @@ export const categoryIcons = {
   'pools-spas': '/icons/pools-spas.svg',
   'windows-glass': '/icons/windows-glass.svg',
   'handyman': '/icons/handyman.svg',
+  'insulation': '/icons/insulation.svg',
+  'asbestos-removal': '/icons/asbestos-removal.svg',
 } as const;
 
 export type CategoryIconSlug = keyof typeof categoryIcons;

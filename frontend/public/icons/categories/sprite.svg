@@ -48,4 +48,6 @@
 <symbol id="icon-pools-spas" viewBox="0 0 24 24"><path d="M3 16c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 2-2"/><path d="M3 20c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2 2-2 2-2"/><path d="M7 14V7a3 3 0 0 1 6 0M13 14V9h5"/></symbol>
 <symbol id="icon-windows-glass" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 3v18M4 12h16"/><path d="m14 5 4 4M15 9l3-3"/></symbol>
 <symbol id="icon-handyman" viewBox="0 0 24 24"><path d="m14 5 5 5"/><path d="M4 20 15 9l-4-4L3 13v7h1Z"/><path d="m13 7 3-3 4 4-3 3"/><path d="M8 16l-3-3"/></symbol>
+<symbol id="icon-insulation" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M6 9l2-2 2 2 2-2 2 2 2-2 2 2"/><path d="M6 13l2-2 2 2 2-2 2 2 2-2 2 2"/><path d="M6 17l2-2 2 2 2-2 2 2 2-2 2 2"/></symbol>
+<symbol id="icon-asbestos-removal" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 9v5"/><circle cx="12" cy="17" r="1"/></symbol>
 </svg>

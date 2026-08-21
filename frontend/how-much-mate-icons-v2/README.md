@@ -1,6 +1,6 @@
 # How Much Mate Category Icons v2
 
-49 consistent outline SVG icons.
+51 consistent outline SVG icons.
 
 New categories added:
 - Moving & Removals
@@ -12,6 +12,8 @@ New categories added:
 - Pools & Spas
 - Windows & Glass
 - Handyman
+- Insulation
+- Asbestos Removal
 
 Files include individual SVGs, `sprite.svg`, `category-icons.ts`, `manifest.json`,
 `categories.sql`, and `preview.html`.

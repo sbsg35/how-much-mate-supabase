@@ -1,5 +1,5 @@
 -- How Much Mate categories
--- 49 categories total: original 40 + 9 additions
+-- 51 categories total: original 40 + 9 additions + 2 additions
 
 INSERT INTO category (name, slug)
 VALUES
@@ -51,4 +51,6 @@ VALUES
     ('Tree Services', 'tree-services'),
     ('Pools & Spas', 'pools-spas'),
     ('Windows & Glass', 'windows-glass'),
-    ('Handyman', 'handyman');
+    ('Handyman', 'handyman'),
+    ('Insulation', 'insulation'),
+    ('Asbestos Removal', 'asbestos-removal');
