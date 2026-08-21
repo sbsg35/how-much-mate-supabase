@@ -135,6 +135,11 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
             <GridCol span={{ base: 12, md: 7 }}>
               <Stack gap={30}>
                 <DetailItem
+                  icon={<IconCalendar size={23} stroke={1.8} />}
+                  label="Quote year"
+                  value={String(quote.quote_year)}
+                />
+                <DetailItem
                   icon={<IconBuildingStore size={23} stroke={1.8} />}
                   label="Service provider"
                   value={quote.business_name}
@@ -148,11 +153,6 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
                   icon={<IconMapPin size={23} stroke={1.8} />}
                   label="Location"
                   value={location}
-                />
-                <DetailItem
-                  icon={<IconCalendar size={23} stroke={1.8} />}
-                  label="Quote year"
-                  value={String(quote.quote_year)}
                 />
                 <DetailItem
                   icon={<IconBriefcase size={23} stroke={1.8} />}
