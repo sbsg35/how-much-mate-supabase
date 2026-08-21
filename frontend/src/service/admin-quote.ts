@@ -83,6 +83,23 @@ export async function getPublicQuotes({
   };
 }
 
+export async function getPublishedQuoteSitemapEntries(): Promise<
+  { quote_id: string; updated_at: string }[]
+> {
+  const { data, error } = await supabaseAdminServerClient()
+    .from("quote")
+    .select("quote_id, updated_at")
+    .eq("status", "published")
+    .order("updated_at", { ascending: false })
+    .limit(50000);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data ?? [];
+}
+
 export async function getQuoteById(
   quote_id: string,
 ): Promise<{ data: Quote | null }> {

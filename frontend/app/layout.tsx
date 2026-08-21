@@ -6,11 +6,19 @@ import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import type { Metadata } from "next";
 import Providers from "@/providers/Providers";
 import { Analytics } from "@vercel/analytics/next";
+import { getAppConfig } from "@/lib/config";
+import { defaultOpenGraph, defaultTwitter } from "@/lib/seo";
+
+const title = "How Much Mate | See what local jobs really cost";
+const description =
+  "A community record of real quotes for everyday services across Australia — so you know roughly what to expect before you ask around.";
 
 export const metadata: Metadata = {
-  title: "How Much Mate | See what local jobs really cost",
-  description:
-    "A community record of real quotes for everyday services across Australia — so you know roughly what to expect before you ask around.",
+  metadataBase: new URL(getAppConfig().frontendUrl),
+  title,
+  description,
+  openGraph: { ...defaultOpenGraph, title, description },
+  twitter: { ...defaultTwitter, title, description },
   icons: {
     icon: [
       { url: "/favicon/favicon.svg", type: "image/svg+xml" },

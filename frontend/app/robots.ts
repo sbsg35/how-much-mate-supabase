@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getAppConfig } from "@/lib/config";
 
 const AI_TRAINING_CRAWLERS = [
   "GPTBot",
@@ -23,5 +24,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: "/",
       },
     ],
+    sitemap: `${getAppConfig().frontendUrl}/sitemap.xml`,
   };
 }

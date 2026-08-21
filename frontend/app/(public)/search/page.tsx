@@ -6,10 +6,17 @@ import {
   AUState,
   publicQuotesSearchSchema,
 } from "@/schema";
+import { defaultOpenGraph, defaultTwitter } from "@/lib/seo";
+
+const title = "Browse quotes | How Much Mate?";
+const description = "Browse community-submitted quotes for services in your area.";
 
 export const metadata: Metadata = {
-  title: "Browse quotes | How Much Mate?",
-  description: "Browse community-submitted quotes for services in your area.",
+  title,
+  description,
+  alternates: { canonical: "/search" },
+  openGraph: { ...defaultOpenGraph, title, description },
+  twitter: { ...defaultTwitter, title, description },
 };
 
 export default async function Search({

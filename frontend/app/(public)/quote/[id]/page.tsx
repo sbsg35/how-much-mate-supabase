@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { QuoteDetailPage } from "@/modules/quote/QuoteDetailPage";
 import { getQuoteById, type Quote } from "@/service/admin-quote";
+import { defaultOpenGraph, defaultTwitter } from "@/lib/seo";
 
 interface QuotePageProps {
   params: Promise<{ id: string }>;
@@ -32,12 +33,15 @@ export async function generateMetadata({
     return {
       title,
       description,
+      alternates: { canonical: `/quote/${p.id}` },
       openGraph: {
+        ...defaultOpenGraph,
         title,
         description,
         type: "article",
       },
       twitter: {
+        ...defaultTwitter,
         card: "summary_large_image",
         title,
         description,

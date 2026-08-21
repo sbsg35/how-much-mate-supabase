@@ -24,6 +24,7 @@ import { ShareButtons } from "@/components/ShareButtons";
 import { BodyText } from "@/components/BodyText";
 import { Heading } from "@/components/Heading";
 import type { Quote } from "@/service/admin-quote";
+import { getAppConfig } from "@/lib/config";
 
 interface QuoteDetailPageProps {
   quote: Quote;
@@ -74,6 +75,27 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
     ? `${quote.suburb.locality}, ${quote.suburb.postcode}, ${quote.suburb.state}`
     : "Not provided";
 
+  const baseUrl = getAppConfig().frontendUrl;
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: baseUrl },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Quotes",
+        item: `${baseUrl}/search`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: quote.title,
+        item: `${baseUrl}/quote/${quote.quote_id}`,
+      },
+    ],
+  };
+
   return (
     <Box
       py={{ base: 24, md: 38 }}
@@ -83,6 +105,12 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
           "linear-gradient(135deg, #f7fbfa 0%, #ffffff 46%, #f4faf7 100%)",
       }}
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       <Container size="xl">
         <Breadcrumbs
           mb={22}
