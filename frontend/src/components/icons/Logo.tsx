@@ -12,7 +12,7 @@ export const Logo = () => (
     />
     <Stack gap={1}>
       <Text
-        c="#111111"
+        c="var(--hmw-heading)"
         fw={800}
         fz={21}
         lh={0.9}

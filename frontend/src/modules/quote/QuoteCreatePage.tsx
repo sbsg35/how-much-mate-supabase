@@ -22,7 +22,7 @@ export const QuoteCreatePage = ({
   createQuoteAction,
 }: QuoteCreatePageProps) => {
   return (
-    <Box bg="#f8faf9" py={{ base: 0, sm: 32, lg: 48 }}>
+    <Box bg="var(--hmw-surface-tint)" py={{ base: 0, sm: 32, lg: 48 }}>
       <Container size="lg">
         <Paper
           withBorder

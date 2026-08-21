@@ -74,8 +74,7 @@ export const LandingPage = ({
         component="section"
         style={{
           overflow: "hidden",
-          background:
-            "radial-gradient(circle at 76% 45%, rgba(179, 235, 211, .42), transparent 30%), linear-gradient(115deg, #f7fcfa 0%, #f4fbf8 55%, #fbfefd 100%)",
+          background: "var(--hmw-hero-bg)",
         }}
       >
         <Container size="xxl" py={{ base: 36, sm: 52, lg: 72 }}>
@@ -100,7 +99,7 @@ export const LandingPage = ({
                   fz={{ base: 47, sm: 60, lg: 72 }}
                   lh={1.12}
                   fw={800}
-                  c="#111827"
+                  c="var(--hmw-heading)"
                   style={{ letterSpacing: "-0.05em" }}
                 >
                   See what jobs
@@ -124,7 +123,7 @@ export const LandingPage = ({
                   mt={18}
                   mb={34}
                   maw={620}
-                  c="#536075"
+                  c="var(--hmw-body-text)"
                   fz={{ base: 17, sm: 19 }}
                   lh={1.55}
                 >
@@ -177,7 +176,7 @@ export const LandingPage = ({
                 </Paper>
 
                 <Group mt={26} gap={30} align="center">
-                  <Text fw={700} c="#273143">
+                  <Text fw={700} c="var(--hmw-heading)">
                     Got a recent quote?
                   </Text>
                   <Anchor

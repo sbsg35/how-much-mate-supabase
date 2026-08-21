@@ -59,6 +59,37 @@ The plan should show no changes (aside from cosmetic diffs) once the generated c
 matches the live zone. Resolve any drift before ever running `apply`. Once the import
 is applied, delete `imports.tf` — it's only needed once.
 
+## Importing the existing Turnstile widget
+
+The Turnstile widget behind quote submission/auth already exists in Cloudflare (site key
+`0x4AAAAAABdQCglMU9gaRmEr`, referenced in `frontend/src/lib/env.ts`). Import it the same
+way as the DNS zone above rather than hand-writing the resource — `mode`, `domains`, and
+`bot_fight_mode` need to match the live widget exactly, or `terraform apply` will try to
+change it.
+
+Fill in `cloudflare_account_id` in `terraform.tfvars` first (Cloudflare dashboard -> select
+the zone -> right sidebar -> "Account ID"). The API token also needs `Account:Turnstile:Edit`
+added to its scopes (see `variables.tf`).
+
+```sh
+export CLOUDFLARE_API_TOKEN="your-cloudflare-api-token"
+export CLOUDFLARE_ACCOUNT_ID="your-account-id"
+
+cf-terraforming generate --account "$CLOUDFLARE_ACCOUNT_ID" --resource-type "cloudflare_turnstile_widget" > turnstile.tf
+cf-terraforming import --account "$CLOUDFLARE_ACCOUNT_ID" --resource-type "cloudflare_turnstile_widget" --modern-import-block > imports_turnstile.tf
+```
+
+Then:
+
+```sh
+terraform init
+terraform plan
+```
+
+The plan should show no changes once the generated config matches the live widget. As with
+the DNS import, resolve any drift before running `apply`, and delete `imports_turnstile.tf`
+once the one-time import has been applied.
+
 ## Usage
 
 ```sh

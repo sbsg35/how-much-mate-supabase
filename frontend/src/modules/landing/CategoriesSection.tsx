@@ -7,11 +7,11 @@ const cardStyle: CSSProperties = {
   display: "block",
   minHeight: 112,
   padding: "16px 10px 14px",
-  color: "#111827",
+  color: "var(--hmw-heading)",
   textDecoration: "none",
-  border: "1px solid #dfe7e4",
+  border: "1px solid var(--hmw-border)",
   borderRadius: 10,
-  background: "#ffffff",
+  background: "var(--hmw-surface)",
   boxShadow: "0 4px 12px rgba(17, 24, 39, 0.05)",
   transition:
     "color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease",
@@ -34,10 +34,12 @@ const setCardHover = (
   hovered: boolean,
 ) => {
   const card = event.currentTarget;
-  card.style.color = hovered ? "var(--mantine-color-hmw-7)" : "#111827";
+  card.style.color = hovered
+    ? "var(--mantine-color-hmw-7)"
+    : "var(--hmw-heading)";
   card.style.borderColor = hovered
     ? "var(--mantine-color-hmw-3)"
-    : "#dfe7e4";
+    : "var(--hmw-border)";
   card.style.boxShadow = hovered
     ? "0 9px 22px rgba(19, 105, 66, 0.11)"
     : "0 4px 12px rgba(17, 24, 39, 0.05)";
@@ -53,18 +55,18 @@ export const CategoriesSection = ({
     <Box
       component="section"
       py={{ base: 42, md: 54 }}
-      bg="#ffffff"
+      bg="var(--hmw-surface)"
       style={{
-        borderTop: "1px solid #eef3f1",
-        borderBottom: "1px solid #eef3f1",
+        borderTop: "1px solid var(--hmw-border)",
+        borderBottom: "1px solid var(--hmw-border)",
       }}
     >
       <Container size="xxl">
         <Stack gap={8} align="center" mb={{ base: 28, md: 34 }}>
-          <Title order={2} fz={{ base: 26, sm: 30 }} c="#111827">
+          <Title order={2} fz={{ base: 26, sm: 30 }} c="var(--hmw-heading)">
             Browse categories
           </Title>
-          <Text c="#5b6678" ta="center">
+          <Text c="var(--hmw-muted-text)" ta="center">
             Find real prices for the service you need.
           </Text>
         </Stack>

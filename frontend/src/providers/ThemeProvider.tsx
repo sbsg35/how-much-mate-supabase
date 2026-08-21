@@ -4,6 +4,7 @@ import {
   Container,
   MantineColorsTuple,
   Button,
+  CSSVariablesResolver,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import React, { FC, ReactNode } from "react";
@@ -31,9 +32,52 @@ const hmw: MantineColorsTuple = [
   "#0d472d",
 ];
 
+/**
+ * Custom design tokens for bespoke sections (landing page, quote cards)
+ * that fall outside Mantine's built-in color/variant system. Each token
+ * resolves to a real CSS variable that swaps automatically with the
+ * active color scheme.
+ */
+const cssVariablesResolver: CSSVariablesResolver = () => ({
+  variables: {},
+  light: {
+    "--hmw-heading": "#111827",
+    "--hmw-body-text": "#394559",
+    "--hmw-muted-text": "#5b6678",
+    "--hmw-border": "#e1e8e5",
+    "--hmw-surface": "#ffffff",
+    "--hmw-surface-tint": "#f8faf9",
+    "--hmw-card-bg": "rgba(255, 255, 255, 0.94)",
+    "--hmw-highlight-bg": "linear-gradient(145deg, #f2fbf7 0%, #e8f8f1 100%)",
+    "--hmw-highlight-border": "#bfe8d5",
+    "--hmw-hero-bg":
+      "radial-gradient(circle at 76% 45%, rgba(179, 235, 211, .42), transparent 30%), linear-gradient(115deg, #f7fcfa 0%, #f4fbf8 55%, #fbfefd 100%)",
+    "--hmw-page-tint-bg":
+      "linear-gradient(135deg, #f7fbfa 0%, #ffffff 46%, #f4faf7 100%)",
+  },
+  dark: {
+    "--hmw-heading": "var(--mantine-color-dark-0)",
+    "--hmw-body-text": "#aab2bd",
+    "--hmw-muted-text": "var(--mantine-color-dark-2)",
+    "--hmw-border": "var(--mantine-color-dark-4)",
+    "--hmw-surface": "var(--mantine-color-dark-5)",
+    "--hmw-surface-tint": "var(--mantine-color-dark-6)",
+    "--hmw-card-bg": "var(--mantine-color-dark-5)",
+    "--hmw-highlight-bg":
+      "linear-gradient(145deg, #13251c 0%, #162b21 100%)",
+    "--hmw-highlight-border": "#2f6f4d",
+    "--hmw-hero-bg":
+      "radial-gradient(circle at 76% 45%, rgba(44, 169, 107, .18), transparent 30%), linear-gradient(115deg, var(--mantine-color-dark-7) 0%, var(--mantine-color-dark-6) 55%, var(--mantine-color-dark-7) 100%)",
+    "--hmw-page-tint-bg":
+      "linear-gradient(135deg, var(--mantine-color-dark-7) 0%, var(--mantine-color-dark-6) 46%, var(--mantine-color-dark-7) 100%)",
+  },
+});
+
 export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <MantineProvider
+      defaultColorScheme="auto"
+      cssVariablesResolver={cssVariablesResolver}
       theme={{
         primaryColor: "hmw",
         focusRing: "always",

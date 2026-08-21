@@ -1,5 +1,6 @@
 "use client";
 import { AuthHeaderLinks } from "@/components/AuthHeaderLinks";
+import { ColorSchemeToggle } from "@/components/ColorSchemeToggle";
 import { DefaultContainer } from "@/components/DefaultContainer";
 import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/icons/Logo";
@@ -80,6 +81,7 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
               <Skeleton height={36} width={120} radius="md" />
             ) : isLoggedIn ? (
               <Group>
+                <ColorSchemeToggle />
                 <Button
                   display={{ base: "none", md: "inline-flex" }}
                   component={Link}
@@ -111,7 +113,10 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
                 </Box>
               </Group>
             ) : (
-              <AuthHeaderLinks />
+              <Group>
+                <ColorSchemeToggle />
+                <AuthHeaderLinks />
+              </Group>
             )}
           </Group>
         </DefaultContainer>

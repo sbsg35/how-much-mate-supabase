@@ -24,11 +24,11 @@ const cardStyle: CSSProperties = {
   display: "block",
   minHeight: 270,
   padding: 22,
-  color: "#111827",
+  color: "var(--hmw-heading)",
   textDecoration: "none",
-  border: "1px solid #e1e8e5",
+  border: "1px solid var(--hmw-border)",
   borderRadius: 12,
-  background: "rgba(255, 255, 255, 0.94)",
+  background: "var(--hmw-card-bg)",
   boxShadow: "0 6px 18px rgba(17, 24, 39, 0.07)",
   transition:
     "border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease",
@@ -41,7 +41,7 @@ const setCardHover = (
   const card = event.currentTarget;
   card.style.borderColor = hovered
     ? "var(--mantine-color-hmw-3)"
-    : "#e1e8e5";
+    : "var(--hmw-border)";
   card.style.boxShadow = hovered
     ? "0 12px 28px rgba(19, 105, 66, 0.12)"
     : "0 6px 18px rgba(17, 24, 39, 0.07)";
@@ -127,7 +127,7 @@ export const QuoteCard = ({
       >
         {quote.title}
       </Text>
-      <Text mt={6} fz="sm" c="#697386">
+      <Text mt={6} fz="sm" c="var(--hmw-muted-text)">
         {[quote.suburb?.locality, quote.suburb?.state]
           .filter(Boolean)
           .join(", ")}
@@ -139,7 +139,7 @@ export const QuoteCard = ({
       <Text
         mt={12}
         fz="sm"
-        c="#5b6678"
+        c="var(--hmw-muted-text)"
         lh={1.45}
         style={{
           display: "-webkit-box",
@@ -151,7 +151,7 @@ export const QuoteCard = ({
         {quote.description}
       </Text>
 
-      <Text mt="auto" pt={18} fz="xs" c="#697386">
+      <Text mt="auto" pt={18} fz="xs" c="var(--hmw-muted-text)">
         {formatQuoteAge(quote.created_at, renderedAt)}
       </Text>
     </Stack>

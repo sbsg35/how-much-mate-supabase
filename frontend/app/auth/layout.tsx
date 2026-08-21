@@ -1,4 +1,5 @@
 "use client";
+import { ColorSchemeToggle } from "@/components/ColorSchemeToggle";
 import { DefaultContainer } from "@/components/DefaultContainer";
 import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/icons/Logo";
@@ -15,6 +16,7 @@ const Layout: FC<{ children: ReactNode }> = ({ children }) => {
             <NextLink href="/">
               <Logo />
             </NextLink>
+            <ColorSchemeToggle />
           </Group>
         </DefaultContainer>
       </AppShell.Header>

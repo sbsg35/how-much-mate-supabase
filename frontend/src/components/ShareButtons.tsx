@@ -39,7 +39,7 @@ export const ShareButtons = ({ title, shareUrl }: ShareButtonsProps) => {
 
   return (
     <Stack gap="sm">
-      <Text fw={700} c="#202939">
+      <Text fw={700} c="var(--hmw-heading)">
         Share this quote
       </Text>
       <Button

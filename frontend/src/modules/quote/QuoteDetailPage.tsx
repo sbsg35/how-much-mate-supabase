@@ -59,10 +59,10 @@ const DetailItem = ({
       {icon}
     </ThemeIcon>
     <Box style={{ minWidth: 0 }}>
-      <BodyText size="sm" fw={700} c="#253044">
+      <BodyText size="sm" fw={700} c="var(--hmw-heading)">
         {label}
       </BodyText>
-      <BodyText mt={4} c="#394559" lh={1.4}>
+      <BodyText mt={4} c="var(--hmw-body-text)" lh={1.4}>
         {value}
       </BodyText>
     </Box>
@@ -101,8 +101,7 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
       py={{ base: 24, md: 38 }}
       mih="calc(100vh - var(--app-shell-header-height))"
       style={{
-        background:
-          "linear-gradient(135deg, #f7fbfa 0%, #ffffff 46%, #f4faf7 100%)",
+        background: "var(--hmw-page-tint-bg)",
       }}
     >
       <script
@@ -116,7 +115,7 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
           mb={22}
           separator="›"
           separatorMargin="sm"
-          styles={{ separator: { color: "#9aa5b5" } }}
+          styles={{ separator: { color: "var(--hmw-muted-text)" } }}
         >
           <NextLink href="/" c="hmw.7" fz="sm" underline="never">
             Home
@@ -134,14 +133,14 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
           radius="lg"
           p={{ base: 24, sm: 38, lg: 54 }}
           style={{
-            borderColor: "#d8e0e5",
+            borderColor: "var(--hmw-border)",
             boxShadow: "0 16px 42px rgba(17, 24, 39, 0.08)",
           }}
         >
           <Heading
             level={1}
             fw={800}
-            c="#111827"
+            c="var(--hmw-heading)"
             style={{ letterSpacing: "-0.035em" }}
           >
             {quote.title}
@@ -149,7 +148,7 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
           {quote.description ? (
             <BodyText
               mt={12}
-              c="#394559"
+              c="var(--hmw-body-text)"
               maw={900}
               style={{ whiteSpace: "pre-wrap" }}
             >
@@ -157,7 +156,7 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
             </BodyText>
           ) : null}
 
-          <Divider my={{ base: 28, sm: 36 }} color="#d8e0e5" />
+          <Divider my={{ base: 28, sm: 36 }} color="var(--hmw-border)" />
 
           <Grid columns={12} gap={{ base: 36, md: 56 }} align="flex-start">
             <GridCol span={{ base: 12, md: 7 }}>
@@ -201,13 +200,12 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
                 <Box
                   p={{ base: 24, sm: 28 }}
                   style={{
-                    border: "1px solid #bfe8d5",
+                    border: "1px solid var(--hmw-highlight-border)",
                     borderRadius: "var(--mantine-radius-lg)",
-                    background:
-                      "linear-gradient(145deg, #f2fbf7 0%, #e8f8f1 100%)",
+                    background: "var(--hmw-highlight-bg)",
                   }}
                 >
-                  <BodyText size="sm" c="#4f5b6f" fw={700}>
+                  <BodyText size="sm" c="var(--hmw-body-text)" fw={700}>
                     What was quoted
                   </BodyText>
                   <Text
@@ -223,16 +221,16 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
                   >
                     {formatPrice(quote.price)}
                   </Text>
-                  <BodyText mt={4} size="xs" c="#697386">
+                  <BodyText mt={4} size="xs" c="var(--hmw-muted-text)">
                     {GST_STATUS_LABEL[quote.gst_status] ?? "GST unknown"}
                   </BodyText>
-                  <BodyText mt={10} size="xs" c="#697386">
+                  <BodyText mt={10} size="xs" c="var(--hmw-muted-text)">
                     One quote, for reference — prices vary with scope,
                     materials, access and timing.
                   </BodyText>
                 </Box>
 
-                <Divider color="#e2e9e6" />
+                <Divider color="var(--hmw-border)" />
                 <ShareButtons title={quote.title} shareUrl={shareUrl} />
               </Stack>
             </GridCol>

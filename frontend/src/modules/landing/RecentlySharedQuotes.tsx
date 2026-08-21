@@ -18,10 +18,10 @@ export const RecentlySharedQuotes = ({
   quotes: Quote[];
   renderedAt: string;
 }) => (
-  <Box component="section" py={{ base: 46, md: 62 }} bg="#ffffff">
+  <Box component="section" py={{ base: 46, md: 62 }} bg="var(--hmw-surface)">
     <Container size="xxl">
       <Group justify="space-between" align="center" mb={{ base: 24, md: 30 }}>
-        <Title order={2} fz={{ base: 26, sm: 30 }} c="#111827">
+        <Title order={2} fz={{ base: 26, sm: 30 }} c="var(--hmw-heading)">
           Recently shared quotes
         </Title>
         <Box
@@ -52,7 +52,7 @@ export const RecentlySharedQuotes = ({
           ))}
         </SimpleGrid>
       ) : (
-        <Text c="#5b6678">No quotes have been shared yet.</Text>
+        <Text c="var(--hmw-muted-text)">No quotes have been shared yet.</Text>
       )}
     </Container>
   </Box>
