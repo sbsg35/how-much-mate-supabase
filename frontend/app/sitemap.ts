@@ -14,7 +14,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/terms`, changeFrequency: "yearly", priority: 0.1 },
   ];
 
-  const quotes = await getPublishedQuoteSitemapEntries();
+  let quotes: Awaited<ReturnType<typeof getPublishedQuoteSitemapEntries>> =
+    [];
+  try {
+    quotes = await getPublishedQuoteSitemapEntries();
+  } catch (error) {
+    // Supabase can transiently reject requests during build with clock-skew
+    // errors like "JWT issued at future" (a known platform-side issue, not
+    // something this app can fix). Don't let that fail the whole deploy —
+    // fall back to the static routes and pick up quote URLs on the next build.
+    console.error("Failed to fetch quote entries for sitemap:", error);
+  }
+
   const quoteRoutes: MetadataRoute.Sitemap = quotes.map((quote) => ({
     url: `${baseUrl}/quote/${quote.quote_id}`,
     lastModified: quote.updated_at,
