@@ -20,8 +20,8 @@ const environmentConfig = {
     prod: {
         frontendUrl: "https://howmuchmate.com.au",
         supabaseUrl: "https://azcljaelnifkgxfefkvu.supabase.co",
-        smtpHost: "sandbox.smtp.mailtrap.io",
-        user: "ee076af183dc09",
+        smtpHost: "email-smtp.ap-southeast-2.amazonaws.com",
+        user: "AKIAWOOXUI3QEZ4NKLN2",
         smtpPort: 587,
         smtpSecure: false,
     },
