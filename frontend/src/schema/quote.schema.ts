@@ -58,6 +58,11 @@ const confirmedSchema = coerce
     message: "You must confirm this quote information before submitting",
   });
 
+export const GST_STATUS_VALUES = ["included", "excluded", "unknown"] as const;
+export type GstStatus = (typeof GST_STATUS_VALUES)[number];
+
+const gstStatusSchema = z.enum(GST_STATUS_VALUES);
+
 export const MIN_QUOTE_YEAR = 2000;
 
 // Base quote fields shared between create and edit
@@ -70,6 +75,7 @@ const quoteFieldsSchema = {
 
   suburb_id: suburb_idSchema,
   completed: coerce.boolean(),
+  gst_status: gstStatusSchema,
   confirmed: confirmedSchema,
 };
 

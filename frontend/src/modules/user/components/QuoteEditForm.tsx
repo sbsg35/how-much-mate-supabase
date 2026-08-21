@@ -1,7 +1,7 @@
 "use client";
 import { useController, useForm } from "react-hook-form";
 import { HookFormProvider } from "@/components/HookFormProvider";
-import { Checkbox, Group, Stack, Text } from "@mantine/core";
+import { Checkbox, Group, Radio, Stack, Text } from "@mantine/core";
 import { FormSubmitButton } from "@/components/FormSubmitButton";
 import { NextLink } from "@/components/NextLink";
 import { FormTextInput } from "@/components/FormTextInput";
@@ -9,8 +9,14 @@ import { FormTextarea } from "@/components/FormTextarea";
 import { CategorySelect } from "@/components/CategorySelect";
 import { SuburbSelect } from "@/components/SuburbSelect";
 import { FormYearSelect } from "@/components/FormYearSelect";
+import { FormRadioGroup } from "@/components/FormRadioGroup";
 
-import { EditQuoteDto, editQuoteSchema, MIN_QUOTE_YEAR } from "@/schema";
+import {
+  EditQuoteDto,
+  editQuoteSchema,
+  GstStatus,
+  MIN_QUOTE_YEAR,
+} from "@/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormNumberInput } from "@/components/FormNumberInput";
 import { toast } from "@/components/Toast";
@@ -37,6 +43,7 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
       category_id: quote.category?.category_id ?? NaN,
       suburb_id: quote.suburb?.suburb_id ?? "",
       completed: quote.completed,
+      gst_status: quote.gst_status as GstStatus,
       quote_year: quote.quote_year,
       confirmed: false,
     },
@@ -129,6 +136,14 @@ export const QuoteEditForm = ({ quote }: QuoteEditFormProps) => {
             leftSection="$"
             withAsterisk
           />
+
+          <FormRadioGroup name="gst_status" label="GST" size="sm">
+            <Group gap="md" mt={4}>
+              <Radio value="included" label="Included" />
+              <Radio value="excluded" label="Excluded" />
+              <Radio value="unknown" label="Not sure" />
+            </Group>
+          </FormRadioGroup>
 
           <CategorySelect name="category_id" label="Category" withAsterisk />
 

@@ -4,6 +4,7 @@ import {
   Box,
   Checkbox,
   Group,
+  Radio,
   Stack,
   Text,
   VisuallyHidden,
@@ -18,6 +19,7 @@ import { FormTextarea } from "@/components/FormTextarea";
 import { HookFormProvider } from "@/components/HookFormProvider";
 import { CategorySelect } from "@/components/CategorySelect";
 import { FormYearSelect } from "@/components/FormYearSelect";
+import { FormRadioGroup } from "@/components/FormRadioGroup";
 import { Turnstile } from "@/components/Turnstile";
 import { useTurnstile } from "@/hooks/useTurnstile";
 import { CLOUDFLARE_TURNSTILE_KEY } from "@/lib/env";
@@ -57,6 +59,7 @@ export const CreateQuoteForm = ({
       price: 0,
       suburb_id: "",
       completed: false,
+      gst_status: "unknown",
       confirmed: false,
       category_id: NaN,
       botToken: "",
@@ -167,6 +170,14 @@ export const CreateQuoteForm = ({
             rightSection={<></>}
             withAsterisk
           />
+
+          <FormRadioGroup name="gst_status" label="GST" size="sm">
+            <Group gap="md" mt={4}>
+              <Radio value="included" label="Included" />
+              <Radio value="excluded" label="Excluded" />
+              <Radio value="unknown" label="Not sure" />
+            </Group>
+          </FormRadioGroup>
 
           <CategorySelect name="category_id" label="Category" withAsterisk />
 

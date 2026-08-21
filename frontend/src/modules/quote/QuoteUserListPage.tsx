@@ -2,6 +2,7 @@
 import { formatDateTime } from "@/lib/date";
 import { useMyQuotes } from "@/service/quote";
 import { QuoteDeleteButton } from "@/modules/quote/components/QuoteDeleteButton";
+import { DefaultContainer } from "@/components/DefaultContainer";
 import React, { useMemo, useState } from "react";
 import {
   Button,
@@ -110,80 +111,84 @@ export const QuoteUserListPage = () => {
 
   if (isLoading) {
     return (
-      <Center h={200}>
-        <Loader />
-      </Center>
+      <DefaultContainer>
+        <Center h={200}>
+          <Loader />
+        </Center>
+      </DefaultContainer>
     );
   }
 
   return (
-    <Paper mt="xl" p="md" withBorder>
-      <Title order={2} mb="md">
-        My Quotes
-      </Title>
+    <DefaultContainer>
+      <Paper mt="xl" p="md" withBorder>
+        <Title order={2} mb="md">
+          My Quotes
+        </Title>
 
-      <Table>
-        <Table.Thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Table.Tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <Table.Th key={header.id}>
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
-                </Table.Th>
-              ))}
-            </Table.Tr>
-          ))}
-        </Table.Thead>
-        <Table.Tbody>
-          {table.getRowModel().rows.map((row) => (
-            <Table.Tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <Table.Td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        <Table>
+          <Table.Thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Table.Tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <Table.Th key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </Table.Th>
+                ))}
+              </Table.Tr>
+            ))}
+          </Table.Thead>
+          <Table.Tbody>
+            {table.getRowModel().rows.map((row) => (
+              <Table.Tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <Table.Td key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Table.Td>
+                ))}
+              </Table.Tr>
+            ))}
+            {table.getRowModel().rows.length === 0 && (
+              <Table.Tr>
+                <Table.Td colSpan={columns.length}>
+                  <Text ta="center" c="dimmed">
+                    No quotes found
+                  </Text>
                 </Table.Td>
-              ))}
-            </Table.Tr>
-          ))}
-          {table.getRowModel().rows.length === 0 && (
-            <Table.Tr>
-              <Table.Td colSpan={columns.length}>
-                <Text ta="center" c="dimmed">
-                  No quotes found
-                </Text>
-              </Table.Td>
-            </Table.Tr>
-          )}
-        </Table.Tbody>
-      </Table>
+              </Table.Tr>
+            )}
+          </Table.Tbody>
+        </Table>
 
-      <Group justify="space-between" mt="md">
-        <Text size="sm" c="dimmed">
-          Page {pagination.pageIndex + 1}
-        </Text>
-        <Group gap="xs">
-          <Button
-            size="compact-sm"
-            variant="outline"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            size="compact-sm"
-            variant="outline"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+        <Group justify="space-between" mt="md">
+          <Text size="sm" c="dimmed">
+            Page {pagination.pageIndex + 1}
+          </Text>
+          <Group gap="xs">
+            <Button
+              size="compact-sm"
+              variant="outline"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+            <Button
+              size="compact-sm"
+              variant="outline"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </Group>
         </Group>
-      </Group>
-    </Paper>
+      </Paper>
+    </DefaultContainer>
   );
 };

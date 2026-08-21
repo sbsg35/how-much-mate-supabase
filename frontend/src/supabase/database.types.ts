@@ -65,6 +65,7 @@ export type Database = {
           confirmed_at: string
           created_at: string
           description: string | null
+          gst_status: string
           metadata: Json | null
           price: number
           profile_id: string
@@ -85,6 +86,7 @@ export type Database = {
           confirmed_at?: string
           created_at?: string
           description?: string | null
+          gst_status?: string
           metadata?: Json | null
           price: number
           profile_id: string
@@ -105,6 +107,7 @@ export type Database = {
           confirmed_at?: string
           created_at?: string
           description?: string | null
+          gst_status?: string
           metadata?: Json | null
           price?: number
           profile_id?: string

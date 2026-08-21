@@ -38,6 +38,12 @@ const formatPrice = (price: number) =>
     maximumFractionDigits: 2,
   }).format(price);
 
+const GST_STATUS_LABEL: Record<string, string> = {
+  included: "GST included",
+  excluded: "GST excluded",
+  unknown: "GST unknown",
+};
+
 const DetailItem = ({
   icon,
   label,
@@ -189,6 +195,9 @@ export const QuoteDetailPage = ({ quote, shareUrl }: QuoteDetailPageProps) => {
                   >
                     {formatPrice(quote.price)}
                   </Text>
+                  <BodyText mt={4} size="xs" c="#697386">
+                    {GST_STATUS_LABEL[quote.gst_status] ?? "GST unknown"}
+                  </BodyText>
                   <BodyText mt={10} size="xs" c="#697386">
                     One quote, for reference — prices vary with scope,
                     materials, access and timing.
