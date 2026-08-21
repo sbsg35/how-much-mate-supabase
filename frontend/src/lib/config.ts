@@ -8,6 +8,7 @@ const environmentConfig = {
         smtpPort: 54325,
         smtpSecure: false,
         user: "",
+        requireTLS: false,
     },
     dev: {
         frontendUrl: "https://dev.howmuchmate.com.au",
@@ -16,6 +17,7 @@ const environmentConfig = {
         user: "ee076af183dc09",
         smtpPort: 587,
         smtpSecure: false,
+        requireTLS: false,
     },
     prod: {
         frontendUrl: "https://howmuchmate.com.au",
@@ -24,6 +26,7 @@ const environmentConfig = {
         user: "AKIAWOOXUI3QEZ4NKLN2",
         smtpPort: 587,
         smtpSecure: false,
+        requireTLS: true,
     },
 };
 
@@ -44,6 +47,7 @@ export function getAppConfig() {
             port: selectedConfig.smtpPort,
             secure: selectedConfig.smtpSecure,
             user: selectedConfig.user,
+            requireTLS: selectedConfig.requireTLS,
             pass: environment === "local" ? undefined : process.env.SMTP_PASS,
             fromEmail: "hello@howmuchmate.com.au",
             fromName: "How Much Mate",

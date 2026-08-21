@@ -11,16 +11,15 @@ import { ReviewPendingEmail } from "./ReviewPendingEmail";
 type ReviewAction = "published" | "flagged";
 
 type ReviewQuote = Database["public"]["Tables"]["quote"]["Row"] & {
-  category:
-    | Pick<Database["public"]["Tables"]["category"]["Row"], "name">
-    | null;
+  category: Pick<
+    Database["public"]["Tables"]["category"]["Row"],
+    "name"
+  > | null;
   profile: Pick<Database["public"]["Tables"]["profile"]["Row"], "email"> | null;
-  suburb:
-    | Pick<
-        Database["public"]["Tables"]["suburb"]["Row"],
-        "locality" | "postcode" | "state"
-      >
-    | null;
+  suburb: Pick<
+    Database["public"]["Tables"]["suburb"]["Row"],
+    "locality" | "postcode" | "state"
+  > | null;
 };
 
 const ONE_WEEK_IN_MILLISECONDS = 7 * 24 * 60 * 60 * 1000;
@@ -83,7 +82,8 @@ async function loadPendingQuote(quoteId: string) {
     .eq("quote_id", quoteId)
     .maybeSingle();
 
-  if (error) throw new Error(`Failed to load quote ${quoteId}: ${error.message}`);
+  if (error)
+    throw new Error(`Failed to load quote ${quoteId}: ${error.message}`);
   if (!data) throw new Error(`Quote ${quoteId} was not found`);
   if (data.status !== "pending") {
     throw new Error(`Quote ${quoteId} is not pending review`);
@@ -109,14 +109,23 @@ async function hasActiveActionTokens(quoteId: string): Promise<boolean> {
 
 async function createActionTokens(quoteId: string) {
   const admin = supabaseAdminServerClient();
-  const expiresAt = new Date(Date.now() + ONE_WEEK_IN_MILLISECONDS).toISOString();
+  const expiresAt = new Date(
+    Date.now() + ONE_WEEK_IN_MILLISECONDS,
+  ).toISOString();
   const actions: ReviewAction[] = ["published", "flagged"];
   const { data, error } = await admin
     .from("quote_review_action_token")
-    .insert(actions.map((action) => ({ quote_id: quoteId, action, expires_at: expiresAt })))
+    .insert(
+      actions.map((action) => ({
+        quote_id: quoteId,
+        action,
+        expires_at: expiresAt,
+      })),
+    )
     .select("token_id, action");
 
-  if (error) throw new Error(`Failed to create review tokens: ${error.message}`);
+  if (error)
+    throw new Error(`Failed to create review tokens: ${error.message}`);
 
   const publishToken = data.find((token) => token.action === "published");
   const flaggedToken = data.find((token) => token.action === "flagged");
@@ -146,7 +155,7 @@ async function deleteActionTokens(tokenIds: string[]) {
 
 function createSmtpTransport() {
   const { smtp } = getAppConfig();
-  const { host, port, secure, user, pass } = smtp;
+  const { host, port, secure, user, pass, requireTLS } = smtp;
 
   if (!host) throw new Error("Missing required env var: SMTP_HOST");
   if (Boolean(user) !== Boolean(pass)) {
@@ -158,6 +167,7 @@ function createSmtpTransport() {
     port,
     secure,
     auth: user && pass ? { user, pass } : undefined,
+    requireTLS: requireTLS,
   });
 }
 
@@ -166,9 +176,12 @@ export async function sendReviewEmail(quoteId: string): Promise<void> {
   const quote = await loadPendingQuote(quoteId);
 
   if (await hasActiveActionTokens(quoteId)) {
-    console.info("[moderation.sendReviewEmail] Skipping duplicate review email", {
-      quoteId,
-    });
+    console.info(
+      "[moderation.sendReviewEmail] Skipping duplicate review email",
+      {
+        quoteId,
+      },
+    );
     return;
   }
 
