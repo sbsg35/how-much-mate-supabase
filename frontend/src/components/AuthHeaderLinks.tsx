@@ -15,29 +15,14 @@ const authLinks = [
 
 export const AuthHeaderLinks = () => {
   return (
-    <>
-      <Group display={{ base: "none", md: "inherit" }}>
-        {authLinks.map(({ href, label }) => (
-          <NextLink
-            key={href}
-            href={href}
-            display={{ base: "none", md: "initial" }}
-          >
-            <Button component="span" variant="outline">
-              {label}
-            </Button>
-          </NextLink>
-        ))}
-      </Group>
-      <Group display={{ base: "inherit", md: "none" }} gap="6">
-        {authLinks.map(({ href, label }) => (
-          <NextLink key={href} href={href}>
-            <Button size="compact-sm" component="span" variant="outline">
-              {label}
-            </Button>
-          </NextLink>
-        ))}
-      </Group>
-    </>
+    <Group>
+      {authLinks.map(({ href, label }) => (
+        <NextLink key={href} href={href}>
+          <Button component="span" variant="outline">
+            {label}
+          </Button>
+        </NextLink>
+      ))}
+    </Group>
   );
 };

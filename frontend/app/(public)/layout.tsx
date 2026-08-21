@@ -4,11 +4,12 @@ import { ColorSchemeToggle } from "@/components/ColorSchemeToggle";
 import { DefaultContainer } from "@/components/DefaultContainer";
 import { Footer } from "@/components/Footer";
 import { Logo } from "@/components/icons/Logo";
+import { MobileNavDrawer } from "@/components/MobileNavDrawer";
 import { NextLink } from "@/components/NextLink";
 import { UserLogoutAvatar } from "@/components/UserLogoutAvatar";
-import { UserMenuDropdown } from "@/components/UserMenuDropdown";
 import { useAuth } from "@/providers/AuthProvider";
-import { AppShell, Box, Button, Group, Skeleton } from "@mantine/core";
+import { AppShell, Box, Burger, Button, Group, Skeleton } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 import { IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -19,6 +20,8 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
   const isLoggedIn = !!user;
   const router = useRouter();
   const pathname = usePathname();
+  const [mobileNavOpened, { toggle: toggleMobileNav, close: closeMobileNav }] =
+    useDisclosure(false);
   const handleLogout = async () => {
     await logout();
     router.push("/");
@@ -80,7 +83,7 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
             {isLoading ? (
               <Skeleton height={36} width={120} radius="md" />
             ) : isLoggedIn ? (
-              <Group>
+              <Group gap="sm">
                 <ColorSchemeToggle />
                 <Button
                   display={{ base: "none", md: "inline-flex" }}
@@ -101,21 +104,25 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
                     logout={handleLogout}
                   />
                 </Box>
-                <Box display={{ base: "inline-flex", md: "none" }}>
-                  <UserMenuDropdown
-                    email={user?.email}
-                    name={
-                      user?.user_metadata?.full_name ??
-                      user?.user_metadata?.name
-                    }
-                    logout={handleLogout}
-                  />
-                </Box>
+                <Burger
+                  opened={mobileNavOpened}
+                  onClick={toggleMobileNav}
+                  hiddenFrom="md"
+                  aria-label="Toggle navigation menu"
+                />
               </Group>
             ) : (
-              <Group>
+              <Group gap="sm">
                 <ColorSchemeToggle />
-                <AuthHeaderLinks />
+                <Box display={{ base: "none", md: "inline-flex" }}>
+                  <AuthHeaderLinks />
+                </Box>
+                <Burger
+                  opened={mobileNavOpened}
+                  onClick={toggleMobileNav}
+                  hiddenFrom="md"
+                  aria-label="Toggle navigation menu"
+                />
               </Group>
             )}
           </Group>
@@ -125,6 +132,14 @@ const PublicLayout: FC<{ children: ReactNode }> = ({ children }) => {
       <AppShell.Footer>
         <Footer />
       </AppShell.Footer>
+      <MobileNavDrawer
+        opened={mobileNavOpened}
+        onClose={closeMobileNav}
+        isLoading={isLoading}
+        isLoggedIn={isLoggedIn}
+        pathname={pathname}
+        logout={handleLogout}
+      />
     </AppShell>
   );
 };

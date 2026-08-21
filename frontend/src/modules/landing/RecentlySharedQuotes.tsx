@@ -18,7 +18,7 @@ export const RecentlySharedQuotes = ({
   quotes: Quote[];
   renderedAt: string;
 }) => (
-  <Box component="section" py={{ base: 46, md: 62 }} bg="var(--hmw-surface)">
+  <Box component="section" py={{ base: 46, md: 62 }} bg="var(--hmw-surface-tint)">
     <Container size="xxl">
       <Group justify="space-between" align="center" mb={{ base: 24, md: 30 }}>
         <Title order={2} fz={{ base: 26, sm: 30 }} c="var(--hmw-heading)">

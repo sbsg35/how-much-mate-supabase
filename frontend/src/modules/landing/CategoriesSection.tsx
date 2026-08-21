@@ -11,7 +11,7 @@ const cardStyle: CSSProperties = {
   textDecoration: "none",
   border: "1px solid var(--hmw-border)",
   borderRadius: 10,
-  background: "var(--hmw-surface)",
+  background: "var(--hmw-card-bg)",
   boxShadow: "0 4px 12px rgba(17, 24, 39, 0.05)",
   transition:
     "color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease",
@@ -55,7 +55,7 @@ export const CategoriesSection = ({
     <Box
       component="section"
       py={{ base: 42, md: 54 }}
-      bg="var(--hmw-surface)"
+      bg="var(--hmw-surface-tint)"
       style={{
         borderTop: "1px solid var(--hmw-border)",
         borderBottom: "1px solid var(--hmw-border)",

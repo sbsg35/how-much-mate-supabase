@@ -47,7 +47,7 @@ const cssVariablesResolver: CSSVariablesResolver = () => ({
     "--hmw-border": "#e1e8e5",
     "--hmw-surface": "#ffffff",
     "--hmw-surface-tint": "#f8faf9",
-    "--hmw-card-bg": "rgba(255, 255, 255, 0.94)",
+    "--hmw-card-bg": "#ffffff",
     "--hmw-highlight-bg": "linear-gradient(145deg, #f2fbf7 0%, #e8f8f1 100%)",
     "--hmw-highlight-border": "#bfe8d5",
     "--hmw-hero-bg":
@@ -62,7 +62,7 @@ const cssVariablesResolver: CSSVariablesResolver = () => ({
     "--hmw-border": "var(--mantine-color-dark-4)",
     "--hmw-surface": "var(--mantine-color-dark-5)",
     "--hmw-surface-tint": "var(--mantine-color-dark-6)",
-    "--hmw-card-bg": "var(--mantine-color-dark-5)",
+    "--hmw-card-bg": "var(--mantine-color-dark-4)",
     "--hmw-highlight-bg":
       "linear-gradient(145deg, #13251c 0%, #162b21 100%)",
     "--hmw-highlight-border": "#2f6f4d",
