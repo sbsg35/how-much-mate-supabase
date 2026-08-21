@@ -169,39 +169,6 @@ resource "cloudflare_dns_record" "ses_no_reply_mx" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "ns_ns3" {
-  content  = "ns3.nameserver.net.au"
-  name     = "howmuchmate.com.au"
-  proxied  = false
-  tags     = []
-  ttl      = 1
-  type     = "NS"
-  zone_id  = "c8f9d88bf45065c42f454f7c6bd15468"
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "ns_ns2" {
-  content  = "ns2.nameserver.net.au"
-  name     = "howmuchmate.com.au"
-  proxied  = false
-  tags     = []
-  ttl      = 1
-  type     = "NS"
-  zone_id  = "c8f9d88bf45065c42f454f7c6bd15468"
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "ns_ns1" {
-  content  = "ns1.nameserver.net.au"
-  name     = "howmuchmate.com.au"
-  proxied  = false
-  tags     = []
-  ttl      = 1
-  type     = "NS"
-  zone_id  = "c8f9d88bf45065c42f454f7c6bd15468"
-  settings = {}
-}
-
 resource "cloudflare_dns_record" "dmarc_txt" {
   comment  = "DMARC policy"
   content  = "v=DMARC1; p=none; rua=mailto:hello@howmuchmate.com.au; fo=1;"

@@ -1,9 +1,7 @@
 import { GoogleButton } from "@/components/GoogleButton";
-import { apiUrl } from "@/lib/env";
 import { supabaseBrowserClient } from "@/supabase/client";
 import { toast } from "@/components/Toast";
 import { Stack } from "@mantine/core";
-import { useRouter } from "next/navigation";
 import { FC } from "react";
 
 export const SocialLogins: FC<{ isSignUp?: boolean }> = ({
