@@ -14,7 +14,7 @@ export default function Error({
 }) {
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error("Home page error:", error);
+    console.error("Home page error:", error, "digest:", error.digest);
   }, [error]);
 
   return (

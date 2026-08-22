@@ -10,20 +10,6 @@ resource "cloudflare_dns_record" "api_dev_a" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "ses_dkim_1_cname" {
-  comment = "DKIM for AWS SES"
-  content = "5gq3im3vhzje6h6jl5uyynrggylbcu3z.dkim.amazonses.com"
-  name    = "5gq3im3vhzje6h6jl5uyynrggylbcu3z._domainkey.howmuchmate.com.au"
-  proxied = false
-  tags    = []
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "c8f9d88bf45065c42f454f7c6bd15468"
-  settings = {
-    flatten_cname = false
-  }
-}
-
 resource "cloudflare_dns_record" "dev_cname" {
   content = "edb87b04817eca3d.vercel-dns-017.com"
   name    = "dev.howmuchmate.com.au"
@@ -50,37 +36,9 @@ resource "cloudflare_dns_record" "root_cname" {
   }
 }
 
-resource "cloudflare_dns_record" "ses_dkim_2_cname" {
-  comment = "DKIM for AWS SES"
-  content = "khthmc2srbwgpeynswwdgh5tmub46uye.dkim.amazonses.com"
-  name    = "khthmc2srbwgpeynswwdgh5tmub46uye._domainkey.howmuchmate.com.au"
-  proxied = false
-  tags    = []
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "c8f9d88bf45065c42f454f7c6bd15468"
-  settings = {
-    flatten_cname = false
-  }
-}
-
 resource "cloudflare_dns_record" "www_cname" {
   content = "edb87b04817eca3d.vercel-dns-017.com"
   name    = "www.howmuchmate.com.au"
-  proxied = false
-  tags    = []
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "c8f9d88bf45065c42f454f7c6bd15468"
-  settings = {
-    flatten_cname = false
-  }
-}
-
-resource "cloudflare_dns_record" "ses_dkim_3_cname" {
-  comment = "DKIM for AWS SES"
-  content = "zoas4bu7lngr7bn2qjfagu3w6oufq3ai.dkim.amazonses.com"
-  name    = "zoas4bu7lngr7bn2qjfagu3w6oufq3ai._domainkey.howmuchmate.com.au"
   proxied = false
   tags    = []
   ttl     = 1
@@ -156,19 +114,6 @@ resource "cloudflare_dns_record" "google_mx_alt2" {
   settings = {}
 }
 
-resource "cloudflare_dns_record" "ses_no_reply_mx" {
-  comment  = "AWS SES for no-reply"
-  content  = "feedback-smtp.ap-southeast-2.amazonses.com"
-  name     = "no-reply.howmuchmate.com.au"
-  priority = 10
-  proxied  = false
-  tags     = []
-  ttl      = 1
-  type     = "MX"
-  zone_id  = "c8f9d88bf45065c42f454f7c6bd15468"
-  settings = {}
-}
-
 resource "cloudflare_dns_record" "dmarc_txt" {
   comment  = "DMARC policy"
   content  = "v=DMARC1; p=none; rua=mailto:hello@howmuchmate.com.au; fo=1;"
@@ -200,18 +145,6 @@ resource "cloudflare_dns_record" "google_spf_txt" {
   proxied  = false
   tags     = []
   ttl      = 3600
-  type     = "TXT"
-  zone_id  = "c8f9d88bf45065c42f454f7c6bd15468"
-  settings = {}
-}
-
-resource "cloudflare_dns_record" "ses_no_reply_spf_txt" {
-  comment  = "SPF record for AWS SES"
-  content  = "v=spf1 include:amazonses.com ~all"
-  name     = "no-reply.howmuchmate.com.au"
-  proxied  = false
-  tags     = []
-  ttl      = 1
   type     = "TXT"
   zone_id  = "c8f9d88bf45065c42f454f7c6bd15468"
   settings = {}

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [categories, recentQuotesResponse] = await Promise.all([
+  const [categoriesResult, recentQuotesResult] = await Promise.allSettled([
     getRandomCategories(),
     getPublicQuotes({
       page: 1,
@@ -28,10 +28,24 @@ export default async function Home() {
     }),
   ]);
 
+  if (categoriesResult.status === "rejected") {
+    console.error("Home page: failed to load categories", categoriesResult.reason);
+  }
+  if (recentQuotesResult.status === "rejected") {
+    console.error("Home page: failed to load recent quotes", recentQuotesResult.reason);
+  }
+
+  const categories =
+    categoriesResult.status === "fulfilled" ? categoriesResult.value : [];
+  const recentQuotes =
+    recentQuotesResult.status === "fulfilled"
+      ? recentQuotesResult.value.data.quotes
+      : [];
+
   return (
     <LandingPage
       categories={categories}
-      recentQuotes={recentQuotesResponse.data.quotes}
+      recentQuotes={recentQuotes}
       renderedAt={new Date().toISOString()}
     />
   );

@@ -33,6 +33,25 @@ const hmw: MantineColorsTuple = [
 ];
 
 /**
+ * Replaces Mantine's default blue-grey "dark" scale with a true near-black,
+ * faintly green-tinted scale so dark mode reads as rich/black rather than
+ * washed-out grey. Drives every built-in component (Paper, Button, Card,
+ * TextInput, Modal, etc.) plus the --hmw-* tokens below.
+ */
+const dark: MantineColorsTuple = [
+  "#EDF2EF",
+  "#CBD5D0",
+  "#9AA89F",
+  "#69766E",
+  "#212E27",
+  "#182420",
+  "#101915",
+  "#0B1210",
+  "#070C0A",
+  "#040706",
+];
+
+/**
  * Custom design tokens for bespoke sections (landing page, quote cards)
  * that fall outside Mantine's built-in color/variant system. Each token
  * resolves to a real CSS variable that swaps automatically with the
@@ -57,9 +76,9 @@ const cssVariablesResolver: CSSVariablesResolver = () => ({
   },
   dark: {
     "--hmw-heading": "var(--mantine-color-dark-0)",
-    "--hmw-body-text": "#aab2bd",
+    "--hmw-body-text": "#a6b3ac",
     "--hmw-muted-text": "var(--mantine-color-dark-2)",
-    "--hmw-border": "var(--mantine-color-dark-4)",
+    "--hmw-border": "rgba(255, 255, 255, 0.08)",
     "--hmw-surface": "var(--mantine-color-dark-5)",
     "--hmw-surface-tint": "var(--mantine-color-dark-6)",
     "--hmw-card-bg": "var(--mantine-color-dark-4)",
@@ -90,6 +109,7 @@ export const ThemeProvider: FC<{ children: ReactNode }> = ({ children }) => {
         },
         colors: {
           hmw,
+          dark,
         },
         other: {
           containerSizes: CONTAINER_SIZES,
