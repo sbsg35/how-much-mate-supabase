@@ -18,7 +18,8 @@ export const UserMenuDropdown: FC<{
         <UnstyledButton style={{}}>
           <Group>
             <Avatar
-              color="var(--mantine-primary-color-filled)"
+              color="hmw.6"
+              variant="filled"
               radius="xl"
               size={40}
             >

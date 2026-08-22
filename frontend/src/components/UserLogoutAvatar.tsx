@@ -12,7 +12,8 @@ export const UserLogoutAvatar: FC<{
       <Menu.Target>
         <UnstyledButton aria-label="Account menu">
           <Avatar
-            color="var(--mantine-primary-color-filled)"
+            color="hmw.6"
+            variant="filled"
             radius="xl"
             size={40}
           >

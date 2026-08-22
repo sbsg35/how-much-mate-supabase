@@ -39,9 +39,9 @@ const hmw: MantineColorsTuple = [
  * TextInput, Modal, etc.) plus the --hmw-* tokens below.
  */
 const dark: MantineColorsTuple = [
-  "#EDF2EF",
-  "#CBD5D0",
-  "#9AA89F",
+  "#F6FAF8",
+  "#DCE6E1",
+  "#B3C0BA",
   "#69766E",
   "#212E27",
   "#182420",
@@ -76,7 +76,7 @@ const cssVariablesResolver: CSSVariablesResolver = () => ({
   },
   dark: {
     "--hmw-heading": "var(--mantine-color-dark-0)",
-    "--hmw-body-text": "#a6b3ac",
+    "--hmw-body-text": "#c9d2cd",
     "--hmw-muted-text": "var(--mantine-color-dark-2)",
     "--hmw-border": "rgba(255, 255, 255, 0.08)",
     "--hmw-surface": "var(--mantine-color-dark-5)",
