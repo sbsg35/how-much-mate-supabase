@@ -4,3 +4,4 @@
 crash.log
 **/terraform.tfvars.json
 **/secrets.auto.tfvars
+.envrc
