@@ -239,3 +239,40 @@ resource "cloudflare_dns_record" "vercel_verify_www_txt" {
   settings = {}
 }
 
+resource "cloudflare_dns_record" "resend_dkim_txt" {
+  comment  = "DKIM for Resend"
+  content  = "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC2VWr5lRR4Q2D9wX9sMWev+5ITry7HvXuTEPS9Ncsh2ytR204HsYJr3h788xTwFAsOc3PudpALWZyEKzDIvvaEiWyTJvt+epFhjVaWxU1yfMmRpf45bF+PS7RntM4JM5LdwmijzsaQgqdGKaJOshsDsEqJEimjuq0rl3JC6qml7QIDAQAB"
+  name     = "resend._domainkey.howmuchmate.com.au"
+  proxied  = false
+  tags     = []
+  ttl      = 1
+  type     = "TXT"
+  zone_id  = "c8f9d88bf45065c42f454f7c6bd15468"
+  settings = {}
+}
+
+resource "cloudflare_dns_record" "resend_send_mx" {
+  comment  = "MX for Resend sending subdomain (bounce/feedback)"
+  content  = "feedback-smtp.ap-northeast-1.amazonses.com"
+  name     = "send.howmuchmate.com.au"
+  priority = 10
+  proxied  = false
+  tags     = []
+  ttl      = 1
+  type     = "MX"
+  zone_id  = "c8f9d88bf45065c42f454f7c6bd15468"
+  settings = {}
+}
+
+resource "cloudflare_dns_record" "resend_send_spf_txt" {
+  comment  = "SPF record for Resend"
+  content  = "v=spf1 include:amazonses.com ~all"
+  name     = "send.howmuchmate.com.au"
+  proxied  = false
+  tags     = []
+  ttl      = 1
+  type     = "TXT"
+  zone_id  = "c8f9d88bf45065c42f454f7c6bd15468"
+  settings = {}
+}
+

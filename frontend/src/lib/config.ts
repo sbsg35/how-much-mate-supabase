@@ -22,8 +22,8 @@ const environmentConfig = {
     prod: {
         frontendUrl: "https://howmuchmate.com.au",
         supabaseUrl: "https://azcljaelnifkgxfefkvu.supabase.co",
-        smtpHost: "email-smtp.ap-southeast-2.amazonaws.com",
-        user: "AKIAWOOXUI3QEZ4NKLN2",
+        smtpHost: "smtp.resend.com",
+        user: "resend",
         smtpPort: 587,
         smtpSecure: false,
         requireTLS: true,
